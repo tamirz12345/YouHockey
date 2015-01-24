@@ -24,10 +24,11 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player1 = new Texture("player.jpg");
+		player1 = new Texture(Gdx.files.internal("player.jpg"));
 		p1Pos= new Vector3(0, 240, 0);
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, 800, 480);
+	    p1Rec = new Rectangle(p1Pos.x, p1Pos.y, 64, 64);
 	    
 	    
 	    
@@ -43,7 +44,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-	          p1Pos.set(Gdx.input.getX(), Gdx.input.getY(),0);
+	          p1Pos.set(Gdx.input.getX() - p1Rec.width / 2 , Gdx.input.getY()+ p1Rec.height / 2 ,0);
 	          camera.unproject(p1Pos);
 	          
 	    }
