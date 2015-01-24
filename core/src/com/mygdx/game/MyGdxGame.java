@@ -2,12 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -16,7 +16,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Vector3 p1Pos;
 	private OrthographicCamera camera;
 	Rectangle p1Rec;
-	
+	private Music music;
 	
 	
 	
@@ -29,8 +29,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, 800, 480);
 	    p1Rec = new Rectangle(p1Pos.x, p1Pos.y, 64, 64);
-	    
-	    
+	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
+	    music.setLooping(true);
+	    music.play();
 	    
 	    
 	}
