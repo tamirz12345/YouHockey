@@ -24,7 +24,10 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-	    camera.setToOrtho(false, 800, 480);
+	    //camera.setToOrtho(false, 800, 480);
+		float h = Gdx.graphics.getHeight();
+		float w= Gdx.graphics.getWidth();
+		camera.setToOrtho(false, w,h);
         t1 = new Tool("player1.png");
 
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
