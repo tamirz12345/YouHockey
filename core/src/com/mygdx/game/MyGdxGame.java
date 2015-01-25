@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import GameObjects.Tool;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -13,27 +15,21 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture player1;
-	private Vector3 p1Pos;
 	private OrthographicCamera camera;
-	Rectangle p1Rec;
 	private Music music;
-	
+	Tool t1;
 
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		player1 = new Texture(Gdx.files.internal("player1.png"));
-		p1Pos= new Vector3(0, 240, 0);
 		camera = new OrthographicCamera();
 	    camera.setToOrtho(false, 800, 480);
-	    p1Rec = new Rectangle(p1Pos.x, p1Pos.y, 64, 64);
+        t1 = new Tool("player1.png");
+
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
-	    
-	    
 	}
 
 	@Override
@@ -41,16 +37,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(player1, p1Pos.x, p1Pos.y);
+		batch.draw(t1.img, t1.position.x, t1.position.y);
 		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-	          p1Pos.set(Gdx.input.getX() - p1Rec.width / 2 , Gdx.input.getY()+ p1Rec.height / 2 ,0);
-	          camera.unproject(p1Pos);
-	          
+            t1.move(Gdx.input.getX(), Gdx.input.getY());
+	        camera.unproject(t1.position);
 	    }
-		
-		
-		
 	}
 }
