@@ -18,19 +18,29 @@ import com.badlogic.gdx.math.Vector3;
 public class Tool {
     public Texture img;
     public Rectangle rec;
-    public Vector3 position;
-
+    float m, n; // y = mx + n
     public Tool(String image_path) {
         this.img = new Texture(Gdx.files.internal(image_path));
-        this.position = new Vector3(0, 240, 0);
-        this.rec = new Rectangle(position.x, position.y, 64, 64);
+        this.rec = new Rectangle(0, 240, 64, 64);
     }
 
-    public Vector3 move(int x, int y) {
-        this.position.set(x - rec.width / 2 , y + rec.height / 2 ,0);
-        return this.position;
+    public void move(float x, float y) {
+    	float temp = (float) (Gdx.graphics.getWidth()*0.5);
+    	if (x <= Gdx.graphics.getWidth() * 0.5)
+    	{
+    		this.rec.x = x + rec.height / 2 ;
+    		
+    	}
+    	else
+    	{
+    		this.rec.x = temp - this.rec.height;
+    		
+    	}
+    	this.rec.y = y - rec.width / 2 ;
+    	
+        
     }
-
+ 
 
 
 }

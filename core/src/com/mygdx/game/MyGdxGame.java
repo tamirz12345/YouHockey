@@ -18,18 +18,18 @@ public class MyGdxGame extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Music music;
 	Tool t1;
-
-	
+	Vector3 tempTouch;
+	float height,width;
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 	    //camera.setToOrtho(false, 800, 480);
-		float h = Gdx.graphics.getHeight();
-		float w= Gdx.graphics.getWidth();
-		camera.setToOrtho(false, w,h);
+		height= Gdx.graphics.getHeight();
+		width= Gdx.graphics.getWidth();
+		camera.setToOrtho(false, width,height);
         t1 = new Tool("player1.png");
-
+        tempTouch= new Vector3();
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
@@ -40,12 +40,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(t1.img, t1.position.x, t1.position.y);
+		batch.draw(t1.img, t1.rec.x, t1.rec.y);
 		batch.end();
 		
 		if(Gdx.input.isTouched()) {
-            t1.move(Gdx.input.getX(), Gdx.input.getY());
-	        camera.unproject(t1.position);
+			tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0);
+			camera.unproject(tempTouch);
+            t1.move(tempTouch.x, tempTouch.y);
+	        
 	    }
 	}
 }
