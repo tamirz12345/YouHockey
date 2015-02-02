@@ -5,6 +5,7 @@ import GameObjects.Tool;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.sun.prism.GraphicsPipeline.ShaderType;
 
 public class MyGdxGame extends ApplicationAdapter {
@@ -42,18 +44,19 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+		t1.update();
 		
 		shaper.begin(ShapeType.Line);
-		shaper.line(height/2, 0, height/2, width);
+		shaper.line(height/2, 0, height/2, width,Color.BLACK,Color.BLACK);
+		
 		shaper.end();
 		
 		batch.begin();
 		batch.draw(t1.img, t1.rec.x, t1.rec.y);
 		batch.end();
-		
+		DragListener dl = new DragListener();
 		if(Gdx.input.isTouched()) {
 			
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
