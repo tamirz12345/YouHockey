@@ -18,7 +18,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Tool {
     public Texture img;
     public Rectangle rec;
-    float m, n; // y = mx + n
+    
     public Tool(String image_path) {
         this.img = new Texture(Gdx.files.internal(image_path));
         this.rec = new Rectangle(0, 240, 64, 64);
@@ -26,6 +26,7 @@ public class Tool {
 
     public void move(float x, float y) {
     	float temp = (float) (Gdx.graphics.getWidth()*0.5);
+    	/*
     	if (x <= Gdx.graphics.getWidth() * 0.5)
     	{
     		this.rec.x = x + rec.height / 2 ;
@@ -36,6 +37,8 @@ public class Tool {
     		this.rec.x = temp - this.rec.height;
     		
     	}
+    	*/ 
+    	this.rec.x = (float) Math.min(x, Gdx.graphics.getWidth() * 0.5)   - rec.height / 2;
     	this.rec.y = y - rec.width / 2 ;
     	
         
