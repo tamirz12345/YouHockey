@@ -25,9 +25,8 @@ public class Tool {
 
         if (this.isBelow) {
             this.rec = new Rectangle(700, 240, width, height);
-        }
-        else {
-          this.rec = new Rectangle(100, 240, width, height);
+        } else {
+            this.rec = new Rectangle(100, 240, width, height);
         }
 
         target = null;
@@ -36,58 +35,27 @@ public class Tool {
     }
 
     public void move(float x, float y) {
-    	target = new Vector2(x,y);
-    	target = limit.validateTool(target, this.isBelow, this.rec.getHeight(), this.rec.getWidth(), 50);
+        target = new Vector2(x, y);
+        target = limit.validateTool(target, this.isBelow, this.rec.getHeight(), this.rec.getWidth(), 50);
 
-    	delta = new Vector2();
-    	delta.x = (target.x - rec.x) / TimeToMove;
-    	delta.y =  (target.y - rec.y) / TimeToMove;
-    	moves = 0;
-    }
-    
-    public void update()
-    {
-    	if (target == null)
-    	{
-    		return;
-    	}
-    	if (moves < TimeToMove)
-    	{
-    		rec.x += delta.x;
-        	rec.y += delta.y;
-        	moves++;
-    	}
-    	else
-    	{
-    		moves = 0;
-    		target = null;
-    		delta = null;
-    	}
+        delta = new Vector2();
+        delta.x = (target.x - rec.x) / TimeToMove;
+        delta.y = (target.y - rec.y) / TimeToMove;
+        moves = 0;
     }
 
-
-/**
- * Created by user-pc on 02/02/2015.
- */
-public static class Limits {
-
-    public Limits()
-    {}
-
-    public Vector2 validateTool(Vector2 pos, boolean isBelow, float height, float width, int limitPercent)
-    {
-        Vector2 valid = new Vector2();
-        if (isBelow) {
-            valid.x = (float) Math.max(pos.x, Gdx.graphics.getWidth() * (limitPercent / 100))   - width / 2;
-            valid.y = pos.y - height / 2 ;
+    public void update() {
+        if (target == null) {
+            return;
         }
-
-        else {
-            valid.x = (float) Math.min(pos.x, Gdx.graphics.getWidth() * (limitPercent / 100))   - width / 2;
-            valid.y = pos.y - height / 2 ;
+        if (moves < TimeToMove) {
+            rec.x += delta.x;
+            rec.y += delta.y;
+            moves++;
+        } else {
+            moves = 0;
+            target = null;
+            delta = null;
         }
-
-        return valid;
-    }
     }
 }
