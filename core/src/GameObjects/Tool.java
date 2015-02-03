@@ -15,7 +15,7 @@ public class Tool {
     Vector2 target;
     Vector2 delta;
     boolean isBelow;
-    final int TimeToMove = 5;
+    final int TimeToMove = 3;
     int moves;
     Limits limit = new Limits();
 

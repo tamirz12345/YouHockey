@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import GameObjects.Disk;
 import GameObjects.Tool;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -15,13 +16,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.sun.prism.GraphicsPipeline.ShaderType;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
-	private OrthographicCamera camera;
-	private Music music;
+	OrthographicCamera camera;
+	Music music;
 	Tool t1;
     Tool bot;
 	Vector3 tempTouch;
@@ -29,7 +31,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	ShapeRenderer shaper;
     final int TOOL_WIDTH = 64;
     final int TOOL_HEIGHT = 64;
-
+    Disk disk;
+    Texture diskT ;
     @Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -41,7 +44,9 @@ public class MyGdxGame extends ApplicationAdapter {
         t1 = new Tool("player1.png", true, TOOL_HEIGHT, TOOL_WIDTH);
         bot = new Tool("player1.png", false, TOOL_HEIGHT, TOOL_WIDTH);
         tempTouch = new Vector3();
-
+        
+        disk = new Disk();
+        disk.setPosition(height/2 , width/2);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
@@ -60,6 +65,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		shaper.end();
 		
 		batch.begin();
+		disk.setPosition(height/2, width/2);
+		disk.draw(batch, 1);
 		batch.draw(t1.img, t1.rec.x, t1.rec.y);
 		batch.draw(bot.img,bot.rec.x,bot.rec.y);
 		batch.end();
