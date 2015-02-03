@@ -54,18 +54,20 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		t1.update();
-
+		bot.update();
 		shaper.begin(ShapeType.Line);
 		shaper.line(height/2, 0, height/2, width,Color.BLACK,Color.BLACK);
 		shaper.end();
 		
 		batch.begin();
 		batch.draw(t1.img, t1.rec.x, t1.rec.y);
+		batch.draw(bot.img,bot.rec.x,bot.rec.y);
 		batch.end();
 
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
             t1.move(tempTouch.x, tempTouch.y);
+            bot.move(height-tempTouch.x , tempTouch.y);
 	    }
 	}
 }
