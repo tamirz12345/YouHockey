@@ -36,7 +36,7 @@ public class Tool {
 
     public void move(float x, float y) {
         target = new Vector2(x, y);
-        target = limit.validateTool(target, this.isBelow, this.rec.getHeight(), this.rec.getWidth(), 50);
+        target = limit.validateTool(target, this.isBelow, this.rec.getHeight(), this.rec.getWidth());
 
         delta = new Vector2();
         delta.x = (target.x - rec.x) / TimeToMove;

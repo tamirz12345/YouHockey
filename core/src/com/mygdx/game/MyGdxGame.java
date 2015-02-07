@@ -40,9 +40,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		height = Gdx.graphics.getWidth();
 		width = Gdx.graphics.getHeight();
 		camera.setToOrtho(false, height, width);
-
+		
         t1 = new Tool("player1.png", true, TOOL_HEIGHT, TOOL_WIDTH);
-        bot = new Tool("player1.png", false, TOOL_HEIGHT, TOOL_WIDTH);
+        bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH);
         tempTouch = new Vector3();
         
         disk = new Disk();
