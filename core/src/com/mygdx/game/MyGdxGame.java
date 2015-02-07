@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import GameObjects.Disk;
+import GameObjects.Limits;
 import GameObjects.Tool;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -33,6 +34,7 @@ public class MyGdxGame extends ApplicationAdapter {
     final int TOOL_HEIGHT = 64;
     Disk disk;
     Texture diskT ;
+    Limits lim;
     @Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -41,7 +43,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		width = Gdx.graphics.getHeight();
 		camera.setToOrtho(false, height, width);
 		
-        t1 = new Tool("player1.png", true, TOOL_HEIGHT, TOOL_WIDTH);
+        t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH);
         bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH);
         tempTouch = new Vector3();
         
@@ -51,6 +53,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	    music.setLooping(true);
 	    music.play();
 	    shaper = new ShapeRenderer();
+	    lim = new Limits();
 	}
 
 	@Override
@@ -61,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		t1.update();
 		bot.update();
 		shaper.begin(ShapeType.Line);
-		shaper.line(height/2, 0, height/2, width,Color.BLACK,Color.BLACK);
+		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();
 		
 		batch.begin();

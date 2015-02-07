@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * Created by user-pc on 25/01/2015.
  */
 
-public class Tool {
+public class Tool  extends Actor{
     public Texture img;
     public Rectangle rec;
     Vector2 target;
