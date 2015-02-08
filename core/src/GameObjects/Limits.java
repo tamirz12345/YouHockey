@@ -8,9 +8,16 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Limits {
 	private float mid;
+	private float gameWidth;
+	private float gameHeight;
     public Limits()
     {
     	mid = (float) 0.5;
+    	gameWidth = Gdx.graphics.getHeight();
+    	gameHeight = Gdx.graphics.getWidth();
+    	
+    	
+    	
     }
     
     
@@ -41,5 +48,30 @@ public class Limits {
         valid.y = pos.y - height / 2 ;
         return valid;
     }
+	
+	
+	public boolean isHoreg(Disk d)
+	{
+		
+		if (d.getY() + d.getWidth() >= this.gameWidth)
+		{
+			return false;
+		}
+		if (d.getY() <= 0)
+		{
+			return false;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		return false;
+		
+		
+	}
 }
 

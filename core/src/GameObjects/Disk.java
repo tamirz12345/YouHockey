@@ -3,14 +3,26 @@ package GameObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
 	float radius = 32 ; 
 	boolean toHuman;
+	Vector2 delta;
+	boolean moving;
+	
+	
+	
+	
+	public Disk() {
+		super();
+		delta = null;
+	}
+
+
 	@Override
 	public void draw(Batch batch, float alpha){
 		
