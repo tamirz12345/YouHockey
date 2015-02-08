@@ -13,7 +13,9 @@ public class Disk  extends Actor{
 	boolean toHuman;
 	Vector2 delta;
 	boolean moving;
-	
+	float m, n; // y = mx + n
+    boolean start = false;
+    float speed = 1;
 	
 	
 	
@@ -61,16 +63,25 @@ public class Disk  extends Actor{
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-            if (diskX != 0 || diskY != 0) {
-                this.setX(0);
-                this.setY(0);
-            }
-            else {
-            	this.setX(100);
-                this.setY(100);
-            }
+        	this.m = (diskY - toolY) / (diskX - toolX);
+            this.start = true;
+            this.update();
         }
     }
 	
+	private void update() {
+        // y - y0 = m (x - x0)
+        // y = mx + y0 - mx0
+        this.n = this.getY() - this.m * this.getX();
+    }
+ 
+    public void move()
+    {
+        if (this.start)
+        {
+            this.setX(this.getX() + this.speed);
+            this.setY(this.getX() * this.m + this.n);
+        }
+    }
 	
 }

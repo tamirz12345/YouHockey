@@ -64,7 +64,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
 		disk.checkCollision(t1);
-		
+		disk.move();
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();
@@ -83,8 +83,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
             t1.move(tempTouch.x, tempTouch.y);
             bot.move(height-tempTouch.x , tempTouch.y);
-            disk.TestAct();
-            stage.act(delta);
+            
 	    }
 	}
 }
