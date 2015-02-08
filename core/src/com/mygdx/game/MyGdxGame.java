@@ -10,16 +10,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.sun.prism.GraphicsPipeline.ShaderType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -35,6 +31,7 @@ public class MyGdxGame extends ApplicationAdapter {
     Disk disk;
     Texture diskT ;
     Limits lim;
+    Stage stage;
     @Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -49,6 +46,10 @@ public class MyGdxGame extends ApplicationAdapter {
         
         disk = new Disk();
         disk.setPosition(height/2 , width/2);
+        stage = new Stage();
+        stage.addActor(bot);
+        stage.addActor(t1);
+        stage.addActor(disk);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
@@ -69,9 +70,12 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		batch.begin();
 		disk.setPosition(height/2, width/2);
+		/*
 		disk.draw(batch, 1);
 		batch.draw(t1.img, t1.rec.x, t1.rec.y);
 		batch.draw(bot.img,bot.rec.x,bot.rec.y);
+		*/
+		stage.draw();
 		batch.end();
 
 		if(Gdx.input.isTouched()) {
