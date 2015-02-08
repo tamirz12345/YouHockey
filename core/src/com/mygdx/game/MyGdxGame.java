@@ -63,14 +63,14 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
-		t1.update();
-		bot.update();
+		disk.checkCollision(t1);
+		
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();
 		
 		batch.begin();
-		disk.setPosition(height/2, width/2);
+		
 		/*
 		disk.draw(batch, 1);
 		batch.draw(t1.img, t1.rec.x, t1.rec.y);

@@ -9,9 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
+	float radius = 32 ; 
 	boolean toHuman;
 	@Override
 	public void draw(Batch batch, float alpha){
+		
         batch.draw(texture,super.getX(),super.getY());
     }
 	
@@ -35,6 +37,28 @@ public class Disk  extends Actor{
 		this.addAction(moveAction);
 		toHuman = !toHuman;
 	}
+	
+	
+	public void checkCollision(Tool tool){
+        float diskX = this.getX() + this.getWidth() / 2;
+        float diskY = this.getY() + this.getHeight() / 2;
+
+        float toolX = tool.getX() + tool.getWidth() / 2;
+        float toolY = tool.getY() + tool.getHeight() / 2;
+
+        if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
+        		<= this.radius + tool.radius)
+        {
+            if (diskX != 0 || diskY != 0) {
+                this.setX(0);
+                this.setY(0);
+            }
+            else {
+            	this.setX(100);
+                this.setY(100);
+            }
+        }
+    }
 	
 	
 }

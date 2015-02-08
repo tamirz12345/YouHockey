@@ -19,6 +19,7 @@ public class Tool  extends Actor{
     boolean isBelow;
     final int TimeToMove = 3;
     int moves;
+    float radius = 32 ;
     Limits limit = new Limits();
 
     public Tool(String image_path, boolean isBelow, int height, int width) {
@@ -59,11 +60,25 @@ public class Tool  extends Actor{
             target = null;
             delta = null;
         }
+        
+        
+        
     }
 
 	@Override
+	public float getX() {
+		return this.rec.x;
+	}
+
+	@Override
+	public float getY() {
+		// TODO Auto-generated method stub
+		return this.rec.y;
+	}
+
+	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		
+		this.update();
 		batch.draw(img , rec.x , rec.y);
 	}
     
