@@ -32,6 +32,7 @@ public class MyGdxGame extends ApplicationAdapter {
     Texture diskT ;
     Limits lim;
     Stage stage;
+    float delta;
     @Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -61,7 +62,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+		delta = Gdx.graphics.getDeltaTime();
 		t1.update();
 		bot.update();
 		shaper.begin(ShapeType.Line);
@@ -82,6 +83,8 @@ public class MyGdxGame extends ApplicationAdapter {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
             t1.move(tempTouch.x, tempTouch.y);
             bot.move(height-tempTouch.x , tempTouch.y);
+            disk.TestAct();
+            stage.act(delta);
 	    }
 	}
 }
