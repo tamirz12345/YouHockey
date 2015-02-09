@@ -16,12 +16,15 @@ public class Disk  extends Actor{
 	float m, n; // y = mx + n
     boolean start = false;
     float speed = 1;
+	Limits game;
 	
 	
-	
-	public Disk() {
+	public Disk(Limits game) {
 		super();
 		delta = null;
+		this.game = game;
+		this.setWidth(64);
+		this.setHeight(64);
 	}
 
 
@@ -81,7 +84,12 @@ public class Disk  extends Actor{
         {
             this.setX(this.getX() + this.speed);
             this.setY(this.getX() * this.m + this.n);
+            if (game.isHoreg(this))
+            {
+            	this.m *= -1;
+            }
         }
+        
     }
 	
 }

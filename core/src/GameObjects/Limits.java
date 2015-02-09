@@ -53,16 +53,23 @@ public class Limits {
 	public boolean isHoreg(Disk d)
 	{
 		
-		if (d.getY() + d.getWidth() >= this.gameWidth)
+		if (d.getY() - d.getWidth()*2 >= this.gameWidth)
 		{
-			return false;
+			return true;
 		}
 		if (d.getY() <= 0)
 		{
-			return false;
+			return true;
 		}
 		
-		
+		if (d.getX() <= 0)
+		{
+			return true;
+		}
+		if (d.getX() - d.getHeight()*2 >= this.gameHeight)
+		{
+			return true;
+		}
 		
 		
 		

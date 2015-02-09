@@ -44,8 +44,8 @@ public class MyGdxGame extends ApplicationAdapter {
         t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH);
         bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH);
         tempTouch = new Vector3();
-        
-        disk = new Disk();
+        lim = new Limits();
+        disk = new Disk(lim);
         disk.setPosition(height/2 , width/2);
         stage = new Stage();
         stage.addActor(bot);
@@ -55,7 +55,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	    music.setLooping(true);
 	    music.play();
 	    shaper = new ShapeRenderer();
-	    lim = new Limits();
+	    
 	}
 
 	@Override
