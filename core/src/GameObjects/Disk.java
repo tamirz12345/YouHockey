@@ -87,6 +87,8 @@ public class Disk  extends Actor{
             if (game.isHoreg(this))
             {
             	this.m *= -1;
+            	this.speed *= -1;
+            	this.update();
             }
         }
         
