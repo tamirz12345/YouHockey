@@ -1,11 +1,18 @@
 package GameObjects;
 
+import java.util.Set;
+import java.util.Vector;
+
+
+
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.sun.xml.internal.bind.util.Which;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
@@ -14,8 +21,7 @@ public class Disk  extends Actor{
 	Vector2 delta;
 	boolean moving;
 	float m, n; // y = mx + n
-    boolean start = false;
-    float speed = 1;
+    double speed = 0.05;
 	Limits game;
 	
 	
@@ -66,32 +72,52 @@ public class Disk  extends Actor{
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-        	this.m = (diskY - toolY) / (diskX - toolX);
-            this.start = true;
-            this.update();
+        	delta = new Vector2( diskX - toolX, diskY - toolY);
+            this.moving = true;
+            
         }
     }
 	
-	private void update() {
-        // y - y0 = m (x - x0)
-        // y = mx + y0 - mx0
-        this.n = this.getY() - this.m * this.getX();
-    }
+	
  
-    public void move()
+    public void update()
     {
-        if (this.start)
+        if (this.moving)
         {
-            this.setX(this.getX() + this.speed);
-            this.setY(this.getX() * this.m + this.n);
-            if (game.isHoreg(this))
+            
+            Set<Wall> w = game.isHoreg(this);
+            if (w.size() == 2)
             {
-            	this.m *= -1;
-            	this.speed *= -1;
-            	this.update();
+            	delta.x *= -1;
+            	delta.y *= -1;
+            	move();
+            	return;
             }
+            
+        	if (w.contains(Wall.Bottom) ||  w.contains(Wall.Top))
+        	{
+        		delta.x *= -1;
+        		move();
+        		return;
+        	}
+        	else if (w.contains(Wall.Left) || w.contains(Wall.Right))
+        	{
+        		delta.y *= -1 ; 
+        		move();
+        		return;
+        	}
+        	move();
+        	
+            
         }
         
     }
+    
+    public void move()
+    {
+    	this.setX((float) (this.getX() + this.speed * this.delta.x));
+        this.setY((float) (this.getX() + this.speed * this.delta.y));	
+    }
+    
 	
 }

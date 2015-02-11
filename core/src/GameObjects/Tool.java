@@ -17,7 +17,7 @@ public class Tool  extends Actor{
     Vector2 target;
     Vector2 delta;
     boolean isBelow;
-    final int TimeToMove = 3;
+    int TimeToMove ;
     int moves;
     float radius = 32 ;
     Limits limit = new Limits();
@@ -28,8 +28,10 @@ public class Tool  extends Actor{
 
         if (this.isBelow) {
             this.rec = new Rectangle(700, 240, width, height);
+            this.TimeToMove = 3;
         } else {
             this.rec = new Rectangle(100, 240, width, height);
+            this.TimeToMove = 10;
         }
 
         target = null;

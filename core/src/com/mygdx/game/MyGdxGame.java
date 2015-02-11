@@ -46,7 +46,7 @@ public class MyGdxGame extends ApplicationAdapter {
         tempTouch = new Vector3();
         lim = new Limits();
         disk = new Disk(lim);
-        disk.setPosition(height/2 , width/2);
+        disk.setPosition((float) (height * 0.7 - disk.getHeight()/2), width/2 - disk.getWidth()/2);
         stage = new Stage();
         stage.addActor(bot);
         stage.addActor(t1);
@@ -64,7 +64,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
 		disk.checkCollision(t1);
-		disk.move();
+		disk.checkCollision(bot);
+		disk.update();
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();

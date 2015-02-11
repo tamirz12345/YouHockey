@@ -1,5 +1,8 @@
 package GameObjects;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
@@ -50,25 +53,25 @@ public class Limits {
     }
 	
 	
-	public boolean isHoreg(Disk d)
+	public Set<Wall> isHoreg(Disk d)
 	{
-		
-		if (d.getY() - d.getWidth()*2 >= this.gameWidth)
+		Set<Wall> s = new HashSet<Wall>();
+		if (d.getY() + d.getWidth()   >= this.gameWidth)
 		{
-			return true;
+			s.add(Wall.Right);
 		}
 		if (d.getY() <= 0)
 		{
-			return true;
+			s.add(Wall.Left);
 		}
 		
-		if (d.getX() <= 0)
+		if (d.getX() + d.getHeight() / 2 <= 0)
 		{
-			return true;
+			s.add(Wall.Top);
 		}
-		if (d.getX() - d.getHeight()*2 >= this.gameHeight)
+		if (d.getX()  >= this.gameHeight)
 		{
-			return true;
+			s.add( Wall.Bottom);
 		}
 		
 		
@@ -76,7 +79,7 @@ public class Limits {
 		
 		
 		
-		return false;
+		return s;
 		
 		
 	}
