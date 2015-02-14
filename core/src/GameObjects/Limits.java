@@ -53,35 +53,48 @@ public class Limits {
     }
 	
 	
-	public Set<Wall> isHoreg(Disk d)
+	public Wall isHoreg(Disk d)
 	{
-		Set<Wall> s = new HashSet<Wall>();
+		
+		
 		if (d.getY() + d.getWidth()   >= this.gameWidth)
 		{
-			s.add(Wall.Right);
+			return Wall.Right;
 		}
 		if (d.getY() <= 0)
 		{
-			s.add(Wall.Left);
+			return Wall.Left;
 		}
 		
 		if (d.getX() + d.getHeight() / 2 <= 0)
 		{
-			s.add(Wall.Top);
+			return Wall.Top;
 		}
 		if (d.getX()  >= this.gameHeight)
 		{
-			s.add( Wall.Bottom);
+			return Wall.Bottom;
 		}
 		
+		return null;
 		
 		
 		
 		
 		
-		return s;
 		
 		
+	}
+
+
+
+	public float getGameWidth() {
+		return gameWidth;
+	}
+
+
+
+	public float getGameHeight() {
+		return gameHeight;
 	}
 }
 

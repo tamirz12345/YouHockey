@@ -51,6 +51,7 @@ public class MyGdxGame extends ApplicationAdapter {
         stage.addActor(bot);
         stage.addActor(t1);
         stage.addActor(disk);
+        Gdx.input.setInputProcessor(stage);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
@@ -64,19 +65,15 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
 		disk.checkCollision(t1);
-		disk.checkCollision(bot);
-		disk.update();
+		//disk.checkCollision(bot);
+		//disk.update();
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();
 		
 		batch.begin();
 		
-		/*
-		disk.draw(batch, 1);
-		batch.draw(t1.img, t1.rec.x, t1.rec.y);
-		batch.draw(bot.img,bot.rec.x,bot.rec.y);
-		*/
+		
 		stage.draw();
 		batch.end();
 
@@ -85,6 +82,8 @@ public class MyGdxGame extends ApplicationAdapter {
             t1.move(tempTouch.x, tempTouch.y);
             bot.move(height-tempTouch.x , tempTouch.y);
             
+            
 	    }
+		stage.act(delta);
 	}
 }

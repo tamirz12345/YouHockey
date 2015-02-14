@@ -17,7 +17,7 @@ import com.sun.xml.internal.bind.util.Which;
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
 	float radius = 32 ; 
-	boolean toHuman;
+	boolean toHuman = false;
 	Vector2 delta;
 	boolean moving;
 	float m, n; // y = mx + n
@@ -63,52 +63,160 @@ public class Disk  extends Actor{
 	
 	
 	public void checkCollision(Tool tool){
-        float diskX = this.getX() + this.getWidth() / 2;
-        float diskY = this.getY() + this.getHeight() / 2;
+        float diskX = this.getX();
+        float diskY = this.getY() ;
 
-        float toolX = tool.getX() + tool.getWidth() / 2;
-        float toolY = tool.getY() + tool.getHeight() / 2;
+        float toolX = tool.getX() ;
+        float toolY = tool.getY() ;
 
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-        	delta = new Vector2( diskX - toolX, diskY - toolY);
-            this.moving = true;
+        	this.clearActions();
+        	float  a =(diskX - toolX)/ (diskY - toolY);
+            float b = diskX - diskX * a ; 
+            Line l = new Line(a,b);
+            Wall wY = null , wX = null;
+            if (diskX - toolX >= 0)
+            {
+            	wX = Wall.Bottom;
+            }
+            else
+            {
+            	wX = Wall.Top;
+            }
             
+            if (diskY- toolY >= 0)
+            {
+            	wY = Wall.Left;
+            }
+            else
+            {
+            	wY = Wall.Right;
+            }
+            LineToAction(l , wX , wY);
+            
+    	    
+    	    
         }
     }
 	
 	
+	
+	public void LineToAction(Line l , Wall XDirection , Wall YDirection )
+	{
+		MoveToAction moveAction = new MoveToAction();
+	    moveAction.setDuration(4f);
+	    Wall targetW = null;
+	    
+	    if (XDirection == Wall.Top && YDirection == Wall.Left)
+	    {
+	    	if (l.getY(0) > 0)
+	    	{
+	    		targetW = Wall.Left;
+	    	}
+	    	else
+	    	{
+	    		targetW = Wall.Top;
+	    	}
+	    }
+	    
+	    else if (XDirection == Wall.Top && YDirection == Wall.Right)
+	    {
+	    	if (l.getY(game.getGameWidth()) >0)
+	    	{
+	    		targetW = Wall.Right;
+	    	}
+	    	else
+	    	{
+	    		targetW = Wall.Top;
+	    	}
+	    }
+	    
+	    
+	    else if (XDirection == Wall.Bottom && YDirection == Wall.Left)
+	    {
+	    	if (l.getY(0) <game.getGameHeight())
+	    	{
+	    		targetW = Wall.Left;
+	    	}
+	    	else
+	    	{
+	    		targetW = Wall.Bottom;
+	    	}
+	    }
+	    
+	    else if (XDirection == Wall.Bottom && YDirection == Wall.Right)
+	    {
+	    	if (l.getY(game.getGameWidth()) > 0)
+	    	{
+	    		targetW = Wall.Right;
+	    	}
+	    	else
+	    	{
+	    		targetW = Wall.Bottom;
+	    	}
+	    }
+	    
+	    
+	    
+	    switch (targetW)
+	    {
+	    case Bottom:
+	    	moveAction.setPosition(game.getGameHeight()
+	    			, l.getX(game.getGameHeight()));
+	    	this.addAction(moveAction);
+	    	break;
+	    case Top:
+	    	moveAction.setPosition(0
+	    			, l.getX(0));
+	    	this.addAction(moveAction);
+	    	break;
+	    case Left:
+	    	moveAction.setPosition(l.getY(0), 0);
+	    	this.addAction(moveAction);
+	    	break;
+	    	
+	    case Right:
+	    	moveAction.setPosition(l.getY(game.getGameWidth())
+	    			, l.getY(game.getGameWidth()));
+	    	this.addAction(moveAction);
+	    	break;
+	    }
+	    
+	    
+	}
  
     public void update()
     {
+    	
         if (this.moving)
         {
-            
-            Set<Wall> w = game.isHoreg(this);
-            if (w.size() == 2)
-            {
-            	delta.x *= -1;
-            	delta.y *= -1;
-            	move();
-            	return;
-            }
-            
-        	if (w.contains(Wall.Bottom) ||  w.contains(Wall.Top))
+        	Wall w = game.isHoreg(this);
+        	if (w != null)
         	{
-        		delta.x *= -1;
-        		move();
-        		return;
+	            switch (w) {
+				case Bottom:
+					this.delta.x *= -1 ; 
+					this.setX(game.getGameHeight());
+					break;
+				case Top:
+					this.delta.x *= -1 ; 
+					this.setX(0);
+					break;
+				case Left:
+					this.delta.y *= -1 ;
+					this.setY(0);
+				case Right:
+					this.delta.y *= -1 ;
+					this.setY(game.getGameWidth());
+					break;
+				
+				default:
+					break;
+				}
         	}
-        	else if (w.contains(Wall.Left) || w.contains(Wall.Right))
-        	{
-        		delta.y *= -1 ; 
-        		move();
-        		return;
-        	}
-        	move();
-        	
-            
+            move();
         }
         
     }
