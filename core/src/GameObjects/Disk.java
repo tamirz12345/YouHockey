@@ -23,7 +23,7 @@ public class Disk  extends Actor{
 	float m, n; // y = mx + n
     double speed = 0.05;
 	Limits game;
-	
+	Wall targetW = null;
 	
 	public Disk(Limits game) {
 		super();
@@ -31,6 +31,7 @@ public class Disk  extends Actor{
 		this.game = game;
 		this.setWidth(64);
 		this.setHeight(64);
+		
 	}
 
 
@@ -41,25 +42,6 @@ public class Disk  extends Actor{
     }
 	
 	
-	public void TestAct()
-	{
-		MoveToAction moveAction = new MoveToAction();
-	    
-	    moveAction.setDuration(10f);
-		if (toHuman)
-		{
-			moveAction.setPosition(0f, 0f);
-			
-		}
-		else
-		{
-			moveAction.setPosition(Gdx.graphics.getWidth()
-					, Gdx.graphics.getHeight());
-			
-		}
-		this.addAction(moveAction);
-		toHuman = !toHuman;
-	}
 	
 	
 	public void checkCollision(Tool tool){
@@ -102,12 +84,18 @@ public class Disk  extends Actor{
     }
 	
 	
-	
+	/*
+	 * Pre Condition : Recives line it wants to move by it 
+	 * 				   XDirectino is bottom or top
+	 * 				   YDriection is left ot right
+	 * What id does is giving the line and the directions it needs to moves it generates
+	 * the next action and adds it to the action of this disk
+	 */
 	public void LineToAction(Line l , Wall XDirection , Wall YDirection )
 	{
 		MoveToAction moveAction = new MoveToAction();
 	    moveAction.setDuration(4f);
-	    Wall targetW = null;
+	    
 	    
 	    if (XDirection == Wall.Top && YDirection == Wall.Left)
 	    {
@@ -187,45 +175,19 @@ public class Disk  extends Actor{
 	    
 	}
  
-    public void update()
+    public void update(Tool t1 , Tool t2)
     {
-    	
-        if (this.moving)
+    	this.checkCollision(t1);
+		this.checkCollision(t2);
+        if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
         {
-        	Wall w = game.isHoreg(this);
-        	if (w != null)
-        	{
-	            switch (w) {
-				case Bottom:
-					this.delta.x *= -1 ; 
-					this.setX(game.getGameHeight());
-					break;
-				case Top:
-					this.delta.x *= -1 ; 
-					this.setX(0);
-					break;
-				case Left:
-					this.delta.y *= -1 ;
-					this.setY(0);
-				case Right:
-					this.delta.y *= -1 ;
-					this.setY(game.getGameWidth());
-					break;
-				
-				default:
-					break;
-				}
-        	}
-            move();
+        	//To DO :
+        	//Check if it near one of the walls and if it does  so decide the next action using the function
+        	//LineToAction(Line l , Wall XDirection , Wall YDirection )
+        	
         }
         
     }
     
-    public void move()
-    {
-    	this.setX((float) (this.getX() + this.speed * this.delta.x));
-        this.setY((float) (this.getX() + this.speed * this.delta.y));	
-    }
-    
-	
+   
 }

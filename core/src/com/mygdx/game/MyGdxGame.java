@@ -3,6 +3,7 @@ package com.mygdx.game;
 import GameObjects.Disk;
 import GameObjects.Limits;
 import GameObjects.Tool;
+import GameObjects.resetButton;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -15,7 +16,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -23,6 +27,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	Music music;
 	Tool t1;
     Tool bot;
+    //resetButton resetB;
 	Vector3 tempTouch;
 	float height,width;
 	ShapeRenderer shaper;
@@ -40,9 +45,9 @@ public class MyGdxGame extends ApplicationAdapter {
 		height = Gdx.graphics.getWidth();
 		width = Gdx.graphics.getHeight();
 		camera.setToOrtho(false, height, width);
-		
         t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH);
         bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH);
+        
         tempTouch = new Vector3();
         lim = new Limits();
         disk = new Disk(lim);
@@ -57,6 +62,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	    music.play();
 	    shaper = new ShapeRenderer();
 	    
+	        
+
+			
 	}
 
 	@Override
@@ -64,9 +72,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
-		disk.checkCollision(t1);
-		//disk.checkCollision(bot);
-		//disk.update();
+		
+		disk.update(t1 , bot );
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
 		shaper.end();
@@ -76,14 +83,32 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		stage.draw();
 		batch.end();
-
+		// I tried to add some inteligence to the bot so it tries to chase the disk if the disk moves
+		
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
             t1.move(tempTouch.x, tempTouch.y);
-            bot.move(height-tempTouch.x , tempTouch.y);
+            if ( disk.getActions().size > 0 )
+            {
+            	bot.move(height-disk.getX(), disk.getY());
+            }
+            else
+            {
+            	bot.move(height-t1.getX(), t1.getY());
+            }
             
             
 	    }
 		stage.act(delta);
+	}
+	
+	public void resetGame()
+	{
+		disk.setPosition((float) (height * 0.7 - disk.getHeight()/2), width/2 - disk.getWidth()/2);
+		
+		t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH);
+		
+		bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH);
+		
 	}
 }
