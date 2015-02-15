@@ -156,7 +156,7 @@ public class Disk  extends Actor{
 	    	this.addAction(moveAction);
 	    	break;
 	    case Top:
-	    	moveAction.setPosition(0
+	    	moveAction.setPosition(this.getHeight()
 	    			, l.getX(0));
 	    	this.addAction(moveAction);
 	    	break;
@@ -167,7 +167,7 @@ public class Disk  extends Actor{
 	    	
 	    case Right:
 	    	moveAction.setPosition(l.getY(game.getGameWidth())
-	    			, l.getY(game.getGameWidth()));
+	    			, game.getGameWidth() - this.getWidth());
 	    	this.addAction(moveAction);
 	    	break;
 	    }

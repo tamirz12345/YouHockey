@@ -83,19 +83,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		
 		stage.draw();
 		batch.end();
-		// I tried to add some inteligence to the bot so it tries to chase the disk if the disk moves
+		
 		
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
             t1.move(tempTouch.x, tempTouch.y);
-            if ( disk.getActions().size > 0 )
-            {
-            	bot.move(height-disk.getX(), disk.getY());
-            }
-            else
-            {
-            	bot.move(height-t1.getX(), t1.getY());
-            }
+            bot.move(height-t1.getX(), t1.getY());
+            
             
             
 	    }

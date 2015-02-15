@@ -49,6 +49,13 @@ public class Limits {
             
         }
         valid.y = pos.y - height / 2 ;
+        
+        if (valid.y < 0)
+        	valid.y = 0 ;
+        if (valid.y > gameWidth  - width)
+        	valid.y  = gameWidth  - width;
+        
+        
         return valid;
     }
 	
