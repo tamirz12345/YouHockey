@@ -18,7 +18,7 @@ public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
 	float radius = 32 ; 
 	boolean toHuman = false;
-	Vector2 delta;
+	Vector2 targetLoc = null;
 	boolean moving;
 	float m, n; // y = mx + n
     double speed = 0.05;
@@ -27,7 +27,6 @@ public class Disk  extends Actor{
 	
 	public Disk(Limits game) {
 		super();
-		delta = null;
 		this.game = game;
 		this.setWidth(64);
 		this.setHeight(64);
@@ -93,8 +92,7 @@ public class Disk  extends Actor{
 	 */
 	public void LineToAction(Line l , Wall XDirection , Wall YDirection )
 	{
-		MoveToAction moveAction = new MoveToAction();
-	    moveAction.setDuration(4f);
+		
 	    
 	    
 	    if (XDirection == Wall.Top && YDirection == Wall.Left)
@@ -151,28 +149,38 @@ public class Disk  extends Actor{
 	    switch (targetW)
 	    {
 	    case Bottom:
-	    	moveAction.setPosition(game.getGameHeight()
+	    	this.addMoveToAction(game.getGameHeight()
 	    			, l.getX(game.getGameHeight()));
-	    	this.addAction(moveAction);
 	    	break;
 	    case Top:
-	    	moveAction.setPosition(this.getHeight()
+	    	this.addMoveToAction(this.getHeight()
 	    			, l.getX(0));
-	    	this.addAction(moveAction);
 	    	break;
 	    case Left:
-	    	moveAction.setPosition(l.getY(0), 0);
-	    	this.addAction(moveAction);
+	    	this.addMoveToAction(l.getY(0), 0);
 	    	break;
 	    	
 	    case Right:
-	    	moveAction.setPosition(l.getY(game.getGameWidth())
+	    	this.addMoveToAction(l.getY(game.getGameWidth())
 	    			, game.getGameWidth() - this.getWidth());
-	    	this.addAction(moveAction);
 	    	break;
 	    }
 	    
 	    
+	}
+	
+	
+	
+	public void addMoveToAction(float x , float y)
+	{
+		MoveToAction moveAction = new MoveToAction();
+		float oneF = 1f;
+		float speed = (int) Math.sqrt(Math.pow(this.getX()-  x , 2) 
+				+ Math.pow(this.getY()-y, 2)) / 100 * oneF;
+		moveAction.setDuration(speed);
+		moveAction.setPosition(x, y);
+		this.addAction(moveAction);
+		this.targetLoc = new Vector2(x,y);
 	}
  
     public void update(Tool t1 , Tool t2)
