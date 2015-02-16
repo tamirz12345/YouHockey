@@ -1,10 +1,8 @@
 package GameObjects;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * Created by user-pc on 03/02/2015.
@@ -98,7 +96,17 @@ public class Limits {
 		return gameWidth;
 	}
 
-
+	public boolean inGameBounds(Actor a)
+	{
+		
+		if (a.getX() <= a.getHeight() || a.getX() >= gameHeight)
+			return false;
+		if (a.getY() <= 0 || a.getY() >= gameWidth - a.getWidth())
+			return false;
+		if (a.getX() == Float.NaN || a.getY() == Float.NaN )
+			return false;
+		return true;
+	}
 
 	public float getGameHeight() {
 		return gameHeight;

@@ -24,7 +24,8 @@ public class Disk  extends Actor{
     double speed = 0.05;
 	Limits game;
 	Wall targetW = null;
-	
+	Wall wY = null , wX = null;
+	Line l ;
 	public Disk(Limits game) {
 		super();
 		this.game = game;
@@ -56,8 +57,8 @@ public class Disk  extends Actor{
         	this.clearActions();
         	float  a =(diskX - toolX)/ (diskY - toolY);
             float b = diskX - diskX * a ; 
-            Line l = new Line(a,b);
-            Wall wY = null , wX = null;
+            l = new Line(a,b);
+            
             if (diskX - toolX >= 0)
             {
             	wX = Wall.Bottom;
@@ -97,7 +98,7 @@ public class Disk  extends Actor{
 	    
 	    if (XDirection == Wall.Top && YDirection == Wall.Left)
 	    {
-	    	if (l.getY(0) > 0)
+	    	if (l.getY(0) > 0 && l.getY(0)<game.getGameHeight())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -109,7 +110,7 @@ public class Disk  extends Actor{
 	    
 	    else if (XDirection == Wall.Top && YDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getGameWidth()) >0)
+	    	if (l.getY(game.getGameWidth()) >0  && l.getY(game.getGameWidth()) < game.getGameHeight())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -122,7 +123,7 @@ public class Disk  extends Actor{
 	    
 	    else if (XDirection == Wall.Bottom && YDirection == Wall.Left)
 	    {
-	    	if (l.getY(0) <game.getGameHeight())
+	    	if (l.getY(0) <game.getGameHeight() && l.getY(0) > 0 )
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -134,7 +135,7 @@ public class Disk  extends Actor{
 	    
 	    else if (XDirection == Wall.Bottom && YDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getGameWidth()) > 0)
+	    	if (l.getY(game.getGameWidth()) > 0 && l.getY(game.getGameWidth()) < game.getGameHeight())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -187,15 +188,40 @@ public class Disk  extends Actor{
     {
     	this.checkCollision(t1);
 		this.checkCollision(t2);
+		//To DO :
+    	//Check if it near one of the walls and if it does  so decide the next action using the function
+    	//LineToAction(Line l , Wall XDirection , Wall YDirection )
         if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
         {
-        	//To DO :
-        	//Check if it near one of the walls and if it does  so decide the next action using the function
-        	//LineToAction(Line l , Wall XDirection , Wall YDirection )
+        	if (targetLoc!= null && this.getX() == targetLoc.x && this.getY() == targetLoc.y)
+        	{
+        		float newA = this.l.getA() * (- 1);
+        		float newB = this.getX() - this.getX() * newA; 
+        		l = new Line(newA, newB);
+        		if (targetW == Wall.Bottom)
+        			wX = Wall.Top;
+        		if (targetW == Wall.Top)
+        			wX = Wall.Bottom;
+        		if (targetW == Wall.Left)
+        			wY = Wall.Right;
+        		if (targetW == Wall.Right)
+        			wY = Wall.Left;
+        		LineToAction(l, wX , wY);
+        	}
+        	
         	
         }
-        
+        if (!game.inGameBounds(this))
+    	{
+    		this.spawn();
+    	}
     }
+
+
+	public void spawn() {
+		this.clearActions();
+		this.setPosition((float) (game.getGameHeight() * 0.7 - this.getHeight()/2),game.getGameWidth()/2 - this.getWidth()/2);
+	}
     
    
 }

@@ -21,5 +21,22 @@ public class Line {
     
     public float getX(float Y) {
         return (Y - b) / a;
+        
+        
+        
 }
+
+
+
+	public float getA() {
+		return a;
+	}
+
+
+
+	public float getB() {
+		return b;
+	}
+    
+    
 }

@@ -51,7 +51,7 @@ public class MyGdxGame extends ApplicationAdapter {
         tempTouch = new Vector3();
         lim = new Limits();
         disk = new Disk(lim);
-        disk.setPosition((float) (height * 0.7 - disk.getHeight()/2), width/2 - disk.getWidth()/2);
+        disk.spawn();
         stage = new Stage();
         stage.addActor(bot);
         stage.addActor(t1);
@@ -98,7 +98,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	public void resetGame()
 	{
-		disk.setPosition((float) (height * 0.7 - disk.getHeight()/2), width/2 - disk.getWidth()/2);
+		disk.spawn();
 		
 		t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH);
 		
