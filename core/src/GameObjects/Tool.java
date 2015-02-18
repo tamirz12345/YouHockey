@@ -20,17 +20,19 @@ public class Tool  extends Actor{
     int TimeToMove ;
     int moves;
     float radius = 32 ;
-    Limits limit = new Limits();
+    Limits limit ;
 
-    public Tool(String image_path, boolean isBelow, int height, int width) {
+    public Tool(String image_path, boolean isBelow, int height, int width , Limits game) {
         this.img = new Texture(Gdx.files.internal(image_path));
         this.isBelow = isBelow;
-
+        this.limit = game;
         if (this.isBelow) {
-            this.rec = new Rectangle(700, 240, width, height);
+            this.rec = new Rectangle((float) (game.getGameHeight() * (game.getMid() + 0.3)),(float) (game.getGameWidth()*0.5)
+            		, width, height);
             this.TimeToMove = 3;
         } else {
-            this.rec = new Rectangle(100, 240, width, height);
+            this.rec = new Rectangle((float) (game.getGameHeight() * (game.getMid() - 0.3)), (float) (game.getGameWidth()*0.5)
+            		, width, height);
             this.TimeToMove = 10;
         }
 
