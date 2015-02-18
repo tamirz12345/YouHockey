@@ -38,21 +38,21 @@ public class Limits {
 	public Vector2 validateTool(Vector2 pos, boolean isBelow, float height, float width)
     {
         Vector2 valid = new Vector2();
-        if (!isBelow) {
-            valid.x = (float) Math.min(pos.x, Gdx.graphics.getWidth() * mid)   - width / 2;
+        if (isBelow) {
+            valid.y = (float) Math.min(pos.y, Gdx.graphics.getWidth() * mid + height)   - width / 2;
         }
 
         else {
-            valid.x = (float) Math.max(pos.x, Gdx.graphics.getWidth() * mid)   - width / 2;
+            valid.y = (float) Math.max(pos.y, Gdx.graphics.getWidth() * mid + height)   - width / 2;
             
         }
-        valid.y = pos.y - height / 2 ;
-        
+        valid.x = pos.x - width / 2 ;
+        /*
         if (valid.y < 0)
         	valid.y = 0 ;
         if (valid.y > gameWidth  - width)
         	valid.y  = gameWidth  - width;
-        
+        */
         
         return valid;
     }
@@ -99,11 +99,11 @@ public class Limits {
 	public boolean inGameBounds(Actor a)
 	{
 		
-		if (a.getX() <= a.getHeight() || a.getX() >= gameHeight)
+		if (a.getY() <= a.getHeight() || a.getY() >= gameHeight)
 			return false;
-		if (a.getY() <= 0 || a.getY() >= gameWidth - a.getWidth())
+		if (a.getX() <= 0 || a.getX() >= gameWidth - a.getWidth())
 			return false;
-		if (a.getX() == Float.NaN || a.getY() == Float.NaN )
+		if (a.getY() == Float.NaN || a.getY() == Float.NaN )
 			return false;
 		return true;
 	}

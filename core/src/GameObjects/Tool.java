@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.mygdx.game.UnitConvertor;
 
 /**
  * Created by user-pc on 25/01/2015.
@@ -27,11 +28,11 @@ public class Tool  extends Actor{
         this.isBelow = isBelow;
         this.limit = game;
         if (this.isBelow) {
-            this.rec = new Rectangle((float) (game.getGameHeight() * (game.getMid() + 0.3)),(float) (game.getGameWidth()*0.5)
+            this.rec = new Rectangle((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() - 0.3))
             		, width, height);
             this.TimeToMove = 3;
         } else {
-            this.rec = new Rectangle((float) (game.getGameHeight() * (game.getMid() - 0.3)), (float) (game.getGameWidth()*0.5)
+            this.rec = new Rectangle((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() + 0.3))
             		, width, height);
             this.TimeToMove = 10;
         }
@@ -83,7 +84,8 @@ public class Tool  extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		this.update();
-		batch.draw(img , rec.x , rec.y);
+		Vector2 v = UnitConvertor.toGame(rec.x, rec.y);
+		batch.draw(img , v.x , v.y);
 	}
     
     

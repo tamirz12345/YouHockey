@@ -88,8 +88,9 @@ public class MainGame extends ApplicationAdapter {
 		
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
+			tempTouch = UnitConvertor.toNormal(tempTouch);
             t1.move(tempTouch.x, tempTouch.y);
-            bot.move(height-t1.getX(), t1.getY());
+            bot.move(t1.getX(), height - t1.getY());
             
             
             

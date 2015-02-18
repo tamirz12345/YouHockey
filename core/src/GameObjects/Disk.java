@@ -1,18 +1,12 @@
 package GameObjects;
 
-import java.util.Set;
-import java.util.Vector;
-
-
-
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.sun.xml.internal.bind.util.Which;
+import com.mygdx.game.UnitConvertor;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
@@ -37,8 +31,8 @@ public class Disk  extends Actor{
 
 	@Override
 	public void draw(Batch batch, float alpha){
-		
-        batch.draw(texture,super.getX(),super.getY());
+		Vector2 v = UnitConvertor.toGame(super.getX(),super.getY());
+        batch.draw(texture,v.x,v.y);
     }
 	
 	
@@ -220,8 +214,8 @@ public class Disk  extends Actor{
 
 	public void spawn() {
 		this.clearActions();
-		this.setPosition((float) (game.getGameHeight() * 0.7 - this.getHeight()/2),game.getGameWidth()/2 - this.getWidth()/2);
+		this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , (float) (game.getGameHeight() * 0.3 - this.getHeight()/2));
 	}
     
-   
+    
 }
