@@ -49,26 +49,26 @@ public class Disk  extends Actor{
         		<= this.radius + tool.radius)
         {
         	this.clearActions();
-        	float  a =(diskX - toolX)/ (diskY - toolY);
-            float b = diskX - diskX * a ; 
+        	float  a =(diskY - toolY)/ (diskX - toolX);
+            float b = diskY - diskY * a ; 
             l = new Line(a,b);
             
-            if (diskX - toolX >= 0)
+            if (diskY - toolY >= 0)
             {
-            	wX = Wall.Bottom;
+            	wX = Wall.Top;
             }
             else
             {
             	wX = Wall.Top;
             }
             
-            if (diskY- toolY >= 0)
+            if (diskX- toolX >= 0)
             {
-            	wY = Wall.Left;
+            	wY = Wall.Right;
             }
             else
             {
-            	wY = Wall.Right;
+            	wY = Wall.Left;
             }
             LineToAction(l , wX , wY);
             
@@ -144,20 +144,20 @@ public class Disk  extends Actor{
 	    switch (targetW)
 	    {
 	    case Bottom:
-	    	this.addMoveToAction(game.getGameHeight()
-	    			, l.getX(game.getGameHeight()));
+	    	this.addMoveToAction(l.getX(0)
+	    			, 0);
 	    	break;
 	    case Top:
-	    	this.addMoveToAction(this.getHeight()
-	    			, l.getX(0));
+	    	this.addMoveToAction(l.getX(this.getHeight())
+	    			, this.getHeight());
 	    	break;
 	    case Left:
-	    	this.addMoveToAction(l.getY(0), 0);
+	    	this.addMoveToAction(0, l.getY(0));
 	    	break;
 	    	
 	    case Right:
-	    	this.addMoveToAction(l.getY(game.getGameWidth())
-	    			, game.getGameWidth() - this.getWidth());
+	    	this.addMoveToAction( game.getGameWidth() - this.getWidth()
+	    			,l.getY(game.getGameWidth()));
 	    	break;
 	    }
 	    
@@ -190,7 +190,7 @@ public class Disk  extends Actor{
         	if (targetLoc!= null && this.getX() == targetLoc.x && this.getY() == targetLoc.y)
         	{
         		float newA = this.l.getA() * (- 1);
-        		float newB = this.getX() - this.getX() * newA; 
+        		float newB = this.getY() - this.getY() * newA; 
         		l = new Line(newA, newB);
         		if (targetW == Wall.Bottom)
         			wX = Wall.Top;
@@ -203,18 +203,19 @@ public class Disk  extends Actor{
         		LineToAction(l, wX , wY);
         	}
         	
-        	
+        	if (!game.inGameBounds(this))
+        	{
+        		this.spawn();
+        	}
         }
-        if (!game.inGameBounds(this))
-    	{
-    		this.spawn();
-    	}
+        
     }
 
 
 	public void spawn() {
 		this.clearActions();
-		this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , (float) (game.getGameHeight() * 0.3 - this.getHeight()/2));
+		this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
+				(float) (game.getGameHeight() * 0.4 - this.getHeight()/2));
 	}
     
     

@@ -39,11 +39,11 @@ public class Limits {
     {
         Vector2 valid = new Vector2();
         if (isBelow) {
-            valid.y = (float) Math.min(pos.y, Gdx.graphics.getWidth() * mid + height)   - width / 2;
+            valid.y = (float) Math.min(pos.y + height, Gdx.graphics.getWidth() * mid + height)   - width / 2;
         }
 
         else {
-            valid.y = (float) Math.max(pos.y, Gdx.graphics.getWidth() * mid + height)   - width / 2;
+            valid.y = (float) Math.max(pos.y + height, Gdx.graphics.getWidth() * mid + height)   - width / 2;
             
         }
         valid.x = pos.x - width / 2 ;
@@ -58,37 +58,7 @@ public class Limits {
     }
 	
 	
-	public Wall isHoreg(Disk d)
-	{
-		
-		
-		if (d.getY() + d.getWidth()   >= this.gameWidth)
-		{
-			return Wall.Right;
-		}
-		if (d.getY() <= 0)
-		{
-			return Wall.Left;
-		}
-		
-		if (d.getX() + d.getHeight() / 2 <= 0)
-		{
-			return Wall.Top;
-		}
-		if (d.getX()  >= this.gameHeight)
-		{
-			return Wall.Bottom;
-		}
-		
-		return null;
-		
-		
-		
-		
-		
-		
-		
-	}
+	
 
 
 
@@ -99,9 +69,9 @@ public class Limits {
 	public boolean inGameBounds(Actor a)
 	{
 		
-		if (a.getY() <= a.getHeight() || a.getY() >= gameHeight)
+		if (a.getY() <= 0  || a.getY() >= gameHeight)
 			return false;
-		if (a.getX() <= 0 || a.getX() >= gameWidth - a.getWidth())
+		if (a.getX() <= 0 || a.getX() >= gameWidth )
 			return false;
 		if (a.getY() == Float.NaN || a.getY() == Float.NaN )
 			return false;
