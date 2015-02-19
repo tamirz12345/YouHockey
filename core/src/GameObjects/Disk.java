@@ -19,15 +19,13 @@ public class Disk  extends Actor{
 	Limits game;
 	Wall targetW = null;
 	Wall wY = null , wX = null;
-	Line l ;
+	Line l;
 	public Disk(Limits game) {
 		super();
 		this.game = game;
 		this.setWidth(64);
 		this.setHeight(64);
-		
 	}
-
 
 	@Override
 	public void draw(Batch batch, float alpha){

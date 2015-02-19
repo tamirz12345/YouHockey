@@ -3,7 +3,7 @@ package com.mygdx.game;
 import GameObjects.Disk;
 import GameObjects.Limits;
 import GameObjects.Tool;
-import GameObjects.resetButton;
+import GameObjects.Goal;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -38,6 +38,7 @@ public class MainGame extends ApplicationAdapter {
     Limits lim;
     Stage stage;
     float delta;
+
     @Override
 	public void create () {
     	lim = new Limits();
@@ -62,10 +63,6 @@ public class MainGame extends ApplicationAdapter {
 	    music.setLooping(true);
 	    music.play();
 	    shaper = new ShapeRenderer();
-	    
-	        
-
-			
 	}
 
 	@Override
@@ -73,37 +70,23 @@ public class MainGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
-		
-		disk.update(t1 , bot );
+        Goal bottomGoal = new Goal(1);
+        disk.update(t1, bot);
 		shaper.begin(ShapeType.Line);
 		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
+
+        shaper.line(bottomGoal.src.x, bottomGoal.src.y, bottomGoal.dst.x, bottomGoal.dst.y, Color.BLACK,Color.BLACK);
 		shaper.end();
-		
 		batch.begin();
-		
-		
 		stage.draw();
 		batch.end();
-		
-		
+
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
 			tempTouch = UnitConvertor.toNormal(tempTouch);
             t1.move(tempTouch.x, tempTouch.y);
             bot.move(t1.getX(), height - t1.getY());
-            
-            
-            
 	    }
 		stage.act(delta);
-	}
-	
-	public void resetGame()
-	{
-		disk.spawn();
-		
-		t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH,lim);		
-		bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH,lim);
-		
 	}
 }
