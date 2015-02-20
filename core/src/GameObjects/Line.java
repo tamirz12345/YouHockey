@@ -1,30 +1,30 @@
 package GameObjects;
  
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
  
  
 public class Line {
         private float a;
-        private float b;
+        private Vector2 p;
  
-    public Line (float a, float b)
+    public Line (float a,Vector2 point)
     {
         this.a = a;
-        this.b = b;    
+        this.p = point;    
     }
    
    
  
     public float getY(float x) {
-                return this.a * x + b;
+                return p.y + a * ( x - p.x);
         }
     
-    public float getX(float Y) {
-        return (Y - b) / a;
+    public float getX(float y) {
+        return p.x + (y - p.y ) /  a;
         
         
         
-}
+    }
 
 
 
@@ -34,9 +34,6 @@ public class Line {
 
 
 
-	public float getB() {
-		return b;
-	}
     
     
 }

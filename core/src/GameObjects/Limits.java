@@ -20,10 +20,10 @@ public class Limits {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
     	gameHeight = Gdx.graphics.getWidth();
-    	top = gameHeight - 32;
+    	top = gameHeight ;
     	left = 0;
-    	right= gameWidth - 32;
-    	bottom = 0;
+    	right= gameWidth -64;
+    	bottom = 64;
     	
     	
     	

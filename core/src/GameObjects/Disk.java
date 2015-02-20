@@ -48,8 +48,8 @@ public class Disk  extends Actor{
         {
         	this.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
-            float b = diskY - diskY * a ; 
-            l = new Line(a,b);
+           
+            l = new Line(a, new Vector2(diskX , diskY));
             
             if (diskY - toolY >= 0)
             {
@@ -145,7 +145,7 @@ public class Disk  extends Actor{
 	    	this.addMoveToAction(l.getX(game.getBottom()), game.getBottom());
 	    	break;
 	    case Top:
-	    	this.addMoveToAction(game.getTop(),game.getTop());
+	    	this.addMoveToAction(l.getX(game.getTop()),game.getTop());
 	    	break;
 	    case Left:
 	    	this.addMoveToAction(game.getLeft(), l.getY(game.getLeft()));
@@ -189,9 +189,9 @@ public class Disk  extends Actor{
         	if (targetLoc!= null && this.getX() == targetLoc.x && this.getY() == targetLoc.y)
         	{
         		float newA = this.l.getA() * (- 1);
-        		float newB = this.getY() - this.getY() * newA; 
+        		
         		boolean changed = false;
-        		l = new Line(newA, newB);
+        		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && this.getY() == game.getBottom())
         		{
         			wY = Wall.Top;
