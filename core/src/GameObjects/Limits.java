@@ -15,6 +15,7 @@ public class Limits {
 	public float left;
 	public float right ; 
 	public float bottom;
+
     public Limits()
     {
     	mid = (float) 0.5;
@@ -24,42 +25,27 @@ public class Limits {
     	left = 0;
     	right= gameWidth - 32;
     	bottom =32;
-    	
-    	
-    	
     }
-    
-    
 
     public float getMid() {
 		return mid;
 	}
 
-
-
 	public void setMid(float mid) {
 		this.mid = mid;
 	}
-
-
 
 	public float getTop() {
 		return top;
 	}
 
-
-
 	public float getLeft() {
 		return left;
 	}
 
-
-
 	public float getRight() {
 		return right;
 	}
-
-
 
 	public float getBottom() {
 		return bottom;
@@ -82,11 +68,6 @@ public class Limits {
     
         return valid;
     }
-	
-	
-	
-
-
 
 	public float getGameWidth() {
 		return gameWidth;

@@ -7,6 +7,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.UnitConvertor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
@@ -20,7 +23,10 @@ public class Disk  extends Actor{
 	Wall targetW = null;
 	Wall wY = null , wX = null;
 	Line l;
-	public Disk(Limits game) {
+    Music music;
+
+
+    public Disk(Limits game) {
 		super();
 		this.game = game;
 		this.setWidth(64);
@@ -34,9 +40,8 @@ public class Disk  extends Actor{
     }
 	
 	
-	
-	
 	public void checkCollision(Tool tool){
+        long hitTime = 0;
         float diskX = this.getX();
         float diskY = this.getY() ;
 
@@ -46,7 +51,14 @@ public class Disk  extends Actor{
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-        	this.clearActions();
+            if(hitTime + 1000 < com.badlogic.gdx.utils.TimeUtils.millis() * 1000) {
+                hitTime = com.badlogic.gdx.utils.TimeUtils.millis() * 1000;
+                this.music = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+                music.setLooping(false);
+                music.play();
+            }
+
+            this.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
            
             l = new Line(a, new Vector2(diskX , diskY));
@@ -69,9 +81,6 @@ public class Disk  extends Actor{
             	wX = Wall.Left;
             }
             LineToAction(l , wX , wY);
-            
-    	    
-    	    
         }
     }
 	
@@ -155,12 +164,8 @@ public class Disk  extends Actor{
 	    	this.addMoveToAction(game.getRight(),l.getY(game.getRight()));
 	    	break;
 	    }
-	    
-	    
 	}
-	
-	
-	
+
 	public void addMoveToAction(float x , float y)
 	{
 		if (!game.inGameBounds(x, y))
@@ -223,15 +228,12 @@ public class Disk  extends Actor{
             		this.spawn();
             	}
         	}
-        	
-        	
-        	
+
         	if (!game.inGameBounds(this))
         	{
         		this.spawn();
         	}
         }
-        
     }
 
 
