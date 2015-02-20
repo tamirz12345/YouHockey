@@ -57,7 +57,7 @@ public class Disk  extends Actor{
             }
             else
             {
-            	wY = Wall.Top;
+            	wY = Wall.Bottom;
             }
             
             if (diskX- toolX >= 0)
@@ -142,20 +142,17 @@ public class Disk  extends Actor{
 	    switch (targetW)
 	    {
 	    case Bottom:
-	    	this.addMoveToAction(l.getX(0)
-	    			, 0);
+	    	this.addMoveToAction(l.getX(game.getBottom()), game.getBottom());
 	    	break;
 	    case Top:
-	    	this.addMoveToAction(l.getX(this.getHeight())
-	    			, this.getHeight());
+	    	this.addMoveToAction(game.getTop(),game.getTop());
 	    	break;
 	    case Left:
-	    	this.addMoveToAction(0, l.getY(0));
+	    	this.addMoveToAction(game.getLeft(), l.getY(game.getLeft()));
 	    	break;
 	    	
 	    case Right:
-	    	this.addMoveToAction( game.getGameWidth() - this.getWidth()
-	    			,l.getY(game.getGameWidth()));
+	    	this.addMoveToAction(game.getRight(),l.getY(game.getRight()));
 	    	break;
 	    }
 	    
@@ -211,9 +208,19 @@ public class Disk  extends Actor{
 
 
 	public void spawn() {
-		//this.clearActions();
+		this.clearActions();
 		this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
 				(float) (game.getGameHeight() * 0.4 - this.getHeight()/2));
+	}
+
+	@Override
+	public void clearActions() {
+		// TODO Auto-generated method stub
+		super.clearActions();
+		targetLoc = null;
+		wX = null;
+		wY = null;
+		targetW = null;
 	}
     
     
