@@ -22,8 +22,8 @@ public class Limits {
     	gameHeight = Gdx.graphics.getWidth();
     	top = gameHeight ;
     	left = 0;
-    	right= gameWidth -64;
-    	bottom = 64;
+    	right= gameWidth - 32;
+    	bottom =32;
     	
     	
     	
