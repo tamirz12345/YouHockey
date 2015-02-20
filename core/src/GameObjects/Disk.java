@@ -190,17 +190,41 @@ public class Disk  extends Actor{
         	{
         		float newA = this.l.getA() * (- 1);
         		float newB = this.getY() - this.getY() * newA; 
+        		boolean changed = false;
         		l = new Line(newA, newB);
-        		if (targetW == Wall.Bottom)
+        		if (targetW == Wall.Bottom && this.getY() == game.getBottom())
+        		{
         			wY = Wall.Top;
-        		if (targetW == Wall.Top)
+        			changed = true;
+        		}
+        			
+        		if (targetW == Wall.Top && this.getY() == game.getTop())
+        		{
         			wY = Wall.Bottom;
-        		if (targetW == Wall.Left)
+        			changed = true;
+        		}
+        			
+        		if (targetW == Wall.Left && this.getX() == game.getLeft())
+        		{
         			wX = Wall.Right;
-        		if (targetW == Wall.Right)
+        			changed = true;
+        		}
+        			
+        		if (targetW == Wall.Right && this.getX() == game.getRight())
+        		{
         			wX = Wall.Left;
-        		LineToAction(l, wX , wY);
+        			changed = true;
+        		}
+        		if (changed)
+        			LineToAction(l, wX , wY);
+        		else
+        		{
+            		System.out.println("Disk stoped because of a problem somewhere");
+            		this.spawn();
+            	}
         	}
+        	
+        	
         	
         	if (!game.inGameBounds(this))
         	{
