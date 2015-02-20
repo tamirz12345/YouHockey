@@ -103,6 +103,23 @@ public class Limits {
 			return false;
 		return true;
 	}
+	
+	public boolean inGameBounds(float x , float y)
+	{
+		if (y < bottom  || y > top)
+		{
+			System.out.println("y =  " + y + " out of bounds");
+			return false;
+		}
+		if (x <left  || x > right )
+		{
+			System.out.println("x=  " + x + " out of bounds");
+			return false;
+		}
+		if (y== Float.NaN || y== Float.NaN )
+			return false;
+		return true;
+	}
 
 	public float getGameHeight() {
 		return gameHeight;
