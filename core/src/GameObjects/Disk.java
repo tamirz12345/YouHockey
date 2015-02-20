@@ -90,7 +90,7 @@ public class Disk  extends Actor{
 	    
 	    if (YDirection == Wall.Top && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(0) > 0 && l.getY(0)<game.getGameHeight())
+	    	if (l.getY(game.getLeft()) > 0 && l.getY(game.getLeft())<game.getGameHeight())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -102,7 +102,7 @@ public class Disk  extends Actor{
 	    
 	    else if (YDirection == Wall.Top && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getGameWidth()) >0  && l.getY(game.getGameWidth()) < game.getGameHeight())
+	    	if (l.getY(game.getRight()) >0  && l.getY(game.getRight()) < game.getGameHeight())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -115,7 +115,7 @@ public class Disk  extends Actor{
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(0) <game.getGameHeight() && l.getY(0) > 0 )
+	    	if (l.getY(game.getLeft()) > 0 && l.getY(game.getLeft())<game.getGameHeight())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -127,7 +127,7 @@ public class Disk  extends Actor{
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getGameWidth()) > 0 && l.getY(game.getGameWidth()) < game.getGameHeight())
+	    	if (l.getY(game.getRight()) >0  && l.getY(game.getRight()) < game.getGameHeight())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
