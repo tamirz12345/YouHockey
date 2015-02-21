@@ -1,9 +1,9 @@
 package com.mygdx.game;
 
 import GameObjects.Disk;
+import GameObjects.Goal;
 import GameObjects.Limits;
 import GameObjects.Tool;
-import GameObjects.Goal;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -15,11 +15,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -30,7 +28,7 @@ public class MainGame extends ApplicationAdapter {
     //resetButton resetB;
 	Vector3 tempTouch;
 	float height,width;
-	ShapeRenderer shaper;
+	ShapeRenderer midLine , buttomGoal;
     final int TOOL_WIDTH = 64;
     final int TOOL_HEIGHT = 64;
     Disk disk;
@@ -62,7 +60,9 @@ public class MainGame extends ApplicationAdapter {
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
-	    shaper = new ShapeRenderer();
+	    midLine = new ShapeRenderer();
+	    buttomGoal = new ShapeRenderer();
+	    
 	}
 
 	@Override
@@ -70,13 +70,25 @@ public class MainGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
-        Goal bottomGoal = new Goal(1);
+        Goal bottomGoal = new Goal(true , lim , 30);
         disk.update(t1, bot);
-		shaper.begin(ShapeType.Line);
-		shaper.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);
-
-        shaper.line(bottomGoal.src.x, bottomGoal.src.y, bottomGoal.dst.x, bottomGoal.dst.y, Color.BLACK,Color.BLACK);
-		shaper.end();
+        midLine.begin(ShapeType.Line);
+        midLine.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);        
+        midLine.end();
+        
+        buttomGoal.begin(ShapeType.Line);
+        Vector2  src=  bottomGoal.getSrc(true);
+        Vector2  dst = bottomGoal.getDst(true);
+        Gdx.gl20.glLineWidth(10 / camera.zoom);
+        buttomGoal.line(src.x , src.y , dst.x , dst.y , 
+        		Color.BLUE , Color.BLUE);
+        
+        
+        buttomGoal.end();
+        
+        
+        
+        
 		batch.begin();
 		stage.draw();
 		batch.end();

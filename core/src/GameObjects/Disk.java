@@ -33,6 +33,7 @@ public class Disk  extends Actor{
 		this.setHeight(64);
 		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+		
 	}
 
 	@Override

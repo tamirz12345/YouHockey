@@ -21,10 +21,10 @@ public class Limits {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
     	gameHeight = Gdx.graphics.getWidth();
-    	top = gameHeight ;
+    	top = (float) (gameHeight * 0.95) - 32 ;
     	left = 0;
     	right= gameWidth - 32;
-    	bottom =32;
+    	bottom = (float) (gameHeight *  0.05)  + 32;
     }
 
     public float getMid() {
