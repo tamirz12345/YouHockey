@@ -10,31 +10,36 @@ public class Goal {
     public Vector2 src;
     public Vector2 dst;
     public Limits game;
-    public float height ;
-    public Goal(boolean isBottom , Limits game , float height) {
+    public Goal(boolean isBottom , Limits game ) {
         if (isBottom) {
-            this.src = new Vector2((float) (game.getGameWidth() * 0.4)
+            this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
             		, (float) (0.05 * game.getGameHeight()));
-            this.dst = new Vector2((float )(game.getGameWidth() * 0.6), 
+            this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
             		(float) (0.05 * game.getGameHeight()));
             
         }
-        
+        else
+        {
+        	this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
+            		, (float) (0.95 * game.getGameHeight()));
+            this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
+            		(float) (0.95 * game.getGameHeight()));
+        }
         
         
         this.game = game;
-        this.height = height;
+        
     }
 	public Vector2 getSrc(boolean origin) {
 		if (origin)
 			return UnitConvertor.toGame(src.x , src.y);
-		return UnitConvertor.toGame(src.x , src.y + this.height);
+		return UnitConvertor.toGame(src.x , src.y );
 		
 	}
 	public Vector2 getDst(boolean origin) {
 		if (origin)
 			return UnitConvertor.toGame(dst.x , dst.y);
-		return UnitConvertor.toGame(dst.x , dst.y + this.height);
+		return UnitConvertor.toGame(dst.x , dst.y );
 	}
     
     

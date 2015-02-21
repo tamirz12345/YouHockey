@@ -15,16 +15,27 @@ public class Limits {
 	public float left;
 	public float right ; 
 	public float bottom;
-
+	
+	public float leftGoal = (float) 0.4  ;
+	public float rightGoal = (float) 0.6 ;
+	
+	private float ScoreBottom;
+	private float ScoreTop;
     public Limits()
     {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
     	gameHeight = Gdx.graphics.getWidth();
-    	top = (float) (gameHeight * 0.95) - 32 ;
+    	top = (float) (gameHeight * 0.95)  ;
     	left = 0;
     	right= gameWidth - 32;
     	bottom = (float) (gameHeight *  0.05)  + 32;
+    	
+    	
+    	ScoreBottom = 0 ;
+    	ScoreTop = 0;
+    	
+    	
     }
 
     public float getMid() {
@@ -104,6 +115,16 @@ public class Limits {
 
 	public float getGameHeight() {
 		return gameHeight;
+	}
+
+	public void incBottom() {
+		this.ScoreBottom ++;
+		
+	}
+	
+	public void incTop()
+	{
+		this.ScoreTop ++;
 	}
 }
 

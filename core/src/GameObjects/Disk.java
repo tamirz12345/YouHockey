@@ -101,7 +101,7 @@ public class Disk  extends Actor{
 	    
 	    if (YDirection == Wall.Top && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(game.getLeft()) > 0 && l.getY(game.getLeft())<game.getGameHeight())
+	    	if (l.getY(game.getLeft())  > 0 && l.getY(game.getLeft()) <game.getGameHeight())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -205,12 +205,26 @@ public class Disk  extends Actor{
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && this.getY() == game.getBottom())
         		{
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth() -32 &&
+        					this.getX() <= game.rightGoal * game.getGameWidth())
+        			{
+        				this.game.incTop();
+        				this.spawn();
+        				return;
+        			}
         			wY = Wall.Top;
         			changed = true;
         		}
         			
         		if (targetW == Wall.Top && this.getY() == game.getTop())
         		{
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth() - 32&&
+        					this.getX() <= game.rightGoal * game.getGameWidth())
+        			{
+        				this.game.incBottom();
+        				this.spawn();
+        				return;
+        			}
         			wY = Wall.Bottom;
         			changed = true;
         		}
@@ -258,7 +272,7 @@ public class Disk  extends Actor{
 
 	@Override
 	public void clearActions() {
-		// TODO Auto-generated method stub
+		
 		super.clearActions();
 		targetLoc = null;
 		wX = null;

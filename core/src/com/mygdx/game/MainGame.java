@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.sun.prism.GraphicsPipeline.ShaderType;
 
 public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -28,7 +29,7 @@ public class MainGame extends ApplicationAdapter {
     //resetButton resetB;
 	Vector3 tempTouch;
 	float height,width;
-	ShapeRenderer midLine , buttomGoal;
+	ShapeRenderer midLine , buttomGoal , topGoalLine;
     final int TOOL_WIDTH = 64;
     final int TOOL_HEIGHT = 64;
     Disk disk;
@@ -62,7 +63,7 @@ public class MainGame extends ApplicationAdapter {
 	    music.play();
 	    midLine = new ShapeRenderer();
 	    buttomGoal = new ShapeRenderer();
-	    
+	    topGoalLine =  new ShapeRenderer();
 	}
 
 	@Override
@@ -70,7 +71,8 @@ public class MainGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		delta = Gdx.graphics.getDeltaTime();
-        Goal bottomGoal = new Goal(true , lim , 30);
+        Goal bottomGoal = new Goal(true , lim );
+        Goal topGoal = new Goal(false , lim );
         disk.update(t1, bot);
         midLine.begin(ShapeType.Line);
         midLine.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);        
@@ -86,6 +88,15 @@ public class MainGame extends ApplicationAdapter {
         
         buttomGoal.end();
         
+        
+        topGoalLine.begin(ShapeType.Line);
+        src=  topGoal.getSrc(true);
+        dst = topGoal.getDst(true);
+        topGoalLine.line(src.x , src.y , dst.x , dst.y , 
+        		Color.BLUE , Color.BLUE);
+        
+        
+        topGoalLine.end();
         
         
         
