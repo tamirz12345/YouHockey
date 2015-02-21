@@ -31,6 +31,7 @@ public class Disk  extends Actor{
 		this.game = game;
 		this.setWidth(64);
 		this.setHeight(64);
+		this.music = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 	}
 
 	@Override
@@ -51,12 +52,11 @@ public class Disk  extends Actor{
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-            if(hitTime + 1000 < com.badlogic.gdx.utils.TimeUtils.millis() * 1000) {
-                hitTime = com.badlogic.gdx.utils.TimeUtils.millis() * 1000;
-                this.music = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
-                music.setLooping(false);
-                music.play();
-            }
+        	if (!music.isPlaying())
+        	{
+        		music.play();
+        	}
+        	
 
             this.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
@@ -221,7 +221,14 @@ public class Disk  extends Actor{
         			changed = true;
         		}
         		if (changed)
+        		{
         			LineToAction(l, wX , wY);
+        			if (!music.isPlaying())
+                	{
+                		music.play();
+                	}
+        		}
+        			
         		else
         		{
             		System.out.println("Disk stoped because of a problem somewhere");
