@@ -23,15 +23,16 @@ public class Disk  extends Actor{
 	Wall targetW = null;
 	Wall wY = null , wX = null;
 	Line l;
-    Music music;
-
+    Music hitBall;
+    Music hitWall;
 
     public Disk(Limits game) {
 		super();
 		this.game = game;
 		this.setWidth(64);
 		this.setHeight(64);
-		this.music = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 	}
 
 	@Override
@@ -52,9 +53,9 @@ public class Disk  extends Actor{
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= this.radius + tool.radius)
         {
-        	if (!music.isPlaying())
+        	if (!hitBall.isPlaying())
         	{
-        		music.play();
+        		hitBall.play();
         	}
         	
 
@@ -175,7 +176,11 @@ public class Disk  extends Actor{
 		MoveToAction moveAction = new MoveToAction();
 		float oneF = 1f;
 		float speed = (int) Math.sqrt(Math.pow(this.getX()-  x , 2) 
-				+ Math.pow(this.getY()-y, 2)) / 100 * oneF;
+				+ Math.pow(this.getY()-y, 2)) / 200 * oneF;
+		if (speed == 0 )
+		{
+			speed = (float) (oneF * 0.4);
+		}
 		moveAction.setDuration(speed);
 		moveAction.setPosition(x, y);
 		this.addAction(moveAction);
@@ -223,9 +228,9 @@ public class Disk  extends Actor{
         		if (changed)
         		{
         			LineToAction(l, wX , wY);
-        			if (!music.isPlaying())
+        			if (!hitWall.isPlaying())
                 	{
-                		music.play();
+                		hitWall.play();
                 	}
         		}
         			
