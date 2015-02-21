@@ -1,22 +1,22 @@
 package GameObjects;
 
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.UnitConvertor;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
 	float radius = 32 ; 
 	boolean toHuman = false;
 	Vector2 targetLoc = null;
-	boolean moving;
+	boolean moving , downSpawn;
 	float m, n; // y = mx + n
     double speed = 0.05;
 	Limits game;
@@ -33,7 +33,8 @@ public class Disk  extends Actor{
 		this.setHeight(64);
 		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
-		
+		Random r = new Random();
+		downSpawn = r.nextInt(2) % 2 == 0;
 	}
 
 	@Override
@@ -192,9 +193,7 @@ public class Disk  extends Actor{
     {
     	this.checkCollision(t1);
 		this.checkCollision(t2);
-		//To DO :
-    	//Check if it near one of the walls and if it does  so decide the next action using the function
-    	//LineToAction(Line l , Wall XDirection , Wall YDirection )
+		
         if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
         {
         	if (targetLoc!= null && this.getX() == targetLoc.x && this.getY() == targetLoc.y)
@@ -209,7 +208,8 @@ public class Disk  extends Actor{
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
         				this.game.incTop();
-        				this.spawn();
+        				downSpawn = true;
+        				this.spawn();				
         				return;
         			}
         			wY = Wall.Top;
@@ -222,6 +222,7 @@ public class Disk  extends Actor{
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
         				this.game.incBottom();
+        				downSpawn = false;
         				this.spawn();
         				return;
         			}
@@ -266,8 +267,16 @@ public class Disk  extends Actor{
 
 	public void spawn() {
 		this.clearActions();
-		this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
-				(float) (game.getGameHeight() * 0.4 - this.getHeight()/2));
+		if (downSpawn)
+		{
+			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
+					(float) (game.getGameHeight() * 0.4 - this.getHeight()/2));
+		}
+		else
+		{
+			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
+					(float) (game.getGameHeight() * 0.6 + this.getHeight()/2));
+		}
 	}
 
 	@Override
