@@ -171,21 +171,7 @@ public class Disk  extends Actor{
 
 	public void addMoveToAction(float x , float y)
 	{
-		if (!game.inGameBounds(x, y))
-		{
-			System.out.println("Out Of Bound ( "+x+","+y+" )");
-		}
-		MoveToAction moveAction = new MoveToAction();
-		float oneF = 1f;
-		float speed = (int) Math.sqrt(Math.pow(this.getX()-  x , 2) 
-				+ Math.pow(this.getY()-y, 2)) / 200 * oneF;
-		if (speed == 0 )
-		{
-			speed = (float) (oneF * 0.4);
-		}
-		moveAction.setDuration(speed);
-		moveAction.setPosition(x, y);
-		this.addAction(moveAction);
+		game.addMoveToAction(this, x, y);
 		this.targetLoc = new Vector2(x,y);
 	}
  

@@ -3,6 +3,7 @@ package GameObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 
 /**
  * Created by user-pc on 03/02/2015.
@@ -125,6 +126,27 @@ public class Limits {
 	public void incTop()
 	{
 		this.ScoreTop ++;
+	}
+	
+	
+	public void addMoveToAction(Actor a, float x , float y)
+	{
+		if (!this.inGameBounds(x, y))
+		{
+			System.out.println("Out Of Bound ( "+x+","+y+" )");
+		}
+		MoveToAction moveAction = new MoveToAction();
+		float oneF = 1f;
+		float speed = (int) Math.sqrt(Math.pow(a.getX()-  x , 2) 
+				+ Math.pow(a.getY()-y, 2)) / 200 * oneF;
+		if (speed == 0 )
+		{
+			speed = (float) (oneF * 0.4);
+		}
+		moveAction.setDuration(speed);
+		moveAction.setPosition(x, y);
+		a.addAction(moveAction);
+		
 	}
 }
 
