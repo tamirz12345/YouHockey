@@ -1,6 +1,7 @@
 package GameObjects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -17,11 +18,13 @@ public class Limits {
 	public float right ; 
 	public float bottom;
 	
-	public float leftGoal = (float) 0.4  ;
-	public float rightGoal = (float) 0.6 ;
-	
+	public float leftGoal = (float) 0.35  ;
+	public float rightGoal = (float) 0.65 ;
+	private float  speedUnit = (float) 0.55; 
 	private float ScoreBottom;
 	private float ScoreTop;
+	private Music goalSound ;
+	private Music ohSound ;
     public Limits()
     {
     	mid = (float) 0.5;
@@ -35,8 +38,9 @@ public class Limits {
     	
     	ScoreBottom = 0 ;
     	ScoreTop = 0;
-    	
-    	
+    	speedUnit = (float) (speedUnit * Math.sqrt(Math.pow(gameHeight , 2 ) + Math.pow(gameWidth , 2 )));
+    	goalSound = Gdx.audio.newMusic(Gdx.files.internal("score.mp3"));
+    	ohSound = Gdx.audio.newMusic(Gdx.files.internal("oh.mp3"));
     }
 
     public float getMid() {
@@ -65,18 +69,24 @@ public class Limits {
 
 
 
-	public Vector2 validateTool(Vector2 pos, boolean isBelow, float height, float width)
+	public Vector2 validateTool(Tool t , float x , float y )
     {
         Vector2 valid = new Vector2();
-        if (isBelow) {
-            valid.y = (float) Math.min(pos.y + height, Gdx.graphics.getWidth() * mid + height)   - width / 2;
+        if (t.isBelow) {
+            valid.y = (float) Math.min(y , Gdx.graphics.getWidth() * mid)  + t.getHeight();
         }
 
         else {
-            valid.y = (float) Math.max(pos.y + height, Gdx.graphics.getWidth() * mid + height)   - width / 2;
+            valid.y = (float) Math.max(y, Gdx.graphics.getWidth() * mid )+ t.getHeight()   ;
             
         }
-        valid.x = pos.x - width / 2 ;
+        
+        
+        if ( x < 0 )
+        	valid.x = 0  ;
+        if (x > this.getGameWidth() - t.getWidth());
+        	valid.x = this.getGameWidth() - t.getWidth();
+        	
     
         return valid;
     }
@@ -120,12 +130,13 @@ public class Limits {
 
 	public void incBottom() {
 		this.ScoreBottom ++;
-		
+		goalSound.play();
 	}
 	
 	public void incTop()
 	{
 		this.ScoreTop ++;
+		ohSound.play();
 	}
 	
 	
@@ -138,7 +149,7 @@ public class Limits {
 		MoveToAction moveAction = new MoveToAction();
 		float oneF = 1f;
 		float speed = (int) Math.sqrt(Math.pow(a.getX()-  x , 2) 
-				+ Math.pow(a.getY()-y, 2)) / 200 * oneF;
+				+ Math.pow(a.getY()-y, 2)) /speedUnit* oneF;
 		if (speed == 0 )
 		{
 			speed = (float) (oneF * 0.4);

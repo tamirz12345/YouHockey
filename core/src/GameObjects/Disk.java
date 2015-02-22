@@ -60,7 +60,7 @@ public class Disk  extends Actor{
         		hitBall.play();
         	}
         	
-
+        	tool.clearActions();
             this.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
            
