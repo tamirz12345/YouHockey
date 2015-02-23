@@ -7,6 +7,7 @@ import GameObjects.Tool;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
@@ -64,6 +65,7 @@ public class MainGame extends ScreenAdapter {
         stage.addActor(t1);
         stage.addActor(disk);
         Gdx.input.setInputProcessor(stage);
+        Gdx.input.setCatchBackKey(true);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
@@ -115,6 +117,17 @@ public class MainGame extends ScreenAdapter {
             t1.move(tempTouch.x, tempTouch.y);
             bot.move(t1.getX(), height - t1.getY());
 	    }
+		
+		if (Gdx.input.isKeyPressed(Keys.BACK)){
+			music.stop();
+			super.dispose();
+			game.setScreen(new Menu(game));
+			
+		}
 		stage.act(delta);
+		
+		
 	}
+	
+	
 }
