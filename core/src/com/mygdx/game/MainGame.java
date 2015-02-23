@@ -7,6 +7,7 @@ import GameObjects.Tool;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,7 +21,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.sun.prism.GraphicsPipeline.ShaderType;
 
-public class MainGame extends ApplicationAdapter {
+public class MainGame extends ScreenAdapter {
+	YouHockey game;
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	Music music;
@@ -38,7 +40,11 @@ public class MainGame extends ApplicationAdapter {
     Stage stage;
     float delta;
 
-    @Override
+    public MainGame(YouHockey youHockey) {
+    	this.game = youHockey;
+		this.create();
+	}
+
 	public void create () {
     	lim = new Limits();
 		batch = new SpriteBatch();
@@ -66,11 +72,10 @@ public class MainGame extends ApplicationAdapter {
 	    topGoalLine =  new ShapeRenderer();
 	}
 
-	@Override
-	public void render () {
+	public void render (float delta) {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		delta = Gdx.graphics.getDeltaTime();
+		//delta = Gdx.graphics.getDeltaTime();
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
         disk.update(t1, bot);

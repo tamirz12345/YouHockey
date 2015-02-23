@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.mygdx.game.YouHockey;
 import com.mygdx.game.MainGame;
 
 public class AndroidLauncher extends AndroidApplication {
@@ -14,6 +15,6 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useCompass = false;
 		config.useAccelerometer = false;
-		initialize(new MainGame(), config);
+		initialize(new YouHockey(), config);
 	}
 }
