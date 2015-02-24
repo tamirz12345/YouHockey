@@ -13,25 +13,24 @@ import com.mygdx.game.UnitConvertor;
 
 public class Disk  extends Actor{
 	Texture texture = new Texture("disk.png");
-	float radius  ; 
+	float radius = 32 ; 
 	boolean toHuman = false;
 	Vector2 targetLoc = null;
 	boolean moving , downSpawn;
 	float m, n; // y = mx + n
-    
+    double speed = 0.05;
 	Limits game;
 	Wall targetW = null;
 	Wall wY = null , wX = null;
 	Line l;
     Music hitBall;
     Music hitWall;
-    float rSize = 7;
+
     public Disk(Limits game) {
 		super();
 		this.game = game;
-		this.radius  = (float) (rSize * game.getxUnit() );
-		this.setWidth(radius * 2 );
-		this.setHeight(radius * 2);
+		this.setWidth(64);
+		this.setHeight(64);
 		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 		Random r = new Random();
@@ -41,7 +40,7 @@ public class Disk  extends Actor{
 	@Override
 	public void draw(Batch batch, float alpha){
 		Vector2 v = UnitConvertor.toGame(super.getX(),super.getY());
-        batch.draw(texture,v.x,v.y,this.getWidth(), this.getHeight());
+        batch.draw(texture,v.x,v.y);
     }
 	
 	

@@ -64,9 +64,8 @@ public class Menu extends ScreenAdapter{
 			
             if (PlayButton.contains(tempTouch.x, tempTouch.y))
             {
-            	game.setScreen(new MainGame(game));
-            	//m.play();
-            	//started = true;
+            	m.play();
+            	started = true;
             	
             }
 	    }

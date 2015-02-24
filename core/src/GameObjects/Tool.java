@@ -20,15 +20,15 @@ public class Tool  extends Actor{
     boolean isBelow;
     int TimeToMove ;
     int moves;
-    float radius  ;
+    float radius = 32 ;
     Limits game ;
     
-    public Tool(String image_path, boolean isBelow,float radius , Limits game) {
+    public Tool(String image_path, boolean isBelow, int height, int width , Limits game) {
         this.img = new Texture(Gdx.files.internal(image_path));
         this.isBelow = isBelow;
         this.game = game;
-        this.setWidth((float) (radius * game.getxUnit()));
-        this.setHeight(this.getWidth());
+        this.setWidth(width);
+        this.setHeight(height);
         if (this.isBelow) {
             this.setPosition((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() - 0.3)));
             this.TimeToMove = 3;
@@ -37,7 +37,7 @@ public class Tool  extends Actor{
             this.setPosition((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() + 0.3)));
             this.TimeToMove = 10;
         }
-        this.radius  = this.getWidth()   / 2 ; 
+
        
     }
 
@@ -63,7 +63,7 @@ public class Tool  extends Actor{
 	public void draw(Batch batch, float parentAlpha) {
 		//this.update();
 		Vector2 v = UnitConvertor.toGame(this.getX(), this.getY());
-		batch.draw(img , v.x , v.y , this.getWidth() , this.getHeight());
+		batch.draw(img , v.x , v.y);
 	}
     
     

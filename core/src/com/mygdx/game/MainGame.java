@@ -33,8 +33,8 @@ public class MainGame extends ScreenAdapter {
 	Vector3 tempTouch;
 	float height,width;
 	ShapeRenderer midLine , buttomGoal , topGoalLine;
-    final int TOOL_R = 15;
-    
+    final int TOOL_WIDTH = 64;
+    final int TOOL_HEIGHT = 64;
     Disk disk;
     Texture diskT ;
     Limits lim;
@@ -53,8 +53,8 @@ public class MainGame extends ScreenAdapter {
 		height = Gdx.graphics.getWidth();
 		width = Gdx.graphics.getHeight();
 		camera.setToOrtho(false, height, width);
-        t1 = new Tool("player2.png", true, TOOL_R , lim);
-        bot = new Tool("player2.png", false, TOOL_R,lim);
+        t1 = new Tool("player2.png", true, TOOL_HEIGHT, TOOL_WIDTH,lim);
+        bot = new Tool("player2.png", false, TOOL_HEIGHT, TOOL_WIDTH,lim);
         
         tempTouch = new Vector3();
         
