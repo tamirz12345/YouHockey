@@ -54,7 +54,7 @@ public class Disk  extends Actor{
         float toolY = tool.getY() ;
 
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
-        		<= this.radius + tool.radius)
+        		<= this.radius + tool.R)
         {
         	if (!hitBall.isPlaying())
         	{

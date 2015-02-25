@@ -49,7 +49,7 @@ public class Limits {
     	
     	
     	
-    	left = (float) (5  * xUnit);
+    	left = 0;
     	bottom = (float) (5 * yUnit)  ;
     	top =gameHeight - bottom  ;
     	right= gameWidth -  left;
@@ -91,28 +91,32 @@ public class Limits {
 
 	public Vector2 validateTool(Tool t , float x , float y )
     {
-        Vector2 valid = new Vector2();
+        
         if (t.isBelow) {
-            valid.y = (float) Math.min(y , Gdx.graphics.getWidth() * mid)  + t.getHeight();
+            y = (float) Math.min(y , Gdx.graphics.getWidth() * mid)  + t.getHeight();
         }
 
         else {
-            valid.y = (float) Math.max(y, Gdx.graphics.getWidth() * mid )+ t.getHeight()   ;
+          y= (float) Math.max(y, Gdx.graphics.getWidth() * mid )+ t.getHeight()   ;
             
         }
         
         
         if ( x < left )
-        	valid.x = left  ;
-        if (x > right);
-        	valid.x = right;
-        if (y < bottom )
-        	valid.y = bottom;
+        	x = left  ;
+        if (x + t.getWidth()  > right)
+        {
+        	System.out.println(x + " > " + right);
+        	x = right - t.getWidth();
+        }
+        	
+        if (y - t.getHeight()< bottom )
+        	y = bottom + t.getHeight();
         if (y > top)
-        	valid.y = top;
+        	y = top;
          
     
-        return valid;
+        return new Vector2(x,y);
     }
 
 	public float getGameWidth() {

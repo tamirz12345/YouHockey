@@ -33,7 +33,7 @@ public class MainGame extends ScreenAdapter {
 	Vector3 tempTouch;
 	float height,width;
 	ShapeRenderer midLine , buttomGoal , topGoalLine;
-    final int TOOL_R = 15;
+    final int TOOL_R = 5;
     
     Disk disk;
     Texture diskT ;
