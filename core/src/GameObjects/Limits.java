@@ -48,10 +48,11 @@ public class Limits {
     	
     	
     	
-    	top =gameHeight - bottom  ;
+    	
     	left = (float) (5  * xUnit);
-    	right= gameWidth -  left;
     	bottom = (float) (5 * yUnit)  ;
+    	top =gameHeight - bottom  ;
+    	right= gameWidth -  left;
     }
 
     public float getMid() {
@@ -106,9 +107,9 @@ public class Limits {
         if (x > right);
         	valid.x = right;
         if (y < bottom )
-        	y = bottom;
+        	valid.y = bottom;
         if (y > top)
-        	y = top;
+        	valid.y = top;
          
     
         return valid;

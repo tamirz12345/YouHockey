@@ -88,7 +88,7 @@ public class MainGame extends ScreenAdapter {
         buttomGoal.begin(ShapeType.Line);
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
-        Gdx.gl20.glLineWidth(10 / camera.zoom);
+        Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
         buttomGoal.line(src.x , src.y , dst.x , dst.y , 
         		Color.BLUE , Color.BLUE);
         
