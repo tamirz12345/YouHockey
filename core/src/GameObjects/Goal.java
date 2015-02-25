@@ -13,17 +13,17 @@ public class Goal {
     public Goal(boolean isBottom , Limits game ) {
         if (isBottom) {
             this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
-            		, (float) (0.05 * game.getGameHeight()));
+            		, (float) game.bottom);
             this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
-            		(float) (0.05 * game.getGameHeight()));
+            		(float) game.bottom);
             
         }
         else
         {
         	this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
-            		, (float) (0.95 * game.getGameHeight()));
+            		, (float) game.top);
             this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
-            		(float) (0.95 * game.getGameHeight()));
+            		(float)game.top);
         }
         
         

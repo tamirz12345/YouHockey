@@ -13,7 +13,7 @@ public class Limits {
 	private float mid;
 	private float gameWidth;
 	private float gameHeight;
-	private  float top;
+	public  float top;
 	public float left;
 	public float right ; 
 	public float bottom;
@@ -25,15 +25,16 @@ public class Limits {
 	private float ScoreTop;
 	private Music goalSound ;
 	private Music ohSound ;
+	
+	private double xUnit ;
+	private double yUnit;
+	
     public Limits()
     {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
     	gameHeight = Gdx.graphics.getWidth();
-    	top = (float) (gameHeight * 0.95)  ;
-    	left = 0;
-    	right= gameWidth - 32;
-    	bottom = (float) (gameHeight *  0.05)  + 32;
+    	
     	
     	
     	ScoreBottom = 0 ;
@@ -41,6 +42,16 @@ public class Limits {
     	speedUnit = (float) (speedUnit * Math.sqrt(Math.pow(gameHeight , 2 ) + Math.pow(gameWidth , 2 )));
     	goalSound = Gdx.audio.newMusic(Gdx.files.internal("score.mp3"));
     	ohSound = Gdx.audio.newMusic(Gdx.files.internal("oh.mp3"));
+    	
+    	xUnit = 0.01 * gameWidth ;
+    	yUnit = 0.01 * gameHeight;
+    	
+    	
+    	
+    	top =gameHeight - bottom  ;
+    	left = (float) (5  * xUnit);
+    	right= gameWidth -  left;
+    	bottom = (float) (5 * yUnit)  ;
     }
 
     public float getMid() {
@@ -69,6 +80,14 @@ public class Limits {
 
 
 
+	public double getxUnit() {
+		return xUnit;
+	}
+
+	public double getyUnit() {
+		return yUnit;
+	}
+
 	public Vector2 validateTool(Tool t , float x , float y )
     {
         Vector2 valid = new Vector2();
@@ -82,11 +101,15 @@ public class Limits {
         }
         
         
-        if ( x < 0 )
-        	valid.x = 0  ;
-        if (x > this.getGameWidth() - t.getWidth());
-        	valid.x = this.getGameWidth() - t.getWidth();
-        	
+        if ( x < left )
+        	valid.x = left  ;
+        if (x > right);
+        	valid.x = right;
+        if (y < bottom )
+        	y = bottom;
+        if (y > top)
+        	y = top;
+         
     
         return valid;
     }
