@@ -158,12 +158,16 @@ public class Limits {
 
 	public void incBottom() {
 		this.ScoreBottom ++;
+		if (goalSound.isPlaying())
+			goalSound.stop();
 		goalSound.play();
 	}
 	
 	public void incTop()
 	{
 		this.ScoreTop ++;
+		if (ohSound.isPlaying())
+			ohSound.stop();
 		ohSound.play();
 	}
 	
