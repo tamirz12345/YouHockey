@@ -36,12 +36,12 @@ public class Menu extends ScreenAdapter{
 		camera = new OrthographicCamera();
 		
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
-		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 - 200, lim.getGameHeight() /2 + lim.getGameHeight() / 8);
+		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 - (float)(lim.getGameWidth() / 8.8), lim.getGameHeight() /2 + lim.getGameHeight() / 9);
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
         PlayButton = new Rectangle(temp1.x,
         		temp1.y,(float)300.0, (float)300.0);
 
-        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 - 200, lim.getGameHeight() /2 + lim.getGameHeight() / 4);
+        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 - (float)(lim.getGameWidth() / 8.8), lim.getGameHeight() /2 + lim.getGameHeight() / 4);
         PVPButton = new Rectangle(temp2.x,
                 temp2.y,(float)300.0, (float)300.0);
 
