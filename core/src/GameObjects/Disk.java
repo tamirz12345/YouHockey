@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.mygdx.game.UnitConvertor;
 
-public class Disk  extends Actor{
+public class Disk  extends Actor {
 	Texture texture = new Texture("disk.png");
 	float radius  ; 
 	boolean toHuman = false;

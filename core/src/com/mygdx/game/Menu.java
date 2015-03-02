@@ -16,13 +16,13 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Menu extends ScreenAdapter{
 	YouHockey game;
-	Rectangle PlayButton;
+	Rectangle PlayButton, PVPButton;
 	Texture playTexture;
 	Limits lim;
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	Vector3 tempTouch;
-	Vector2 temp;
+	Vector2 temp1, temp2;
 	Music m ;
 	boolean started = false;
 	public Menu(YouHockey youHockey) {
@@ -36,11 +36,15 @@ public class Menu extends ScreenAdapter{
 		camera = new OrthographicCamera();
 		
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
-		temp = UnitConvertor.toGame(lim.getGameWidth() / 2 - 150, lim.getGameHeight() /2 + 150);
+		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 - 200, lim.getGameHeight() /2 + lim.getGameHeight() / 8);
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
-        PlayButton = new Rectangle(temp.x,
-        		temp.y,(float)300.0, (float)300.0);
-        
+        PlayButton = new Rectangle(temp1.x,
+        		temp1.y,(float)300.0, (float)300.0);
+
+        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 - 200, lim.getGameHeight() /2 + lim.getGameHeight() / 4);
+        PVPButton = new Rectangle(temp2.x,
+                temp2.y,(float)300.0, (float)300.0);
+
         tempTouch = new Vector3();
         playTexture = new Texture("playButton.png");
         Gdx.input.setCatchBackKey(true);
@@ -51,8 +55,8 @@ public class Menu extends ScreenAdapter{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		
-		batch.draw(playTexture, temp.x, temp.y);
-		
+		batch.draw(playTexture, temp1.x, temp1.y);
+		batch.draw(playTexture, temp2.x, temp2.y);
 		batch.end();
 		if (started && !m.isPlaying())
 		{
@@ -60,22 +64,22 @@ public class Menu extends ScreenAdapter{
 		}
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
-			//tempTouch = UnitConvertor.toNormal(tempTouch);
 			
             if (PlayButton.contains(tempTouch.x, tempTouch.y))
             {
             	game.setScreen(new MainGame(game));
             	//m.play();
             	//started = true;
-            	
+            }
+
+            if (PVPButton.contains(tempTouch.x, tempTouch.y))
+            {
+                game.setScreen(new MainGame(game));
             }
 	    }
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK)){
 			System.exit(0);
-			
-			
-			
 		}
 		
 	}
