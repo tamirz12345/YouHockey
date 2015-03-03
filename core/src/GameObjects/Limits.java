@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.mygdx.game.UnitConvertor;
 
 /**
  * Created by user-pc on 03/02/2015.
@@ -190,6 +191,25 @@ public class Limits {
 		moveAction.setPosition(x, y);
 		a.addAction(moveAction);
 		
+	}
+	
+	
+	public Vector2 leftBottomCorner()
+	{
+		return UnitConvertor.toGame(this.left, this.bottom);
+	}
+	
+	public Vector2 leftTopCorner()
+	{
+		return UnitConvertor.toGame(this.left, this.top);
+	}
+	public Vector2 rightBottomCorner()
+	{
+		return UnitConvertor.toGame(this.right, this.bottom);
+	}
+	public Vector2 rightTopCorner()
+	{
+		return UnitConvertor.toGame(this.right, this.top);
 	}
 }
 

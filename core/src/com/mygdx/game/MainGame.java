@@ -81,6 +81,10 @@ public class MainGame extends ScreenAdapter {
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
         disk.update(t1, bot);
+        Vector2 leftB = lim.leftBottomCorner();
+        Vector2 leftT = lim.leftTopCorner();
+        Vector2 rightB = lim.rightBottomCorner();
+        Vector2 rightT = lim.rightTopCorner();
         midLine.begin(ShapeType.Line);
         midLine.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);        
         midLine.end();
@@ -89,9 +93,10 @@ public class MainGame extends ScreenAdapter {
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
         Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
-        buttomGoal.line(src.x , src.y , dst.x , dst.y , 
+        buttomGoal.line(src.x , src.y , leftB.x , leftB.y , 
         		Color.BLUE , Color.BLUE);
-        
+        buttomGoal.line(dst.x , dst.y , rightB.x , rightB.y , 
+        		Color.BLUE , Color.BLUE);
         
         buttomGoal.end();
         
@@ -99,7 +104,9 @@ public class MainGame extends ScreenAdapter {
         topGoalLine.begin(ShapeType.Line);
         src=  topGoal.getSrc(true);
         dst = topGoal.getDst(true);
-        topGoalLine.line(src.x , src.y , dst.x , dst.y , 
+        topGoalLine.line(src.x , src.y , leftT.x , leftT.y , 
+        		Color.BLUE , Color.BLUE);
+        topGoalLine.line(dst.x , dst.y , rightT.x , rightT.y , 
         		Color.BLUE , Color.BLUE);
         
         
