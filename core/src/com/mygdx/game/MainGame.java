@@ -32,7 +32,7 @@ public class MainGame extends ScreenAdapter {
     //resetButton resetB;
 	Vector3 tempTouch;
 	float height,width;
-	ShapeRenderer midLine , buttomGoal , topGoalLine;
+	ShapeRenderer  shaper;
     final int TOOL_R = 5;
     
     Disk disk;
@@ -69,9 +69,7 @@ public class MainGame extends ScreenAdapter {
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
 	    music.play();
-	    midLine = new ShapeRenderer();
-	    buttomGoal = new ShapeRenderer();
-	    topGoalLine =  new ShapeRenderer();
+	    shaper = new ShapeRenderer();
 	}
 
 	public void render (float delta) {
@@ -85,32 +83,33 @@ public class MainGame extends ScreenAdapter {
         Vector2 leftT = lim.leftTopCorner();
         Vector2 rightB = lim.rightBottomCorner();
         Vector2 rightT = lim.rightTopCorner();
-        midLine.begin(ShapeType.Line);
-        midLine.line(height * lim.getMid(), 0, height * lim.getMid(), width,Color.BLACK,Color.BLACK);        
-        midLine.end();
+       
+        shaper.begin(ShapeType.Line);
+        Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
         
-        buttomGoal.begin(ShapeType.Line);
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
-        Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
-        buttomGoal.line(src.x , src.y , leftB.x , leftB.y , 
+        
+        shaper.line(src.x , src.y , leftB.x , leftB.y , 
         		Color.BLUE , Color.BLUE);
-        buttomGoal.line(dst.x , dst.y , rightB.x , rightB.y , 
+        shaper.line(dst.x , dst.y , rightB.x , rightB.y , 
         		Color.BLUE , Color.BLUE);
-        
-        buttomGoal.end();
-        
-        
-        topGoalLine.begin(ShapeType.Line);
         src=  topGoal.getSrc(true);
         dst = topGoal.getDst(true);
-        topGoalLine.line(src.x , src.y , leftT.x , leftT.y , 
+        shaper.line(src.x , src.y , leftT.x , leftT.y , 
         		Color.BLUE , Color.BLUE);
-        topGoalLine.line(dst.x , dst.y , rightT.x , rightT.y , 
+        shaper.line(dst.x , dst.y , rightT.x , rightT.y , 
         		Color.BLUE , Color.BLUE);
+        shaper.line(rightB.x , rightB.y , rightT.x , rightT.y , 
+        		Color.BLUE , Color.BLUE);
+        shaper.line(leftB.x ,leftB.y , leftT.x , leftT.y , 
+        		Color.BLUE , Color.BLUE);
+        shaper.line(height * lim.getMid(), lim.getLeft(), height * lim.getMid(),
+        		lim.getRight(),Color.BLACK,Color.BLACK);  
+        shaper.end();
         
         
-        topGoalLine.end();
+        
         
         
         
