@@ -12,18 +12,18 @@ namespace HockeyServer
 {
     public partial class Form1 : Form
     {
+        int port = 3000;
         public Form1()
         {
             InitializeComponent();
-            Server server = new Server(getIpAddress(), 3000);
-            lblInfo.Text = "Listen at: " + server.tcpListener.LocalEndpoint.ToString();
+            Server server = new Server(port);
+            lblInfo.Text = "Listen at: " + getIpAddress().ToString() + ":" + port.ToString();
         }
 
         // returns the ip address of current computer
         private string getIpAddress()
         {
             IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName());
-            // IpAddress ="127.0.0.1";
             return Convert.ToString(localIP[localIP.Length - 2]);
         }
     }

@@ -15,6 +15,6 @@ namespace HockeyServer
         string getListener() { return this.ipListener; }
         void setPort(int port) { this. port = port; }
         void setInitiator(string initiator) { this.ipInitiator = initiator; }
-        void setInitiator(string listener) { this.ipListener = listener; }
+        void setListener(string listener) { this.ipListener = listener; }
     }
 }
