@@ -36,14 +36,16 @@ public class Menu extends ScreenAdapter{
 		camera = new OrthographicCamera();
 		
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
-		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 - (float)(lim.getGameWidth() / 8.8), lim.getGameHeight() /2 + lim.getGameHeight() / 9);
+		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 , (float) (lim.getyUnit() * 80));
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
         PlayButton = new Rectangle(temp1.x,
-        		temp1.y,(float)300.0, (float)300.0);
+        		temp1.y,(float) ((float)20 * lim.getyUnit()),
+        		(float) ((float)20 * lim.getyUnit()));
 
-        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 - (float)(lim.getGameWidth() / 8.8), lim.getGameHeight() /2 + lim.getGameHeight() / 4);
+        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 , (float) (lim.getyUnit() * 20));
         PVPButton = new Rectangle(temp2.x,
-                temp2.y,(float)300.0, (float)300.0);
+                temp2.y,(float) ((float)20 * lim.getyUnit()),
+        		(float) ((float)20 * lim.getyUnit()));
 
         tempTouch = new Vector3();
         playTexture = new Texture("playButton.png");
@@ -54,9 +56,10 @@ public class Menu extends ScreenAdapter{
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		batch.draw(playTexture, temp1.x, temp1.y , 
+				PlayButton.width , PlayButton.height);
 		
-		batch.draw(playTexture, temp1.x, temp1.y);
-		batch.draw(playTexture, temp2.x, temp2.y);
+		batch.draw(playTexture, temp2.x, temp2.y , PVPButton.width , PVPButton.height);
 		batch.end();
 		if (started && !m.isPlaying())
 		{
