@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Net;
 
 namespace HockeyServer
 {
@@ -14,6 +15,16 @@ namespace HockeyServer
         public Form1()
         {
             InitializeComponent();
+            Server server = new Server(getIpAddress(), 3000);
+            lblInfo.Text = "Listen at: " + server.tcpListener.LocalEndpoint.ToString();
+        }
+
+        // returns the ip address of current computer
+        private string getIpAddress()
+        {
+            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName());
+            // IpAddress ="127.0.0.1";
+            return Convert.ToString(localIP[localIP.Length - 2]);
         }
     }
 }
