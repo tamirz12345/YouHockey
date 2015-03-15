@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>AirHockey</name>
+	<name>ClientSide</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,7 +17,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1422106482066</id>
+			<id>1426439498868</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
