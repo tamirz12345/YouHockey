@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import GameObjects.Limits;
+import Network.ServerChat;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -23,8 +24,10 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
     public static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
 	boolean started = false;
+	Thread serverCon;
 	int countR = 0 ;
-	int rindurs = 500;
+	int rindurs = 50;
+	ServerChat sc ;
 	public MultiplayerLoadingScreen(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -35,8 +38,13 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		backgroundTexture = new Texture(Gdx.files.internal("loading.png"));
         lim = new Limits();
         spriteBatch = new SpriteBatch();
+        sc = new ServerChat();
+        serverCon = new Thread(sc);
+        serverCon.start();
+       
 	}
 
+	@SuppressWarnings("deprecation")
 	public void render (float delta) {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		spriteBatch.begin();
@@ -44,7 +52,13 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         spriteBatch.end();
         
         if (countR++==rindurs)
+        {
+        	sc.stop();
+        	serverCon.interrupt();
         	game.setScreen(new MainGame(game));
+        	
+        }
+        	
 		
 }
 }
