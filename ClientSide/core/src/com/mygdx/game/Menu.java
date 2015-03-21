@@ -77,7 +77,7 @@ public class Menu extends ScreenAdapter{
 
             if (PVPButton.contains(tempTouch.x, tempTouch.y))
             {
-                game.setScreen(new MainGame(game));
+                game.setScreen(new MultiplayerLoadingScreen(game));
             }
 	    }
 		
