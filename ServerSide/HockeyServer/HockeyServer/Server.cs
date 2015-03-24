@@ -32,7 +32,7 @@ namespace HockeyServer
             {
                 var remoteEP = new IPEndPoint(IPAddress.Any, this.port);
                 var data = this.socket.Receive(ref remoteEP);
-                //Console.Write("receive data from " + remoteEP.ToString());
+                Console.Write("receive data from " + remoteEP.ToString());
                 //udpServer.Send(new byte[] { 1 }, 1, remoteEP); // reply back
             }
         }

@@ -1,7 +1,17 @@
 package com.mygdx.game;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import GameObjects.Limits;
 import Network.ServerChat;
+import android.os.AsyncTask;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -24,10 +34,10 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
     public static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
 	boolean started = false;
-	Thread serverCon;
+	
 	int countR = 0 ;
 	int rindurs = 50;
-	ServerChat sc ;
+	
 	public MultiplayerLoadingScreen(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -38,9 +48,10 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		backgroundTexture = new Texture(Gdx.files.internal("loading.png"));
         lim = new Limits();
         spriteBatch = new SpriteBatch();
-        sc = new ServerChat();
-        serverCon = new Thread(sc);
-        serverCon.start();
+        
+        ServerChat Schat = new ServerChat();
+        Schat.execute();
+        
        
 	}
 
@@ -51,14 +62,61 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		spriteBatch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
         spriteBatch.end();
         
-        if (countR++==rindurs)
-        {
-        	sc.stop();
-        	serverCon.interrupt();
-        	game.setScreen(new MainGame(game));
-        	
-        }
+        
         	
 		
 }
+	
+	private class ServerChat extends AsyncTask<String, Void, String> {
+
+        protected String doInBackground(String... params) {
+    		  BufferedReader inFromUser =
+    	         new BufferedReader(new InputStreamReader(System.in));
+    	      DatagramSocket clientSocket;
+    	      InetAddress IPAddress ;
+    	      byte[] sendData = new byte[1024];
+    	      byte[] receiveData = new byte[1024];
+			try {
+				clientSocket = new DatagramSocket();
+				IPAddress = InetAddress.getByName("192.168.223.1");
+				String sentence = "660";
+			    sendData = sentence.getBytes();
+			    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
+			    		IPAddress,3000);
+			    clientSocket.send(sendPacket);
+			    DatagramPacket receivePacket = new DatagramPacket(receiveData, 
+			    		receiveData.length);
+			    clientSocket.receive(receivePacket);
+			    String modifiedSentence = new String(receivePacket.getData());
+			    System.out.println("FROM SERVER:" + modifiedSentence);
+			    clientSocket.close();
+			} catch (SocketException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	      
+	      
+	     
+          return "Executed";
+        }
+
+        protected void onPostExecute(String result) {
+            
+            // txt.setText(result);
+            // might want to change "executed" for the returned string passed
+            // into onPostExecute() but that is upto you
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
 }
