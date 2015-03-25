@@ -76,6 +76,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
     	      InetAddress IPAddress ;
     	      byte[] sendData = new byte[1024];
     	      byte[] receiveData = new byte[1024];
+    	      screenSwitch sSwitch = new screenSwitch();
 			try {
 				clientSocket = new DatagramSocket();
 				IPAddress = InetAddress.getByName("192.168.223.1");
@@ -93,12 +94,15 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 			} catch (SocketException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Gdx.app.postRunnable(sSwitch);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Gdx.app.postRunnable(sSwitch);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				Gdx.app.postRunnable(sSwitch);
 			}
     	      
 	      
@@ -108,9 +112,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 
         protected void onPostExecute(String result) {
             
-            // txt.setText(result);
-            // might want to change "executed" for the returned string passed
-            // into onPostExecute() but that is upto you
+            
         }
 
         @Override
@@ -119,4 +121,16 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         @Override
         protected void onProgressUpdate(Void... values) {}
     }
+	
+	
+	private class screenSwitch implements Runnable
+	{
+
+		@Override
+		public void run() {
+			game.setScreen(new Menu(game));
+			
+		}
+		
+	}
 }
