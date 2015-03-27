@@ -80,7 +80,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 			try {
 				clientSocket = new DatagramSocket();
 				IPAddress = InetAddress.getByName("192.168.223.1");
-				String sentence = "660";
+				String sentence = "660-";
 			    sendData = sentence.getBytes();
 			    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
 			    		IPAddress,3000);
