@@ -13,3 +13,4 @@ C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\HockeyServer\HockeyServer\obj\
 C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.Form1.resources
 C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.Properties.Resources.resources
 C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.csproj.GenerateResource.Cache
+D:\Users\user-pc\Documents\Magshimim\YouHockey\ServerSide\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.csprojResolveAssemblyReference.cache

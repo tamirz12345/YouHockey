@@ -17,6 +17,7 @@ namespace HockeyServer
     {
         private Thread listenThread;
         UdpClient socket;
+        Queue<string> clientIps = new Queue<string>(); 
         int port; 
 
         public Server(int port)
@@ -24,6 +25,7 @@ namespace HockeyServer
             this.port = port;
             this.socket = new UdpClient(port);
             this.listenThread = new Thread(new ThreadStart(listen));
+            this.listenThread.Start();
         }
 
         public void listen()
@@ -34,16 +36,10 @@ namespace HockeyServer
                 var data = this.socket.Receive(ref remoteEP);
                 Console.Write("receive data from " + remoteEP.ToString());
                 //udpServer.Send(new byte[] { 1 }, 1, remoteEP); // reply back
+                
             }
         }
 
-    }
-
-    /*
-     * how to use a thread:
-     * this.sendScreenshot = new Thread(new ThreadStart(sendData));
-     * this.sendScreenshot.Start();
-     */
-      
+    } 
 }
 
