@@ -23,5 +23,19 @@ namespace HockeyServer
         {
             return this.message.Substring(0, message.IndexOf('-'));
         }
+
+        public List<string> cutParameters()
+        {
+            string[] words = this.message.Split('-');
+            List<string> parameters = new List<string>();
+
+            foreach (string word in words)
+            {
+                parameters.Add(word);
+            }
+
+            return parameters;
+        }
+
     }
 }

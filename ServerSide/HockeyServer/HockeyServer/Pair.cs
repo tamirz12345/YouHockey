@@ -7,14 +7,12 @@ namespace HockeyServer
 {
     class Pair
     {
-        private string ipInitiator, ipListener;
-        private int port;
+        public ClientInfo listener, initiator;
 
-        int getPort() { return this.port; }
-        string getInitiator() { return this.ipInitiator; }
-        string getListener() { return this.ipListener; }
-        void setPort(int port) { this. port = port; }
-        void setInitiator(string initiator) { this.ipInitiator = initiator; }
-        void setListener(string listener) { this.ipListener = listener; }
+        public Pair(ClientInfo listener, ClientInfo initiator)
+        {
+            this.listener = listener;
+            this.initiator = initiator; 
+        }
     }
 }
