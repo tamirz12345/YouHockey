@@ -35,7 +35,6 @@ public class Message implements IMessage {
 			
 		
 		}
-		return true;
 	}
 
 	@Override
