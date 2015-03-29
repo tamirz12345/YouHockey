@@ -16,8 +16,25 @@ public class Message implements IMessage {
 		
 	}
 	
-	private boolean checkType(String string , String[] parts) {
+	private boolean checkType(String type , String[] parts) {
+		switch (type)
+		{
+		case "660":
+			return (parts.length == 1 );
+		case "303":
+			return (parts.length == 1 );
+		case "661":
+			return (parts.length == 2);
+		case "301":
+			return (parts.length == 3);
+		case "300":
+			return (parts.length == 1);
+		default:
+			return false;
+			
+			
 		
+		}
 		return true;
 	}
 
