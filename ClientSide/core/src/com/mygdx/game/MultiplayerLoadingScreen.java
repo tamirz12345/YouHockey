@@ -10,6 +10,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import GameObjects.Limits;
+import Network.Message;
 import Network.ServerChat;
 import android.os.AsyncTask;
 
@@ -70,6 +71,9 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
+        	  String ipS = "192.168.223.1";
+        	  int portS = 3000;
+        	  
     		  BufferedReader inFromUser =
     	         new BufferedReader(new InputStreamReader(System.in));
     	      DatagramSocket clientSocket;
@@ -79,16 +83,18 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
     	      screenSwitch sSwitch = new screenSwitch();
 			try {
 				clientSocket = new DatagramSocket();
-				IPAddress = InetAddress.getByName("192.168.223.1");
-				String sentence = "660";
+				IPAddress = InetAddress.getByName(ipS);
+				String sentence = "660-";
 			    sendData = sentence.getBytes();
 			    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
-			    		IPAddress,3000);
+			    		IPAddress,portS);
 			    clientSocket.send(sendPacket);
+			    
 			    DatagramPacket receivePacket = new DatagramPacket(receiveData, 
 			    		receiveData.length);
 			    clientSocket.receive(receivePacket);
 			    String modifiedSentence = new String(receivePacket.getData());
+			    Message m= new Message(modifiedSentence);
 			    System.out.println("FROM SERVER:" + modifiedSentence);
 			    clientSocket.close();
 			} catch (SocketException e) {
