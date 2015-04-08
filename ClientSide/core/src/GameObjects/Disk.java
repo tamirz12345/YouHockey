@@ -26,7 +26,7 @@ public class Disk  extends Actor {
     Music hitBall;
     Music hitWall;
     float rSize = 7;
-    private float bottomLim;
+    private float bottomLim , rightLim;
     public Disk(Limits game) {
 		super();
 		this.game = game;
@@ -38,6 +38,7 @@ public class Disk  extends Actor {
 		Random r = new Random();
 		downSpawn = r.nextInt(2) % 2 == 0;
 		bottomLim = game.getBottom() + this.getHeight();
+		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Top && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getRight()) > bottomLim  && l.getY(game.getRight()) < game.getTop())
+	    	if (l.getY(rightLim) > bottomLim  && l.getY(rightLim) < game.getTop())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -142,7 +143,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getRight()) > bottomLim && l.getY(game.getRight()) < game.getTop())
+	    	if (l.getY(rightLim) > bottomLim && l.getY(rightLim) < game.getTop())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -167,7 +168,7 @@ public class Disk  extends Actor {
 	    	break;
 	    	
 	    case Right:
-	    	this.addMoveToAction(game.getRight(),l.getY(game.getRight()));
+	    	this.addMoveToAction(rightLim,l.getY(rightLim));
 	    	break;
 	    }
 	}
@@ -185,7 +186,7 @@ public class Disk  extends Actor {
 		
         if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
         {
-        	if (targetLoc!= null && this.getX() == targetLoc.x && (int)this.getY() == (int)targetLoc.y)
+        	if (targetLoc!= null && (int)this.getX() == (int)targetLoc.x && (int)this.getY() == (int)targetLoc.y)
         	{
         		float newA = this.l.getA() * (- 1);
         		
@@ -205,7 +206,7 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Top && this.getY() == game.getTop())
+        		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop())
         		{
         			if (this.getX() >= game.leftGoal  * game.getGameWidth() - 32&&
         					this.getX() <= game.rightGoal * game.getGameWidth())
@@ -219,13 +220,13 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Left && this.getX() == game.getLeft())
+        		if (targetW == Wall.Left && (int)this.getX() == (int)game.getLeft())
         		{
         			wX = Wall.Right;
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Right && this.getX() == game.getRight())
+        		if (targetW == Wall.Right && (int)this.getX() == (int)rightLim)
         		{
         			wX = Wall.Left;
         			changed = true;
