@@ -16,28 +16,48 @@ namespace HockeyServer
     class Server
     {
         private Thread listenThread;
-        UdpClient socket;
         Queue<ClientInfo> clientInfo = new Queue<ClientInfo>(); 
-        int port; 
+        int port;
+        IPEndPoint ip;
+        Socket socket;
 
         public Server(int port)
         {
-            this.port = port;
+            /*this.port = port;
             this.socket = new UdpClient(port);
             this.listenThread = new Thread(new ThreadStart(listen));
             this.listenThread.Start();
+             * */
+            this.ip = new IPEndPoint(IPAddress.Any, 9050);
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 
+            this.socket.Bind(this.ip);         
         }
 
         public void listen()
         {
             while (true)
             {
-                var remoteEP = new IPEndPoint(IPAddress.Any, this.port);
-                var data = this.socket.Receive(ref remoteEP);
-                // Console.Write("receive data from " + remoteEP.ToString());
-                // udpServer.Send(new byte[] { 1 }, 1, remoteEP); // reply back
-                Message msg = new Message(data);
-                handleCommand(msg, remoteEP.ToString());             
+                socket.Listen(10);
+                Socket client = socket.Accept();
+                IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+
+                Console.WriteLine("Connected with {0} at port {1}", clientep.Address, clientep.Port);
+                // string welcome = "Welcome to my test server";
+                // data = Encoding.ASCII.GetBytes(welcome);
+                // client.Send(data, data.Length, SocketFlags.None);
+
+                /* data = new byte[1024];
+                recv = client.Receive(data);
+                if (recv == 0)
+                    break;
+
+                Console.WriteLine(
+                         Encoding.ASCII.GetString(data, 0, recv));
+                client.Send(data, recv, SocketFlags.None);
+                */
+
+                //Message msg = new Message(data);
+                //handleCommand(msg, remoteEP.ToString());             
             }
         }
 
