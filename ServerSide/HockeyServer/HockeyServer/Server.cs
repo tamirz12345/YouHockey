@@ -30,7 +30,9 @@ namespace HockeyServer
              * */
             this.ip = new IPEndPoint(IPAddress.Any, 9050);
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 
-            this.socket.Bind(this.ip);         
+            this.socket.Bind(this.ip);
+            this.listenThread = new Thread(new ThreadStart(listen));
+            this.listenThread.Start();
         }
 
         public void listen()
