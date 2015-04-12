@@ -73,7 +73,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
-        	  String ipS = "localhost";
+        	  String ipS = "192.168.223.1";
         	  int portS = 3000;
         	  
         	  String sentence;
@@ -81,7 +81,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
         	  Socket clientSocket;
 			try {
-				  clientSocket = new Socket("localhost", portS);
+				  clientSocket = new Socket(ipS, portS);
 				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				  sentence = "660-";
