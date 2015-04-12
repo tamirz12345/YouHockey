@@ -1,11 +1,13 @@
 package com.mygdx.game;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -71,46 +73,30 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
-        	  String ipS = "192.168.223.1";
+        	  String ipS = "localhost";
         	  int portS = 3000;
         	  
-    		  BufferedReader inFromUser =
-    	         new BufferedReader(new InputStreamReader(System.in));
-    	      DatagramSocket clientSocket;
-    	      InetAddress IPAddress ;
-    	      byte[] sendData = new byte[1024];
-    	      byte[] receiveData = new byte[1024];
-    	      screenSwitch sSwitch = new screenSwitch();
+        	  String sentence;
+        	  String modifiedSentence;
+        	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
+        	  Socket clientSocket;
 			try {
-				clientSocket = new DatagramSocket();
-				IPAddress = InetAddress.getByName(ipS);
-				String sentence = "660-";
-			    sendData = sentence.getBytes();
-			    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length,
-			    		IPAddress,portS);
-			    clientSocket.send(sendPacket);
-			    
-			    DatagramPacket receivePacket = new DatagramPacket(receiveData, 
-			    		receiveData.length);
-			    clientSocket.receive(receivePacket);
-			    String modifiedSentence = new String(receivePacket.getData());
-			    Message m= new Message(modifiedSentence);
-			    System.out.println("FROM SERVER:" + modifiedSentence);
-			    clientSocket.close();
-			} catch (SocketException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				Gdx.app.postRunnable(sSwitch);
+				  clientSocket = new Socket("localhost", portS);
+				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				  sentence = "660-";
+				  outToServer.writeBytes(sentence );
+				  modifiedSentence = inFromServer.readLine();
+				  System.out.println("FROM SERVER: " + modifiedSentence);
+				  clientSocket.close();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Gdx.app.postRunnable(sSwitch);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Gdx.app.postRunnable(sSwitch);
 			}
-    	      
+        	  
 	      
 	     
           return "Executed";
