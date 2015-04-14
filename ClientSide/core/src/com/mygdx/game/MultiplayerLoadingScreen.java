@@ -86,11 +86,12 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 			try {
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
-				  clientSocket.connect(serverAddress , 2000);
+				  clientSocket.connect(serverAddress , 5000);
 				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				  sentence = "660-";
 				  outToServer.writeBytes(sentence );
+
 				  modifiedSentence = inFromServer.readLine();
 				  System.out.println("FROM SERVER: " + modifiedSentence);
 				  clientSocket.close();
