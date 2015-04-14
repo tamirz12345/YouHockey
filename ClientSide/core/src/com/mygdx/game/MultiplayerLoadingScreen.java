@@ -7,9 +7,12 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.channels.ClosedByInterruptException;
 
 import GameObjects.Limits;
 import Network.Message;
@@ -75,13 +78,15 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         protected String doInBackground(String... params) {
         	  String ipS = "192.168.223.1";
         	  int portS = 3000;
-        	  
+        	  InetSocketAddress serverAddress;
         	  String sentence;
         	  String modifiedSentence;
         	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
         	  Socket clientSocket;
 			try {
-				  clientSocket = new Socket(ipS, portS);
+				  clientSocket = new Socket();
+				  serverAddress = new InetSocketAddress(ipS , portS);
+				  clientSocket.connect(serverAddress , 2000);
 				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				  sentence = "660-";
