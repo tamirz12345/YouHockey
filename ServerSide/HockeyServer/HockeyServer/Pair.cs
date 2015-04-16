@@ -8,11 +8,15 @@ namespace HockeyServer
     class Pair
     {
         public ClientInfo listener, initiator;
+        public Boolean isReady;
 
-        public Pair(ClientInfo listener, ClientInfo initiator)
+        public Pair(ClientInfo listener = null, ClientInfo initiator = null)
         {
             this.listener = listener;
-            this.initiator = initiator; 
+            this.initiator = initiator;
+
+            if (this.listener != null && this.initiator != null)
+                this.isReady = true; 
         }
     }
 }
