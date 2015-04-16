@@ -76,11 +76,12 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
-        	  String ipS = "192.168.223.1";
+        	  String ipS = "192.168.43.13";
         	  int portS = 3000;
         	  InetSocketAddress serverAddress;
         	  String sentence;
-        	  String modifiedSentence;
+        	  String recivedString;
+        	  Message m ;
         	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
         	  Socket clientSocket;
 			try {
@@ -92,8 +93,15 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  sentence = "660-";
 				  outToServer.writeBytes(sentence );
 
-				  modifiedSentence = inFromServer.readLine();
-				  System.out.println("FROM SERVER: " + modifiedSentence);
+				  recivedString = inFromServer.readLine();
+				  m = new Message(recivedString);
+				   
+				  System.out.println("FROM SERVER: " + m.getType());
+				  
+				  
+				  
+				  
+				  
 				  clientSocket.close();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
