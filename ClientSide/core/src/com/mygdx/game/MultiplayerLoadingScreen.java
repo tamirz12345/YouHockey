@@ -7,9 +7,12 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.channels.ClosedByInterruptException;
 
 import GameObjects.Limits;
 import Network.Message;
@@ -73,19 +76,22 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
-        	  String ipS = "localhost";
+        	  String ipS = "192.168.223.1";
         	  int portS = 3000;
-        	  
+        	  InetSocketAddress serverAddress;
         	  String sentence;
         	  String modifiedSentence;
         	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
         	  Socket clientSocket;
 			try {
-				  clientSocket = new Socket("localhost", portS);
+				  clientSocket = new Socket();
+				  serverAddress = new InetSocketAddress(ipS , portS);
+				  clientSocket.connect(serverAddress , 5000);
 				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				  sentence = "660-";
 				  outToServer.writeBytes(sentence );
+
 				  modifiedSentence = inFromServer.readLine();
 				  System.out.println("FROM SERVER: " + modifiedSentence);
 				  clientSocket.close();
