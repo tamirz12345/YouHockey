@@ -42,18 +42,23 @@ namespace HockeyServer
                 socket.Listen(10);
                 Socket client = socket.Accept();
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
-
-                Console.WriteLine("Connected with {0} at port {1}", clientep.Address, clientep.Port);
+                Thread handleThread =  new Thread(() => handleCommand(client));
+                handleThread.Start();
+                // Console.WriteLine("Connected with {0} at port {1}", clientep.Address, clientep.Port);
                 // string welcome = "Welcome to my test server";
                 // data = Encoding.ASCII.GetBytes(welcome);
                 // client.Send(data, data.Length, SocketFlags.None);
+                /*
+                byte[] data = new byte[1024];
+                int recv = client.Receive(data);
 
-                /* data = new byte[1024];
-                recv = client.Receive(data);
-                if (recv == 0)
-                    break;
+                if (recv != 0)
+                {
+                    Message msg = new Message(data);
+                    handleCommand(msg, ""); 
+                }*/
 
-                Console.WriteLine(
+               /* Console.WriteLine(
                          Encoding.ASCII.GetString(data, 0, recv));
                 client.Send(data, recv, SocketFlags.None);
                 */
@@ -63,8 +68,14 @@ namespace HockeyServer
             }
         }
 
-        void handleCommand(Message msg, string ip)
+        void handleCommand(Socket client)
         {
+            IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+            byte[] data = new byte[1024];
+            int recv = client.Receive(data);
+            Message msg = new Message(data);
+            
+
             string opcode = msg.cutOpcode();
             List<string> parameters = msg.cutParameters();
 
@@ -72,15 +83,15 @@ namespace HockeyServer
             {
                 bool isExist = false;
 
-                foreach (ClientInfo client in this.clientInfo)
+                foreach (ClientInfo clientInfo in this.clientInfo)
                 {
-                    if (client.ip == ip)
+                    if (clientInfo.ip == clientep.ToString())
                         isExist = true;
                 }
 
                 if (!isExist)
                 {
-                    this.clientInfo.Enqueue(new ClientInfo(ip));
+                    this.clientInfo.Enqueue(new ClientInfo(clientep.ToString()));
                 }
             }
         }
