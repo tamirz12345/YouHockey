@@ -20,13 +20,13 @@ namespace HockeyServer
             foreach (Pair pair in this.pairQueue)
             {
                 if (pair.listener.ip == checkClient.ip.ToString())
-                    return false;
+                    return true;
 
                 if (pair.initiator.ip == checkClient.ip.ToString())
-                    return false;
+                    return true;
             }
 
-            return true; 
+            return false; 
         }
 
         public void insertClient(ClientInfo newClient)
@@ -45,7 +45,7 @@ namespace HockeyServer
                     i++;
                 }
 
-                if (i != -1)
+                if (indexAvailable != -1)
                 {
                     this.pairQueue.ElementAt(i).initiator = newClient;
                 }
