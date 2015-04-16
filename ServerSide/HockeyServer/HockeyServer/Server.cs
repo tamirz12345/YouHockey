@@ -16,8 +16,8 @@ namespace HockeyServer
     class Server
     {
         private Thread listenThread;
-        Queue<ClientInfo> clientInfo = new Queue<ClientInfo>(); 
-        int port;
+        Queue<ClientInfo> clientInfo = new Queue<ClientInfo>();
+       // List<Pair<ClientInfo, ClientInfo>> pairs = new List<Pair<ClientInfo, ClientInfo>()>(); 
         IPEndPoint ip;
         Socket socket;
 
@@ -92,6 +92,8 @@ namespace HockeyServer
                 if (!isExist)
                 {
                     this.clientInfo.Enqueue(new ClientInfo(clientep.ToString()));
+                    data = Encoding.ASCII.GetBytes("300-");
+                    client.Send(data, data.Length, SocketFlags.None);
                 }
             }
         }
