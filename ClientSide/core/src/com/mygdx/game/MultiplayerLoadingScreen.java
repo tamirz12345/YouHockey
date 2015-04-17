@@ -76,14 +76,14 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	private class ServerChat extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String... params) {
-        	  String ipS = "192.168.43.13";
+        	  String ipS = "192.168.1.107";
         	  int portS = 3000;
         	  InetSocketAddress serverAddress;
         	  String sentence;
         	  String recivedString;
         	  Message m ;
         	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        	  Socket clientSocket;
+        	  Socket clientSocket = null;
 			try {
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
@@ -103,12 +103,16 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  
 				  
 				  clientSocket.close();
+				  
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
+				returnToMenu();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				returnToMenu();
 			}
         	  
 	      
@@ -126,17 +130,29 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 
         @Override
         protected void onProgressUpdate(Void... values) {}
+        
+        
+        
+        @Override
+		protected void onCancelled() {
+		
+			super.onCancelled();
+		}
+
+		public void returnToMenu()
+        {
+        	Gdx.app.postRunnable(new Runnable() {
+				
+				@Override
+				public void run() {
+					game.setScreen(new Menu(game));
+					
+				}
+			});
+        	
+        }
     }
 	
 	
-	private class screenSwitch implements Runnable
-	{
-
-		@Override
-		public void run() {
-			game.setScreen(new Menu(game));
-			
-		}
-		
-	}
+	
 }
