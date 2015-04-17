@@ -104,7 +104,7 @@ public class MainGame extends ScreenAdapter {
         		Color.BLUE , Color.BLUE);
         shaper.line(leftB.x ,leftB.y , leftT.x , leftT.y , 
         		Color.BLUE , Color.BLUE);
-        shaper.line(height * lim.getMid(), lim.getLeft(), height * lim.getMid(),
+        shaper.line(lim.calcMid(), lim.getLeft(), lim.calcMid(),
         		lim.getRight(),Color.BLACK,Color.BLACK);  
         shaper.end();
         

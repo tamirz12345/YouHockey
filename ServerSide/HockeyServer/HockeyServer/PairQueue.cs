@@ -19,10 +19,10 @@ namespace HockeyServer
         {
             foreach (Pair pair in this.pairQueue)
             {
-                if (pair.listener.ip == checkClient.ip.ToString())
+                if (pair.listener != null   && pair.listener.ip == checkClient.ip.ToString())
                     return true;
 
-                if (pair.initiator.ip == checkClient.ip.ToString())
+                if (pair.initiator != null && pair.initiator.ip == checkClient.ip.ToString())
                     return true;
             }
 

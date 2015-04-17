@@ -59,7 +59,15 @@ public class Limits {
     public float getMid() {
 		return mid;
 	}
-
+    
+    public float calcMid()
+    {
+    	return this.getMid() * (this.top + this.bottom);
+    }
+    
+    
+    
+    
 	public void setMid(float mid) {
 		this.mid = mid;
 	}
