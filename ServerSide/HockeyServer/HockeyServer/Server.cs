@@ -81,7 +81,7 @@ namespace HockeyServer
             if (opcode == "660")
             {
                 this.pairQueue.insertClient(new ClientInfo(clientep.ToString(), 0));
-                data = Encoding.ASCII.GetBytes("300-");
+                data = Encoding.ASCII.GetBytes("300-\n");
                 client.Send(data, data.Length, SocketFlags.None);
             }
         }
