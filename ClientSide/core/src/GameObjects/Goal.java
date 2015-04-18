@@ -1,7 +1,7 @@
 package GameObjects;
 
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.UnitConvertor;
+import com.mygdx.Screens.UnitConvertor;
 
 /**
  * Created by user-pc on 19/02/2015.

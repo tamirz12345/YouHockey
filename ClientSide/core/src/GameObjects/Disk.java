@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.mygdx.game.UnitConvertor;
+import com.mygdx.Screens.UnitConvertor;
 
 public class Disk  extends Actor {
 	Texture texture = new Texture("disk.png");

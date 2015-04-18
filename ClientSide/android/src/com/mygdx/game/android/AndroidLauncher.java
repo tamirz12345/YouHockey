@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.mygdx.game.YouHockey;
-import com.mygdx.game.MainGame;
+import com.mygdx.Screens.MainGame;
+import com.mygdx.Screens.YouHockey;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

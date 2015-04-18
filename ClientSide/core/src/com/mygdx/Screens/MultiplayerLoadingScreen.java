@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.Screens;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -73,30 +73,34 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		
 }
 	
-	private class ServerChat extends AsyncTask<String, Void, String> {
-
+	public class ServerChat extends AsyncTask<String, Void, String> {
+		String ipS = "192.168.1.106";
+	  	int portS = 3000;
+	  	InetSocketAddress serverAddress;
+	  	String sentence;
+	  	String recivedString;
+	  	Message m ;
+	  	DataOutputStream outToServer ;
+		BufferedReader inFromServer ;
+	  	Socket clientSocket = null;
+		
+		
+		
+		
         protected String doInBackground(String... params) {
-        	  String ipS = "192.168.1.107";
-        	  int portS = 3000;
-        	  InetSocketAddress serverAddress;
-        	  String sentence;
-        	  String recivedString;
-        	  Message m ;
-        	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        	  Socket clientSocket = null;
+        	  
 			try {
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
 				  clientSocket.connect(serverAddress , 5000);
-				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				  sentence = "660-";
-				  outToServer.writeBytes(sentence );
-
-				  recivedString = inFromServer.readLine();
-				  m = new Message(recivedString);
+				  outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				  inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				  if (gameRequest())
+				  {
+					  System.out.println("Waiting To rival \n");
+				  }
 				   
-				  System.out.println("FROM SERVER: " + m.getType());
+				  
 				  
 				  
 				  
@@ -141,6 +145,20 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 
 		public void returnToMenu()
         {
+			
+			if (clientSocket.isConnected())
+			{
+				sentence = "405-";
+				try {
+					
+					outToServer.writeBytes(sentence );
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}
+			}
         	Gdx.app.postRunnable(new Runnable() {
 				
 				@Override
@@ -151,6 +169,39 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 			});
         	
         }
+		
+		
+		
+		
+		public boolean gameRequest()
+		{
+			
+			sentence = "660-";
+			try {
+				
+				outToServer.writeBytes(sentence );
+				recivedString = inFromServer.readLine();
+				m = new Message(recivedString);
+				if (m.getType().compareTo("300") == 0 )
+				{
+					return true;
+				}
+				if (m.getType().compareTo("403") == 0 )
+				{
+					// To be updated for now it returns to menu
+					
+					return false;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
+
+			
+			
+			return false;
+		}
     }
 	
 	

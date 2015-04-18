@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.mygdx.game.UnitConvertor;
+import com.mygdx.Screens.UnitConvertor;
 
 /**
  * Created by user-pc on 03/02/2015.
@@ -62,7 +62,7 @@ public class Limits {
     
     public float calcMid()
     {
-    	return this.getMid() * (this.top + this.bottom);
+    	return (float) ((this.getMid() ) * (this.top + this.bottom));
     }
     
     
@@ -102,11 +102,11 @@ public class Limits {
     {
         
         if (t.isBelow) {
-            y = (float) Math.min(y , Gdx.graphics.getWidth() * mid)  + t.getHeight();
+            y = (float) Math.min(y , this.calcMid()) ;
         }
 
         else {
-          y= (float) Math.max(y, Gdx.graphics.getWidth() * mid )+ t.getHeight()   ;
+          y= (float) Math.max(y, this.calcMid())+ t.getHeight()  ;
             
         }
         
