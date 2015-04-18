@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -90,6 +91,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         protected String doInBackground(String... params) {
         	  
 			try {
+				  int freePort = findPort(1025, 10000);
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
 				  clientSocket.connect(serverAddress , 5000);
@@ -135,6 +137,26 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         @Override
         protected void onProgressUpdate(Void... values) {}
         
+        
+        
+        
+        public int findPort(int start , int end) throws IOException
+        {
+        	ServerSocket s = new ServerSocket(0);
+        	
+        	for (int i = start ; i < end ; i ++ ) {
+                try {
+                	
+                    ServerSocket temp = new ServerSocket(i);
+                    return i;
+                } catch (IOException ex) {
+                    continue; // try next port
+                }
+            }
+
+            // if the program gets here, no port in the range was found
+            throw new IOException("no free port found");
+        }
         
         
         @Override
