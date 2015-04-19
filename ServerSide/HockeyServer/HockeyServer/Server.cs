@@ -50,25 +50,28 @@ namespace HockeyServer
 
         void handleCommand(Socket client)
         {
-            IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
-            byte[] data = new byte[1024];
-            int recv = client.Receive(data);
-            Message msg = new Message(data);
-
-            string opcode = msg.cutOpcode();
-            Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
-            List<string> parameters = msg.cutParameters();
-
-            if (opcode == "660")
+            while (true)
             {
-                this.pairQueue.insertClient(new ClientInfo(clientep.ToString(), 0));
-                data = Encoding.ASCII.GetBytes("300-\n");
-                client.Send(data, data.Length, SocketFlags.None);
-            }
+                IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+                byte[] data = new byte[1024];
+                int recv = client.Receive(data);
+                Message msg = new Message(data);
 
-            if (opcode == "405")
-            {
-                this.pairQueue.deleteClient((new ClientInfo(clientep.ToString())));
+                string opcode = msg.cutOpcode();
+                Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
+                List<string> parameters = msg.cutParameters();
+
+                if (opcode == "660")
+                {
+                    this.pairQueue.insertClient(new ClientInfo(clientep.ToString(), 0));
+                    data = Encoding.ASCII.GetBytes("300-\n");
+                    client.Send(data, data.Length, SocketFlags.None);
+                }
+
+                if (opcode == "405")
+                {
+                    this.pairQueue.deleteClient((new ClientInfo(clientep.ToString())));
+                }
             }
         }
     } 

@@ -47,8 +47,8 @@ namespace HockeyServer
 
                 if (indexAvailable != -1)
                 {
-                    this.pairQueue.ElementAt(i).initiator = newClient;
-                    this.pairQueue.ElementAt(i).isFull = true; 
+                    this.pairQueue.ElementAt(indexAvailable).initiator = newClient;
+                    this.pairQueue.ElementAt(indexAvailable).isFull = true; 
                 }
                 else
                 {
@@ -69,7 +69,7 @@ namespace HockeyServer
                     if (pair.listener.ip == client.ip.ToString())
                         this.pairQueue.ElementAt(index).listener = null;
 
-                    if (pair.initiator.ip == client.ip.ToString())
+                    else if (pair.initiator.ip == client.ip.ToString())
                         this.pairQueue.ElementAt(index).initiator = null; 
 
                     index++;
