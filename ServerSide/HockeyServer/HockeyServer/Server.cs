@@ -15,23 +15,21 @@ namespace HockeyServer
 {
     class Server
     {
-        private Thread listenThread;
+        private Thread listenThread, matchThread;
         PairQueue pairQueue = new PairQueue();
         IPEndPoint ip;
         Socket socket;
 
         public Server(int port)
         {
-            /*this.port = port;
-            this.socket = new UdpClient(port);
-            this.listenThread = new Thread(new ThreadStart(listen));
-            this.listenThread.Start();
-             * */
             this.ip = new IPEndPoint(IPAddress.Any, port);
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); 
             this.socket.Bind(this.ip);
             this.listenThread = new Thread(new ThreadStart(listen));
             this.listenThread.Start();
+
+            this.matchThread = new Thread(new ThreadStart(match));
+            this.matchThread.Start();
         }
 
         public void listen()
@@ -43,7 +41,7 @@ namespace HockeyServer
                 Socket client = socket.Accept();
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
                 Console.WriteLine(clientep.ToString() + " Accepted!");
-                Thread handleThread =  new Thread(() => handleCommand(client));
+                Thread handleThread =  new Thread(() => handleCommand(client)); // handle command thread for each client
                 handleThread.Start();            
             }
         }
@@ -52,7 +50,7 @@ namespace HockeyServer
         {
             while (true)
             {
-                IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+                IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint; 
                 byte[] data = new byte[1024];
                 int recv = client.Receive(data);
                 Message msg = new Message(data);
@@ -63,14 +61,34 @@ namespace HockeyServer
 
                 if (opcode == "660")
                 {
-                    this.pairQueue.insertClient(new ClientInfo(clientep.ToString(), 0));
+                    this.pairQueue.insertClient(new ClientInfo(client, clientep.ToString()));
                     data = Encoding.ASCII.GetBytes("300-\n");
                     client.Send(data, data.Length, SocketFlags.None);
                 }
 
                 if (opcode == "405")
                 {
-                    this.pairQueue.deleteClient((new ClientInfo(clientep.ToString())));
+                    this.pairQueue.deleteClient((new ClientInfo(null, clientep.ToString())));
+                }
+
+                if (opcode == "661")
+                {
+                    
+                }
+            }
+        }
+
+        void match()
+        {
+            while (true)
+            {
+                Pair pair = this.pairQueue.getFullPair();
+                byte[] data = new byte[1024];
+
+                if (pair != null)
+                {
+                    data = Encoding.ASCII.GetBytes("303-\n");
+                    pair.listener.socket.Send(data, data.Length, SocketFlags.None); 
                 }
             }
         }

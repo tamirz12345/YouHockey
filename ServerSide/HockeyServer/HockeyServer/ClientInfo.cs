@@ -2,23 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Sockets;
 
 namespace HockeyServer
 {
     class ClientInfo
     {
         public string ip;
-        public int port;
+        public Socket socket;
 
-        public ClientInfo(string ip = "", int port = 0)
+        public ClientInfo(Socket socket, string ip = "")
         {
             this.ip = ip;
-            this.port = port; 
+            this.socket = socket; 
         }
 
-        bool isEqual(ClientInfo clientInfo)
+        public bool isEqual(ClientInfo clientInfo)
         {
-            if (this.ip == clientInfo.ip && this.port == clientInfo.port)
+            if (this.ip == clientInfo.ip)
                 return true;
 
             return false; 

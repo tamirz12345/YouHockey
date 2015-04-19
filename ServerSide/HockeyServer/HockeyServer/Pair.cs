@@ -9,6 +9,7 @@ namespace HockeyServer
     {
         public ClientInfo listener, initiator;
         public Boolean isFull;
+        public int port; 
 
         public Pair(ClientInfo listener = null, ClientInfo initiator = null)
         {
