@@ -73,7 +73,20 @@ namespace HockeyServer
 
                 if (opcode == "661")
                 {
+                    string port = parameters[1];
+                    Pair p = this.pairQueue.getSpecifiedPair(new ClientInfo(client, clientep.ToString()));
+                    this.pairQueue.addPortToPair(Convert.ToInt32(port), new ClientInfo(client, clientep.ToString()));
+
+                    // sending to the listener:
+                    string ipInitiator = p.initiator.ip;
+                    string[] words = ipInitiator.Split(':');
+                    data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
                     
+                    
+                    // sending to the initiator:
+                    string ipListener = p.listener.ip;
+                    ipListener.Split(':');
+                    data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
                 }
             }
         }
@@ -85,10 +98,11 @@ namespace HockeyServer
                 Pair pair = this.pairQueue.getFullPair();
                 byte[] data = new byte[1024];
 
-                if (pair != null)
+                if (pair != null && pair.startedReaching == false)
                 {
                     data = Encoding.ASCII.GetBytes("303-\n");
-                    pair.listener.socket.Send(data, data.Length, SocketFlags.None); 
+                    pair.listener.socket.Send(data, data.Length, SocketFlags.None);
+                    pair.startedReaching = true; 
                 }
             }
         }

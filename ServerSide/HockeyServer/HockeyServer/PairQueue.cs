@@ -7,7 +7,7 @@ namespace HockeyServer
 {
     class PairQueue
     {
-        Queue<Pair> pairQueue;
+        public Queue<Pair> pairQueue;
 
         public PairQueue()
         {
@@ -82,8 +82,45 @@ namespace HockeyServer
         {
             foreach (Pair pair in this.pairQueue)
             {
-                if (pair.isFull == true)
+                if (pair.isFull == true && pair.startedReaching == false)
                     return pair; 
+            }
+
+            return null;
+        }
+
+        public int getSpecifiedPairIndex(ClientInfo client)
+        {
+            int i = 0; 
+            foreach (Pair pair in this.pairQueue)
+            {
+                if (pair.listener.isEqual(client))
+                    return i; 
+
+                else if (pair.initiator.isEqual(client))
+                    return i;
+
+                i++;
+            }
+
+            return i;
+        }
+
+        public void addPortToPair(int port, ClientInfo client)
+        {
+            int index = this.getSpecifiedPairIndex(client); 
+            this.pairQueue.ElementAt(index).port = port;
+        }
+
+        public Pair getSpecifiedPair(ClientInfo client)
+        {
+            foreach (Pair pair in this.pairQueue)
+            {
+                if (pair.listener.isEqual(client))
+                    return pair;
+
+                else if (pair.initiator.isEqual(client))
+                    return pair;
             }
 
             return null;
