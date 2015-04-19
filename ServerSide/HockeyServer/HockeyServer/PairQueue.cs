@@ -38,7 +38,7 @@ namespace HockeyServer
 
                 foreach (Pair pair in this.pairQueue)
                 {
-                    if (pair.isReady == false)
+                    if (pair.isFull == false)
                     {
                         indexAvailable = i; 
                     }
@@ -48,6 +48,7 @@ namespace HockeyServer
                 if (indexAvailable != -1)
                 {
                     this.pairQueue.ElementAt(i).initiator = newClient;
+                    this.pairQueue.ElementAt(i).isFull = true; 
                 }
                 else
                 {
@@ -55,6 +56,37 @@ namespace HockeyServer
                 }
 
             }
+        }
+
+        public void deleteClient(ClientInfo client)
+        {
+            int index = 0;
+
+            if (this.isExist(client))
+            {
+                foreach (Pair pair in this.pairQueue)
+                {
+                    if (pair.listener.ip == client.ip.ToString())
+                        this.pairQueue.ElementAt(index).listener = null;
+
+                    if (pair.initiator.ip == client.ip.ToString())
+                        this.pairQueue.ElementAt(index).initiator = null; 
+
+                    index++;
+                }
+            }
+        }
+
+        // returns the first full pair that needs to be handled
+        public Pair getFullPair()
+        {
+            foreach (Pair pair in this.pairQueue)
+            {
+                if (pair.isFull == true)
+                    return pair; 
+            }
+
+            return null;
         }
     }
 }

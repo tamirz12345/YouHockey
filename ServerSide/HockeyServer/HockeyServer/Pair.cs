@@ -8,7 +8,7 @@ namespace HockeyServer
     class Pair
     {
         public ClientInfo listener, initiator;
-        public Boolean isReady;
+        public Boolean isFull;
 
         public Pair(ClientInfo listener = null, ClientInfo initiator = null)
         {
@@ -16,7 +16,9 @@ namespace HockeyServer
             this.initiator = initiator;
 
             if (this.listener != null && this.initiator != null)
-                this.isReady = true; 
+                this.isFull = true;
+            else
+                this.isFull = false; 
         }
     }
 }

@@ -39,31 +39,12 @@ namespace HockeyServer
             while (true)
             {
                 socket.Listen(10);
+                Console.WriteLine("Listening...");
                 Socket client = socket.Accept();
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+                Console.WriteLine(clientep.ToString() + " Accepted!");
                 Thread handleThread =  new Thread(() => handleCommand(client));
-                handleThread.Start();
-                // Console.WriteLine("Connected with {0} at port {1}", clientep.Address, clientep.Port);
-                // string welcome = "Welcome to my test server";
-                // data = Encoding.ASCII.GetBytes(welcome);
-                // client.Send(data, data.Length, SocketFlags.None);
-                /*
-                byte[] data = new byte[1024];
-                int recv = client.Receive(data);
-
-                if (recv != 0)
-                {
-                    Message msg = new Message(data);
-                    handleCommand(msg, ""); 
-                }*/
-
-               /* Console.WriteLine(
-                         Encoding.ASCII.GetString(data, 0, recv));
-                client.Send(data, recv, SocketFlags.None);
-                */
-
-                //Message msg = new Message(data);
-                //handleCommand(msg, remoteEP.ToString());             
+                handleThread.Start();            
             }
         }
 
@@ -73,16 +54,21 @@ namespace HockeyServer
             byte[] data = new byte[1024];
             int recv = client.Receive(data);
             Message msg = new Message(data);
-            
 
             string opcode = msg.cutOpcode();
+            Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
             List<string> parameters = msg.cutParameters();
 
             if (opcode == "660")
             {
                 this.pairQueue.insertClient(new ClientInfo(clientep.ToString(), 0));
-                data = Encoding.ASCII.GetBytes("300-");
+                data = Encoding.ASCII.GetBytes("300-\n");
                 client.Send(data, data.Length, SocketFlags.None);
+            }
+
+            if (opcode == "405")
+            {
+                this.pairQueue.deleteClient((new ClientInfo(clientep.ToString())));
             }
         }
     } 

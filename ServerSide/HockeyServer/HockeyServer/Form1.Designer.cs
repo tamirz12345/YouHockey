@@ -44,7 +44,7 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ip Address:";
-          
+           // this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
             // lblInfo
             // 
@@ -54,6 +54,7 @@
             this.lblInfo.Size = new System.Drawing.Size(56, 25);
             this.lblInfo.TabIndex = 0;
             this.lblInfo.Text = "label1";
+          //  this.lblInfo.Click += new System.EventHandler(this.lblInfo_Click);
             // 
             // Form1
             // 

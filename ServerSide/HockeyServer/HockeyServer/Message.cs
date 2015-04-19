@@ -7,7 +7,7 @@ namespace HockeyServer
 {
     class Message
     {
-        string message;
+        public string message;
 
         public Message(byte[] arr)
         {

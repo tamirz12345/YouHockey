@@ -16,8 +16,10 @@ namespace HockeyServer
         public Form1()
         {
             InitializeComponent();
+            this.Visible = false; 
             Server server = new Server(port);
             lblInfo.Text = "Listen at: " + getIpAddress().ToString() + ":" + port.ToString();
+            this.Hide(); 
         }
 
         // returns the ip address of current computer
