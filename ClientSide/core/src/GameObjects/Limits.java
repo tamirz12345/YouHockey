@@ -22,8 +22,8 @@ public class Limits {
 	public float leftGoal = (float) 0.35  ;
 	public float rightGoal = (float) 0.65 ;
 	private float  speedUnit = (float) 0.55; 
-	private float ScoreBottom;
-	private float ScoreTop;
+	private Integer ScoreBottom;
+	private Integer ScoreTop;
 	private Music goalSound ;
 	private Music ohSound ;
 	
@@ -219,5 +219,15 @@ public class Limits {
 	{
 		return UnitConvertor.toGame(this.right, this.top);
 	}
+
+	public Integer getScoreBottom() {
+		return ScoreBottom;
+	}
+
+	public Integer getScoreTop() {
+		return ScoreTop;
+	}
+	
+	
 }
 
