@@ -101,7 +101,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  {
 					  System.out.println("Waiting To rival \n");
 				  }
-				  
+				  String rival = pairUp(freePort);
 				  
 				  
 				  
