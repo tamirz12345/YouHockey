@@ -101,14 +101,10 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  {
 					  System.out.println("Waiting To rival \n");
 				  }
-				   
 				  
 				  
 				  
 				  
-				  
-				  
-				  clientSocket.close();
 				  
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -227,9 +223,36 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		
 		
 		
-		public String pairUp()
+		public String pairUp(int fPort)
 		{
-			
+			try {
+				
+				
+				recivedString = inFromServer.readLine();
+				m = new Message(recivedString);
+				
+				if (m.getType().compareTo("301") == 0 )
+				{
+					String params[]= m.getParameters();
+					return params[0] + ":" + params[1];
+					
+					
+				}
+				
+				else if  (m.getType().compareTo("303") == 0)
+				{
+					sentence = Integer.toString(fPort);
+					sentence = "661-"+sentence;
+					outToServer.writeBytes(sentence );
+					
+					
+					
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
 			
 			return null;
 		}
