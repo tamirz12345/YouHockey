@@ -14,9 +14,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -40,7 +42,9 @@ public class MainGame extends ScreenAdapter {
     Limits lim;
     Stage stage;
     float delta;
-
+    Vector2 textBoxPos ;
+    private String ScoreString;
+    BitmapFont yourBitmapFontName;
     public MainGame(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -49,6 +53,7 @@ public class MainGame extends ScreenAdapter {
 	public void create () {
     	lim = new Limits();
 		batch = new SpriteBatch();
+		
 		camera = new OrthographicCamera();
 		height = Gdx.graphics.getWidth();
 		width = Gdx.graphics.getHeight();
@@ -70,14 +75,20 @@ public class MainGame extends ScreenAdapter {
 	    music.setLooping(true);
 	    music.play();
 	    shaper = new ShapeRenderer();
+	    
+	    
+	    ScoreString = "0 : 0";
+	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
+	    
 	}
 
 	public void render (float delta) {
-		Gdx.gl.glClearColor(1, 10, 1, 1);
+		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//delta = Gdx.graphics.getDeltaTime();
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
+        
         disk.update(t1, bot);
         Vector2 leftB = lim.leftBottomCorner();
         Vector2 leftT = lim.leftTopCorner();
@@ -91,22 +102,22 @@ public class MainGame extends ScreenAdapter {
         Vector2  dst = bottomGoal.getDst(true);
         
         shaper.line(src.x , src.y , leftB.x , leftB.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.YELLOW , Color.YELLOW);
         shaper.line(dst.x , dst.y , rightB.x , rightB.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.YELLOW , Color.YELLOW);
         src=  topGoal.getSrc(true);
         dst = topGoal.getDst(true);
         shaper.line(src.x , src.y , leftT.x , leftT.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.YELLOW , Color.YELLOW);
         shaper.line(dst.x , dst.y , rightT.x , rightT.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.YELLOW, Color.YELLOW);
         shaper.line(rightB.x , rightB.y , rightT.x , rightT.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.GREEN , Color.GREEN);
         shaper.line(leftB.x ,leftB.y , leftT.x , leftT.y , 
-        		Color.BLUE , Color.BLUE);
+        		Color.GREEN , Color.GREEN);
         
         
-		float j=  (float) (lim.calcMid() * 1.2);
+		
         shaper.line(lim.calcMid(), lim.getLeft(), lim.calcMid(),
         		lim.getRight(),Color.BLACK,Color.BLACK);  
         shaper.end();
@@ -117,6 +128,14 @@ public class MainGame extends ScreenAdapter {
         
         
 		batch.begin();
+		
+		yourBitmapFontName.setColor(Color.BLACK);
+		textBoxPos = bottomGoal.getSrc(true);
+		textBoxPos=  UnitConvertor.toGame(textBoxPos.x , textBoxPos.y);
+		ScoreString = Integer.toString(lim.getScoreBottom()) + " : " + 
+				Integer.toString(lim.getScoreTop());
+		yourBitmapFontName.draw(batch, ScoreString,25,100);
+		
 		stage.draw();
 		batch.end();
 
