@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.mygdx.game.UnitConvertor;
+import com.mygdx.Screens.UnitConvertor;
 
 /**
  * Created by user-pc on 25/01/2015.

@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.Screens;
 
 import GameObjects.Disk;
 import GameObjects.Goal;
@@ -104,7 +104,10 @@ public class MainGame extends ScreenAdapter {
         		Color.BLUE , Color.BLUE);
         shaper.line(leftB.x ,leftB.y , leftT.x , leftT.y , 
         		Color.BLUE , Color.BLUE);
-        shaper.line(height * lim.getMid(), lim.getLeft(), height * lim.getMid(),
+        
+        
+		float j=  (float) (lim.calcMid() * 1.2);
+        shaper.line(lim.calcMid(), lim.getLeft(), lim.calcMid(),
         		lim.getRight(),Color.BLACK,Color.BLACK);  
         shaper.end();
         
@@ -120,8 +123,10 @@ public class MainGame extends ScreenAdapter {
 		if(Gdx.input.isTouched()) {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
 			tempTouch = UnitConvertor.toNormal(tempTouch);
-            t1.move(tempTouch.x, tempTouch.y);
+			t1.move(tempTouch.x, tempTouch.y);
             bot.move(t1.getX(), height - t1.getY());
+			
+            
 	    }
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK)){

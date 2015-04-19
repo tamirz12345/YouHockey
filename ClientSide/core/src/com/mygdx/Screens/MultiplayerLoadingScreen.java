@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.Screens;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -73,42 +74,51 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		
 }
 	
-	private class ServerChat extends AsyncTask<String, Void, String> {
-
+	public class ServerChat extends AsyncTask<String, Void, String> {
+		String ipS = "192.168.1.106";
+	  	int portS = 3000;
+	  	InetSocketAddress serverAddress;
+	  	String sentence;
+	  	String recivedString;
+	  	Message m ;
+	  	DataOutputStream outToServer ;
+		BufferedReader inFromServer ;
+	  	Socket clientSocket = null;
+		
+		
+		
+		
         protected String doInBackground(String... params) {
-        	  String ipS = "192.168.43.13";
-        	  int portS = 3000;
-        	  InetSocketAddress serverAddress;
-        	  String sentence;
-        	  String recivedString;
-        	  Message m ;
-        	  BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        	  Socket clientSocket;
+        	  
 			try {
+				  int freePort = findPort(1025, 10000);
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
 				  clientSocket.connect(serverAddress , 5000);
-				  DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-				  BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				  sentence = "660-";
-				  outToServer.writeBytes(sentence );
-
-				  recivedString = inFromServer.readLine();
-				  m = new Message(recivedString);
+				  outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				  inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				  if (gameRequest())
+				  {
+					  System.out.println("Waiting To rival \n");
+				  }
 				   
-				  System.out.println("FROM SERVER: " + m.getType());
+				  
 				  
 				  
 				  
 				  
 				  
 				  clientSocket.close();
+				  
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
+				returnToMenu();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				returnToMenu();
 			}
         	  
 	      
@@ -126,17 +136,96 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 
         @Override
         protected void onProgressUpdate(Void... values) {}
+        
+        
+        
+        
+        public int findPort(int start , int end) throws IOException
+        {
+        	ServerSocket s = new ServerSocket(0);
+        	
+        	for (int i = start ; i < end ; i ++ ) {
+                try {
+                	
+                    ServerSocket temp = new ServerSocket(i);
+                    return i;
+                } catch (IOException ex) {
+                    continue; // try next port
+                }
+            }
+
+            // if the program gets here, no port in the range was found
+            throw new IOException("no free port found");
+        }
+        
+        
+        @Override
+		protected void onCancelled() {
+		
+			super.onCancelled();
+		}
+
+		public void returnToMenu()
+        {
+			
+			if (clientSocket.isConnected())
+			{
+				sentence = "405-";
+				try {
+					
+					outToServer.writeBytes(sentence );
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					
+				}
+			}
+        	Gdx.app.postRunnable(new Runnable() {
+				
+				@Override
+				public void run() {
+					game.setScreen(new Menu(game));
+					
+				}
+			});
+        	
+        }
+		
+		
+		
+		
+		public boolean gameRequest()
+		{
+			
+			sentence = "660-";
+			try {
+				
+				outToServer.writeBytes(sentence );
+				recivedString = inFromServer.readLine();
+				m = new Message(recivedString);
+				if (m.getType().compareTo("300") == 0 )
+				{
+					return true;
+				}
+				if (m.getType().compareTo("403") == 0 )
+				{
+					// To be updated for now it returns to menu
+					
+					return false;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+			}
+
+			
+			
+			return false;
+		}
     }
 	
 	
-	private class screenSwitch implements Runnable
-	{
-
-		@Override
-		public void run() {
-			game.setScreen(new Menu(game));
-			
-		}
-		
-	}
+	
 }
