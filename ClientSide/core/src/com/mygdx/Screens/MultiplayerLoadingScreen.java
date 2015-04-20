@@ -27,6 +27,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -35,7 +36,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	YouHockey game;
-	
+	public String status ="Connecting to server";
 	Limits lim;
 	public static Texture backgroundTexture;
     public static Sprite backgroundSprite;
@@ -44,7 +45,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	
 	int countR = 0 ;
 	int rindurs = 50;
-	
+	BitmapFont font ;
 	public MultiplayerLoadingScreen(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -58,7 +59,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         
         ServerChat Schat = new ServerChat();
         Schat.execute();
-        
+        font = new BitmapFont();
        
 	}
 
@@ -66,7 +67,9 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	public void render (float delta) {
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		spriteBatch.begin();
-		spriteBatch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
+		//spriteBatch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
+
+		font.draw(spriteBatch, status, 200, 200);
         spriteBatch.end();
         
         
