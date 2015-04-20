@@ -81,12 +81,14 @@ namespace HockeyServer
                     string ipInitiator = p.initiator.ip;
                     string[] words = ipInitiator.Split(':');
                     data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
-                    
+                    p.listener.socket.Send(data, data.Length, SocketFlags.None);
                     
                     // sending to the initiator:
                     string ipListener = p.listener.ip;
                     ipListener.Split(':');
                     data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
+                    p.initiator.socket.Send(data, data.Length, SocketFlags.None);
+                    
                 }
             }
         }
