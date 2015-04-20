@@ -245,7 +245,16 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 					sentence = "661-"+sentence;
 					outToServer.writeBytes(sentence );
 					
+					recivedString = inFromServer.readLine();
+					m = new Message(recivedString);
 					
+					if (m.getType().compareTo("301") == 0 )
+					{
+						String params[]= m.getParameters();
+						return params[0] + ":" + params[1];
+						
+						
+					}
 					
 				}
 			} catch (IOException e) {
