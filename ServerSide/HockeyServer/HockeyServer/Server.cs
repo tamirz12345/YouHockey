@@ -54,10 +54,13 @@ namespace HockeyServer
                 byte[] data = new byte[1024];
                 int recv = client.Receive(data);
                 Message msg = new Message(data);
-
+                Mutex m = new Mutex;
                 string opcode = msg.cutOpcode();
+                m.WaitOne();
                 Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
+                m.ReleaseMutex();
                 List<string> parameters = msg.cutParameters();
+                
 
                 if (opcode == "660")
                 {
@@ -95,6 +98,7 @@ namespace HockeyServer
 
         void match()
         {
+            Mutex m = new Mutex();
             while (true)
             {
                 Pair pair = this.pairQueue.getFullPair();
@@ -102,7 +106,9 @@ namespace HockeyServer
 
                 if (pair != null && pair.startedReaching == false)
                 {
+                    m.WaitOne();
                     data = Encoding.ASCII.GetBytes("303-\n");
+                    m.ReleaseMutex();
                     pair.listener.socket.Send(data, data.Length, SocketFlags.None);
                     pair.startedReaching = true; 
                 }

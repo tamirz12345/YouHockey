@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace HockeyServer
 {
@@ -17,15 +18,24 @@ namespace HockeyServer
 
         public Boolean isExist(ClientInfo checkClient)
         {
+            Mutex m = new Mutex();
+            m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
-                if (pair.listener != null   && pair.listener.isEqual(checkClient))
+                if (pair.listener != null && pair.listener.isEqual(checkClient))
+                {
                     return true;
+                    m.ReleaseMutex();
+                }
 
                 if (pair.initiator != null && pair.initiator.isEqual(checkClient))
+                {
+                    m.ReleaseMutex();
                     return true;
+                }
             }
 
+            m.ReleaseMutex();
             return false; 
         }
 
@@ -34,8 +44,10 @@ namespace HockeyServer
             if (!isExist(newClient))
             {
                 int indexAvailable = -1;
-                int i = 0; 
+                int i = 0;
 
+                Mutex m = new Mutex();
+                m.WaitOne();
                 foreach (Pair pair in this.pairQueue)
                 {
                     if (pair.isFull == false)
@@ -44,6 +56,7 @@ namespace HockeyServer
                     }
                     i++;
                 }
+                m.ReleaseMutex();
 
                 if (indexAvailable != -1)
                 {
@@ -61,7 +74,8 @@ namespace HockeyServer
         public void deleteClient(ClientInfo client)
         {
             int index = 0;
-
+            Mutex m = new Mutex();
+            m.WaitOne();
             if (this.isExist(client))
             {
                 foreach (Pair pair in this.pairQueue)
@@ -75,23 +89,28 @@ namespace HockeyServer
                     index++;
                 }
             }
+            m.ReleaseMutex();
         }
 
         // returns the first full pair that needs to be handled
         public Pair getFullPair()
         {
+            Mutex m = new Mutex();
+            m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
                 if (pair.isFull == true && pair.startedReaching == false)
                     return pair; 
             }
-
+            m.ReleaseMutex();
             return null;
         }
 
         public int getSpecifiedPairIndex(ClientInfo client)
         {
-            int i = 0; 
+            int i = 0;
+            Mutex m = new Mutex();
+            m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
                 if (pair.listener.isEqual(client))
@@ -102,7 +121,7 @@ namespace HockeyServer
 
                 i++;
             }
-
+            m.ReleaseMutex();
             return i;
         }
 
@@ -114,15 +133,23 @@ namespace HockeyServer
 
         public Pair getSpecifiedPair(ClientInfo client)
         {
+            Mutex m = new Mutex();
+            m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
                 if (pair.listener.isEqual(client))
+                {
+                    m.ReleaseMutex();
                     return pair;
+                }
 
                 else if (pair.initiator.isEqual(client))
+                {
+                    m.ReleaseMutex();
                     return pair;
+                }
             }
-
+            m.ReleaseMutex();
             return null;
         }
     }
