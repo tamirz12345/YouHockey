@@ -59,17 +59,21 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         
         ServerChat Schat = new ServerChat();
         Schat.execute();
-        font = new BitmapFont();
-       
+        font = new BitmapFont(Gdx.files.internal("data/calibri.fnt"), false);
+        
+
+
 	}
 
 	@SuppressWarnings("deprecation")
 	public void render (float delta) {
-		Gdx.gl.glClearColor(1, 10, 1, 1);
+		Gdx.gl.glClearColor((float)0.5,0.8f, (float)0.7, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		spriteBatch.begin();
 		//spriteBatch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
-
-		font.draw(spriteBatch, status, 200, 200);
+		font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
+		font.setScale(0.2f);
+		font.draw(spriteBatch, status, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         spriteBatch.end();
         
         
