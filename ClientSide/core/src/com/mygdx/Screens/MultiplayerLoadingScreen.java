@@ -82,7 +82,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 }
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
-		String ipS = "192.168.0.107";
+		String ipS = "192.168.1.108";
 	  	int portS = 3000;
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
@@ -91,7 +91,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	  	DataOutputStream outToServer ;
 		BufferedReader inFromServer ;
 	  	Socket clientSocket = null;
-		
+	  	String rival;
 		
 		
 		
@@ -108,7 +108,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  {
 					  System.out.println("Waiting To rival \n");
 				  }
-				  String rival = pairUp(freePort);
+				  rival = pairUp(freePort);
 				  
 				  
 				  
@@ -126,7 +126,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         	  
 	      
 	     
-          return "Executed";
+          return rival;
         }
 
         protected void onPostExecute(String result) {
@@ -240,8 +240,9 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				
 				if (m.getType().compareTo("301") == 0 )
 				{
-					String params[]= m.getParameters();
-					return params[0] + ":" + params[1];
+					String[] params= m.getParameters();
+					String ret = params[0] + ":" + params[1];
+					return ret;
 					
 					
 				}
@@ -257,8 +258,9 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 					
 					if (m.getType().compareTo("301") == 0 )
 					{
-						String params[]= m.getParameters();
-						return params[0] + ":" + params[1];
+						String[] params= m.getParameters();
+						String ret = params[0] + ":" + params[1];
+						return ret;
 						
 						
 					}

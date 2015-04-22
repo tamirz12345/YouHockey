@@ -34,13 +34,16 @@ namespace HockeyServer
 
         public void listen()
         {
+            Mutex m = new Mutex();
             while (true)
             {
                 socket.Listen(10);
                 Console.WriteLine("Listening...");
                 Socket client = socket.Accept();
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
+                m.WaitOne();
                 Console.WriteLine(clientep.ToString() + " Accepted!");
+                m.ReleaseMutex();
                 Thread handleThread =  new Thread(() => handleCommand(client)); // handle command thread for each client
                 handleThread.Start();            
             }
@@ -48,13 +51,14 @@ namespace HockeyServer
 
         void handleCommand(Socket client)
         {
+            string toSend; 
             while (true)
             {
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint; 
                 byte[] data = new byte[1024];
                 int recv = client.Receive(data);
                 Message msg = new Message(data);
-                Mutex m = new Mutex;
+                Mutex m = new Mutex();
                 string opcode = msg.cutOpcode();
                 m.WaitOne();
                 Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
@@ -65,8 +69,9 @@ namespace HockeyServer
                 if (opcode == "660")
                 {
                     this.pairQueue.insertClient(new ClientInfo(client, clientep.ToString()));
-                    data = Encoding.ASCII.GetBytes("300-\n");
-                    client.Send(data, data.Length, SocketFlags.None);
+                    toSend = "300-\n";
+                    data = Encoding.ASCII.GetBytes(toSend);
+                    client.Send(data, toSend.Length, SocketFlags.None);
                 }
 
                 if (opcode == "405")
@@ -83,14 +88,16 @@ namespace HockeyServer
                     // sending to the listener:
                     string ipInitiator = p.initiator.ip;
                     string[] words = ipInitiator.Split(':');
-                    data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
-                    p.listener.socket.Send(data, data.Length, SocketFlags.None);
+                    toSend = "301-" + words[0] + "-\n";
+                    data = Encoding.ASCII.GetBytes(toSend);
+                    p.listener.socket.Send(data, toSend.Length, SocketFlags.None);
                     
                     // sending to the initiator:
                     string ipListener = p.listener.ip;
                     ipListener.Split(':');
-                    data = Encoding.ASCII.GetBytes("301-" + words[1] + "-" + port);
-                    p.initiator.socket.Send(data, data.Length, SocketFlags.None);
+                    toSend = "301-" + words[0] + "-" + port + "-\n";
+                    data = Encoding.ASCII.GetBytes(toSend);
+                    p.initiator.socket.Send(data, toSend.Length, SocketFlags.None);
                     
                 }
             }
