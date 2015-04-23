@@ -88,7 +88,7 @@ namespace HockeyServer
                     // sending to the listener:
                     string ipInitiator = p.initiator.ip;
                     string[] words = ipInitiator.Split(':');
-                    toSend = "301-" + words[0] + "-\n";
+                    toSend = "301-" + words[0] + "- \n";
                     data = Encoding.ASCII.GetBytes(toSend);
                     p.listener.socket.Send(data, toSend.Length, SocketFlags.None);
                     

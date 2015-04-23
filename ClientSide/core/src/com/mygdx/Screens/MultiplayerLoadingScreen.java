@@ -232,6 +232,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		
 		public String pairUp(int fPort)
 		{
+			String ret = null;
 			try {
 				
 				
@@ -241,7 +242,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				if (m.getType().compareTo("301") == 0 )
 				{
 					String[] params= m.getParameters();
-					String ret = params[0] + ":" + params[1];
+					ret= params[0] + ":" + params[1];
 					return ret;
 					
 					
@@ -250,7 +251,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				else if  (m.getType().compareTo("303") == 0)
 				{
 					sentence = Integer.toString(fPort);
-					sentence = "661-"+sentence;
+					sentence = "661-"+sentence +"-";
 					outToServer.writeBytes(sentence );
 					
 					recivedString = inFromServer.readLine();
@@ -259,7 +260,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 					if (m.getType().compareTo("301") == 0 )
 					{
 						String[] params= m.getParameters();
-						String ret = params[0] + ":" + params[1];
+						ret = params[0] + ":" + params[1];
 						return ret;
 						
 						
@@ -271,8 +272,11 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				e.printStackTrace();
 				
 			}
-			
-			return null;
+			catch ( Exception e) {
+				// TODO: handle exception\
+				e.printStackTrace();
+			}
+			return ret;
 		}
     }
 	

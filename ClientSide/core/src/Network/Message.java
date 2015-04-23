@@ -45,7 +45,7 @@ public class Message implements IMessage {
 	@Override
 	public String[] getParameters() {
 		
-		return params;
+		return params.clone();
 	}
 	
 	
