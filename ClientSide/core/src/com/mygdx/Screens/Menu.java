@@ -38,16 +38,16 @@ public class Menu extends ScreenAdapter{
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
 		
 		
-		temp1 = UnitConvertor.toGame((float)lim.getxUnit() * 40 , (float) (lim.getyUnit() * 70));
+		temp1 = UnitConvertor.toGame((float)lim.getxUnit() * 20 , (float) (lim.getyUnit() * 70));
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
         PlayButton = new Rectangle(temp1.x,
         		temp1.y,(float) ((float)20 * lim.getxUnit()),
-        		(float) ((float)20 * lim.getyUnit()));
+        		(float) ((float)40 * lim.getyUnit()));
 
-        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 40, (float) (lim.getyUnit() * 50));
+        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 20, (float) (lim.getyUnit() * 60));
         PVPButton = new Rectangle(temp2.x,
                 temp2.y,(float) ((float)20 * lim.getxUnit()),
-        		(float) ((float)20 * lim.getyUnit()));
+        		(float) ((float)40 * lim.getyUnit()));
 
         tempTouch = new Vector3();
         playTexture = new Texture("bot.png");
