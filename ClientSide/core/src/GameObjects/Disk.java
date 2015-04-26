@@ -182,7 +182,11 @@ public class Disk  extends Actor {
     public void update(Tool t1 , Tool t2)
     {
     	this.checkCollision(t1);
-		this.checkCollision(t2);
+    	if (t2 != null)
+    	{
+    		this.checkCollision(t2);//Collision isn't chacked in multiplayer
+    	}
+		
 		
         if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
         {
