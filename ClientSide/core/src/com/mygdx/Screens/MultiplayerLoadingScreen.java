@@ -130,6 +130,8 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         }
 
         protected void onPostExecute(String result) {
+            String res = result;
+            System.out.println(res);
             
             
         }
