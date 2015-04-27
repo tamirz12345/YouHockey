@@ -1,11 +1,13 @@
 package com.mygdx.Screens;
 
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 
 import GameObjects.Disk;
 import GameObjects.Goal;
 import GameObjects.Limits;
 import GameObjects.Tool;
+import Network.Message;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -47,8 +49,10 @@ public class Multiplayer extends ScreenAdapter {
     Vector2 textBoxPos ;
     private String ScoreString;
     BitmapFont yourBitmapFontName;
-    public Multiplayer(YouHockey youHockey,Socket server  , String rival) {
+    public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr) {
     	this.game = youHockey;
+    	BlockingQueue<Message> toSend;
+    	BlockingQueue<Message> toHandel;
 		this.create();
 	}
 
