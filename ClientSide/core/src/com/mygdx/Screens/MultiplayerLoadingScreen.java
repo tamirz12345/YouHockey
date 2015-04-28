@@ -130,8 +130,17 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         }
 
         protected void onPostExecute(String result) {
+            final String res = result;
+            System.out.println(res);
             
-            
+            Gdx.app.postRunnable(new Runnable() {
+				
+				@Override
+				public void run() {
+					game.setScreen(new Multiplayer(game, clientSocket, res));
+					
+				}
+			});
         }
 
         @Override

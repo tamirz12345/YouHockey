@@ -17,7 +17,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Menu extends ScreenAdapter{
 	YouHockey game;
 	Rectangle PlayButton, PVPButton;
-	Texture playTexture;
+	Texture playTexture , pvpTexture;
 	Limits lim;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -36,19 +36,22 @@ public class Menu extends ScreenAdapter{
 		camera = new OrthographicCamera();
 		
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
-		temp1 = UnitConvertor.toGame(lim.getGameWidth() / 2 , (float) (lim.getyUnit() * 80));
+		
+		
+		temp1 = UnitConvertor.toGame((float)lim.getxUnit() * 20 , (float) (lim.getyUnit() * 70));
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
         PlayButton = new Rectangle(temp1.x,
-        		temp1.y,(float) ((float)20 * lim.getyUnit()),
-        		(float) ((float)20 * lim.getyUnit()));
+        		temp1.y,(float) ((float)20 * lim.getxUnit()),
+        		(float) ((float)40 * lim.getyUnit()));
 
-        temp2 = UnitConvertor.toGame(lim.getGameWidth() / 2 , (float) (lim.getyUnit() * 20));
+        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 20, (float) (lim.getyUnit() * 60));
         PVPButton = new Rectangle(temp2.x,
-                temp2.y,(float) ((float)20 * lim.getyUnit()),
-        		(float) ((float)20 * lim.getyUnit()));
+                temp2.y,(float) ((float)20 * lim.getxUnit()),
+        		(float) ((float)40 * lim.getyUnit()));
 
         tempTouch = new Vector3();
-        playTexture = new Texture("playButton.png");
+        playTexture = new Texture("bot.png");
+        pvpTexture = new Texture("pvp.png");
         Gdx.input.setCatchBackKey(true);
 	}
 
@@ -59,7 +62,7 @@ public class Menu extends ScreenAdapter{
 		batch.draw(playTexture, temp1.x, temp1.y , 
 				PlayButton.width , PlayButton.height);
 		
-		batch.draw(playTexture, temp2.x, temp2.y , PVPButton.width , PVPButton.height);
+		batch.draw(pvpTexture, temp2.x, temp2.y , PVPButton.width , PVPButton.height);
 		batch.end();
 		if (started && !m.isPlaying())
 		{
