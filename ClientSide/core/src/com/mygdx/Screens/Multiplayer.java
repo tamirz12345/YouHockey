@@ -1,13 +1,18 @@
 package com.mygdx.Screens;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import GameObjects.Disk;
 import GameObjects.Goal;
 import GameObjects.Limits;
 import GameObjects.Tool;
 import Network.Message;
+import android.os.AsyncTask;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -41,6 +46,16 @@ public class Multiplayer extends ScreenAdapter {
 	ShapeRenderer  shaper;
     final int TOOL_R = 5;
     
+    
+    
+    BlockingQueue<Message> toSend;
+	BlockingQueue<Message> toHandel;
+	Socket PassiveRival ;
+	ServerSocket ActiveRival;
+	InetSocketAddress rivalAddress;
+	
+	
+	
     Disk disk;
     Texture diskT ;
     Limits lim;
@@ -49,15 +64,40 @@ public class Multiplayer extends ScreenAdapter {
     Vector2 textBoxPos ;
     private String ScoreString;
     BitmapFont yourBitmapFontName;
-    public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr) {
+    public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
-    	BlockingQueue<Message> toSend;
-    	BlockingQueue<Message> toHandel;
+    	toSend = new LinkedBlockingDeque<Message>();
+    	toHandel = new LinkedBlockingDeque<Message>();
+    	
+    	String[] temp = rivalAddr.split(":");
+    	boolean inisiator = temp.length == 2 ; 
+    	if (inisiator)
+    	{
+    		rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
+    		try {
+    			PassiveRival = new Socket();
+    			PassiveRival.connect(rivalAddress, 5000);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	
+    	else
+    	{
+    		try {
+				ActiveRival = new ServerSocket(port);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    		
 		this.create();
 	}
 
 	public void create () {
-    	lim = new Limits();
+    	lim = new Limits(toSend);
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
@@ -165,5 +205,38 @@ public class Multiplayer extends ScreenAdapter {
 		
 	}
 	
+	
+	public class reciver extends AsyncTask<String, Void, String> 
+	{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
+	public class sender extends AsyncTask<String, Void, String> 
+	{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
+	public class handler extends AsyncTask<String, Void, String> 
+	{
+
+		@Override
+		protected String doInBackground(String... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
 	
 }

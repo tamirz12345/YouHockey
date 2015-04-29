@@ -1,5 +1,9 @@
 package GameObjects;
 
+import java.util.concurrent.BlockingQueue;
+
+import Network.Message;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
@@ -30,7 +34,9 @@ public class Limits {
 	private double xUnit ;
 	private double yUnit;
 	
-    public Limits()
+	BlockingQueue<Message> toSend;
+	boolean isMultiplayer = false;
+    public Limits(BlockingQueue<Message> q)
     {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
@@ -54,6 +60,14 @@ public class Limits {
     	bottom = (float) (5 * yUnit)  ;
     	top =gameHeight - bottom  ;
     	right= gameWidth -  left;
+    	
+    	
+    	if (q != null)
+    	{
+    		isMultiplayer = true;
+    		toSend = q;
+    	}
+    	
     }
 
     public float getMid() {

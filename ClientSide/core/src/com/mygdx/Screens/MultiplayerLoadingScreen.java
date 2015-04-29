@@ -54,7 +54,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 
 	public void create () {
 		backgroundTexture = new Texture(Gdx.files.internal("loading.png"));
-        lim = new Limits();
+        lim = new Limits(null);
         spriteBatch = new SpriteBatch();
         
         ServerChat Schat = new ServerChat();
@@ -92,13 +92,13 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		BufferedReader inFromServer ;
 	  	Socket clientSocket = null;
 	  	String rival;
-		
+	  	int freePort;
 		
 		
         protected String doInBackground(String... params) {
         	  
 			try {
-				  int freePort = findPort(1025, 10000);
+				  freePort = findPort(1025, 10000);
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
 				  clientSocket.connect(serverAddress , 5000);
@@ -132,13 +132,18 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         protected void onPostExecute(String result) {
             final String res = result;
             System.out.println(res);
-            
+            try {
+				clientSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             Gdx.app.postRunnable(new Runnable() {
 				
 				@Override
 				public void run() {
 					game.setScreen(new Multiplayer(game,
-							ipS+":" + Integer.toString(portS), res));
+							ipS+":" + Integer.toString(portS), res,freePort));
 					
 				}
 			});

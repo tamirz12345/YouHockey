@@ -31,7 +31,7 @@ public class Menu extends ScreenAdapter{
 	}
 
 	public void create () {
-    	lim = new Limits();
+    	lim = new Limits(null);
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		
