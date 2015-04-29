@@ -27,7 +27,7 @@ public class Disk  extends Actor {
     Music hitWall;
     float rSize = 7;
     private float bottomLim , rightLim;
-    public Disk(Limits game) {
+    public Disk(Limits game, int spawnL) {
 		super();
 		this.game = game;
 		this.radius  = (float) (rSize * game.getxUnit() );
@@ -35,8 +35,16 @@ public class Disk  extends Actor {
 		this.setHeight(radius * 2);
 		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
 		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
-		Random r = new Random();
-		downSpawn = r.nextInt(2) % 2 == 0;
+		if (game.isMultiplayer)
+		{
+			downSpawn = spawnL == 1 ;
+		}
+		else	
+		{
+			Random r = new Random();
+			downSpawn = r.nextInt(2) % 2 == 0;
+		}
+		
 		bottomLim = game.getBottom() + this.getHeight();
 		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
 	}

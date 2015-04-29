@@ -35,7 +35,7 @@ public class Limits {
 	private double yUnit;
 	
 	BlockingQueue<Message> toSend;
-	boolean isMultiplayer = false;
+	public boolean isMultiplayer = false;
     public Limits(BlockingQueue<Message> q)
     {
     	mid = (float) 0.5;

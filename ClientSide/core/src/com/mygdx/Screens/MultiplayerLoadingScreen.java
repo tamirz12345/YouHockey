@@ -275,7 +275,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 					if (m.getType().compareTo("301") == 0 )
 					{
 						String[] params= m.getParameters();
-						ret = params[0] + ":" + params[1];
+						ret = params[0] ;
 						return ret;
 						
 						

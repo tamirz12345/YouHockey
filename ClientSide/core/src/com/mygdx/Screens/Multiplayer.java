@@ -94,7 +94,7 @@ public class Multiplayer extends ScreenAdapter {
     		{
     			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
     			rival = new Socket();
-    			rival.connect(rivalAddress, 5000);
+    			rival.connect(rivalAddress, 15000);
     		}
     		else
     		{
@@ -109,8 +109,10 @@ public class Multiplayer extends ScreenAdapter {
 			if (inisiator)
 			{
 				Random r = new Random();
-				downSpawn = r.nextInt(2) % 2;
-				firstS += Integer.toString(downSpawn)+"-\n";
+				//downSpawn = r.nextInt(2) % 2;
+				//firstS += Integer.toString(downSpawn)+"-\n";
+				firstS="900-1-\n";
+				downSpawn = 1;
 				outToRival.writeBytes(firstS);
 				firstM= new Message(inFromRival.readLine());
 				if (firstM.getType().compareTo("990-") == 0 )
@@ -145,9 +147,11 @@ public class Multiplayer extends ScreenAdapter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			game.setScreen(new Menu(youHockey));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			game.setScreen(new Menu(youHockey));
 		}
     	
     	
@@ -177,7 +181,7 @@ public class Multiplayer extends ScreenAdapter {
         
         tempTouch = new Vector3();
         
-        disk = new Disk(lim);
+        disk = new Disk(lim, downSpawn);
         disk.spawn();
         stage = new Stage();
         stage.addActor(bot);

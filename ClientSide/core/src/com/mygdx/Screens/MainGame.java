@@ -63,7 +63,7 @@ public class MainGame extends ScreenAdapter {
         
         tempTouch = new Vector3();
         
-        disk = new Disk(lim);
+        disk = new Disk(lim , 0);
         disk.spawn();
         stage = new Stage();
         stage.addActor(bot);
