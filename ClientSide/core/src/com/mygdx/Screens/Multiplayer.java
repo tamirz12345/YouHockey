@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -58,7 +59,7 @@ public class Multiplayer extends ScreenAdapter {
 	InetSocketAddress rivalAddress;
 	
 	
-	
+	int downSpawn;
     Disk disk;
     Texture diskT ;
     Limits lim;
@@ -70,9 +71,14 @@ public class Multiplayer extends ScreenAdapter {
     
     boolean inisiator , rivalReady = false , playing = false;
     
-    DataOutputStream outToServer ;
-	BufferedReader inFromServer ;
+    DataOutputStream outToRival ;
+	BufferedReader inFromRival ;
     
+	Reciver reciver ;
+	Handler handler ;
+	Sender  sender  ;
+	Message firstM ;
+	String firstS= "900-";
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
     	toSend = new LinkedBlockingDeque<Message>();
@@ -80,37 +86,79 @@ public class Multiplayer extends ScreenAdapter {
     	
     	String[] temp = rivalAddr.split(":");
     	inisiator = temp.length == 2 ; 
-    	if (inisiator)
-    	{
-    		rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
-    		try {
-    			rival = new Socket();
-    			rival.connect(rivalAddress, 5000);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
     	
-    	else
-    	{
-    		try {
-				ActiveRival = new ServerSocket(port);
-				rival = ActiveRival.accept();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	}
     	
     	
     	try {
-			outToServer = new DataOutputStream(rival.getOutputStream());
-			inFromServer = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+    		if (inisiator)
+    		{
+    			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
+    			rival = new Socket();
+    			rival.connect(rivalAddress, 5000);
+    		}
+    		else
+    		{
+    			ActiveRival = new ServerSocket(port);
+				rival = ActiveRival.accept();
+    		}
+    		outToRival = new DataOutputStream(rival.getOutputStream());
+			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+    		
+			
+			
+			if (inisiator)
+			{
+				Random r = new Random();
+				downSpawn = r.nextInt(2) % 2;
+				firstS += Integer.toString(downSpawn)+"-\n";
+				outToRival.writeBytes(firstS);
+				firstM= new Message(inFromRival.readLine());
+				if (firstM.getType().compareTo("990-") == 0 )
+				{
+					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
+					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
+						playing= true;
+				}
+					
+			}
+    		
+			else
+			{
+				firstM= new Message(inFromRival.readLine());
+				if (firstM.getType().compareTo("990-") == 0 )
+				{
+					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
+					if (downSpawn==  1)
+						downSpawn = 0 ;
+					else
+						downSpawn = 1 ; 
+					firstS= "990-"+Integer.toString(downSpawn)+"-\n";
+					outToRival.writeBytes(firstS);
+					playing= true;
+				}
+					
+			}
+			if (!playing)
+				throw new Exception("Game Start Error");
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+    	
+    	
+		sender = new Sender(toSend,outToRival);
+		handler = new Handler(toHandel);
+		reciver = new Reciver(toHandel, inFromRival);
+		
+		
+    	sender.execute();
+		handler.execute();
+		reciver.execute();
 		
     		
 		this.create();
@@ -226,8 +274,13 @@ public class Multiplayer extends ScreenAdapter {
 	}
 	
 	
-	public class reciver extends AsyncTask<String, Void, String> 
+	public class Reciver extends AsyncTask<String, Void, String> 
 	{
+
+		public Reciver(BlockingQueue<Message> toHandel,
+				BufferedReader inFromRival) {
+			// TODO Auto-generated constructor stub
+		}
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -237,8 +290,13 @@ public class Multiplayer extends ScreenAdapter {
 		
 	}
 	
-	public class sender extends AsyncTask<String, Void, String> 
+	public class Sender extends AsyncTask<String, Void, String> 
 	{
+
+		public Sender(BlockingQueue<Message> toSend,
+				DataOutputStream outToServer) {
+			// TODO Auto-generated constructor stub
+		}
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -248,8 +306,12 @@ public class Multiplayer extends ScreenAdapter {
 		
 	}
 	
-	public class handler extends AsyncTask<String, Void, String> 
+	public class Handler extends AsyncTask<String, Void, String> 
 	{
+
+		public Handler(BlockingQueue<Message> toHandel) {
+			// TODO Auto-generated constructor stub
+		}
 
 		@Override
 		protected String doInBackground(String... params) {
