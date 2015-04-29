@@ -1,6 +1,9 @@
 package com.mygdx.Screens;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -50,7 +53,7 @@ public class Multiplayer extends ScreenAdapter {
     
     BlockingQueue<Message> toSend;
 	BlockingQueue<Message> toHandel;
-	Socket PassiveRival ;
+	Socket rival ;
 	ServerSocket ActiveRival;
 	InetSocketAddress rivalAddress;
 	
@@ -64,19 +67,25 @@ public class Multiplayer extends ScreenAdapter {
     Vector2 textBoxPos ;
     private String ScoreString;
     BitmapFont yourBitmapFontName;
+    
+    boolean inisiator , rivalReady = false , playing = false;
+    
+    DataOutputStream outToServer ;
+	BufferedReader inFromServer ;
+    
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
     	toSend = new LinkedBlockingDeque<Message>();
     	toHandel = new LinkedBlockingDeque<Message>();
     	
     	String[] temp = rivalAddr.split(":");
-    	boolean inisiator = temp.length == 2 ; 
+    	inisiator = temp.length == 2 ; 
     	if (inisiator)
     	{
     		rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
     		try {
-    			PassiveRival = new Socket();
-    			PassiveRival.connect(rivalAddress, 5000);
+    			rival = new Socket();
+    			rival.connect(rivalAddress, 5000);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -87,11 +96,22 @@ public class Multiplayer extends ScreenAdapter {
     	{
     		try {
 				ActiveRival = new ServerSocket(port);
+				rival = ActiveRival.accept();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
+    	
+    	
+    	try {
+			outToServer = new DataOutputStream(rival.getOutputStream());
+			inFromServer = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
     		
 		this.create();
 	}
