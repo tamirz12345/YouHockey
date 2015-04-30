@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -57,10 +54,9 @@ public class Multiplayer extends ScreenAdapter {
     
     BlockingQueue<Message> toSend;
 	BlockingQueue<Message> toHandel;
-	DatagramSocket rival ;
-	DatagramPacket recivePacket;
-	DatagramPacket sendPacket;
-	InetAddress rivalAddress;
+	Socket rival ;
+	ServerSocket ActiveRival;
+	InetSocketAddress rivalAddress;
 	
 	
 	int downSpawn;
@@ -75,16 +71,14 @@ public class Multiplayer extends ScreenAdapter {
     
     boolean inisiator , rivalReady = false , playing = false;
     
-    byte[] inputS = new byte[1024];
-    byte[] outputS= new byte[1024];
-	
+    DataOutputStream outToRival ;
+	BufferedReader inFromRival ;
+    
 	Reciver reciver ;
 	Handler handler ;
 	Sender  sender  ;
 	Message firstM ;
 	String firstS= "900-";
-	
-	int rivalPort;
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
     	toSend = new LinkedBlockingDeque<Message>();
@@ -98,59 +92,54 @@ public class Multiplayer extends ScreenAdapter {
     	try {
     		if (inisiator)
     		{
-    			
-    			rival = new DatagramSocket();
-    			rivalAddress = InetAddress.getByName(temp[0]);
-    			rivalPort = Integer.parseInt(temp[1]);
-    			
-    			Random r = new Random();
-				downSpawn = r.nextInt(2) % 2;
-				firstS += Integer.toString(downSpawn)+"-";
-				
-				outputS = firstS.getBytes();
-				sendPacket = new DatagramPacket(outputS,firstS.length(),rivalAddress , rivalPort);
-				rival.send(sendPacket);
-				recivePacket = new DatagramPacket(inputS, inputS.length);
-				rival.receive(recivePacket);
-				
-				firstM= new Message(inputS.toString());
+    			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
+    			rival = new Socket();
+    			rival.connect(rivalAddress, 15000);
+    		}
+    		else
+    		{
+    			ActiveRival = new ServerSocket(port);
+				rival = ActiveRival.accept();
+    		}
+    		outToRival = new DataOutputStream(rival.getOutputStream());
+			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+    		
+			
+			
+			if (inisiator)
+			{
+				Random r = new Random();
+				//downSpawn = r.nextInt(2) % 2;
+				//firstS += Integer.toString(downSpawn)+"-\n";
+				firstS="900-1-\n";
+				downSpawn = 1;
+				outToRival.writeBytes(firstS);
+				firstM= new Message(inFromRival.readLine());
 				if (firstM.getType().compareTo("990-") == 0 )
 				{
 					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
 					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
 						playing= true;
 				}
-    			
-    		}
-    		else
-    		{
-    			rival = new DatagramSocket(port);
-    			recivePacket= new DatagramPacket(inputS, inputS.length);
-    			rival.receive(recivePacket);
-    			rivalAddress = recivePacket.getAddress();
-    			
-    			firstM = new Message(inputS.toString());
-    			if (firstM.getType().compareTo("990-") == 0 )
+					
+			}
+    		
+			else
+			{
+				firstM= new Message(inFromRival.readLine());
+				if (firstM.getType().compareTo("990-") == 0 )
 				{
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
 					if (downSpawn==  1)
 						downSpawn = 0 ;
 					else
 						downSpawn = 1 ; 
-					firstS= "990-"+Integer.toString(downSpawn)+"-";
-					outputS = firstS.getBytes();
-					sendPacket = new DatagramPacket(outputS,firstS.length(),rivalAddress ,recivePacket.getPort());
-					rival.send(sendPacket);
+					firstS= "990-"+Integer.toString(downSpawn)+"-\n";
+					outToRival.writeBytes(firstS);
 					playing= true;
 				}
-    		}
-    		
-    		
-			
-			
-			
-    		
-			
+					
+			}
 			if (!playing)
 				throw new Exception("Game Start Error");
 			
@@ -165,11 +154,15 @@ public class Multiplayer extends ScreenAdapter {
 			game.setScreen(new Menu(youHockey));
 		}
     	
-    	if (!playing)
-    		game.setScreen(new Menu(youHockey));
+    	
+		sender = new Sender(toSend,outToRival);
+		handler = new Handler(toHandel);
+		reciver = new Reciver(toHandel, inFromRival);
 		
 		
-		
+    	sender.execute();
+		handler.execute();
+		reciver.execute();
 		
     		
 		this.create();
