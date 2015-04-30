@@ -93,27 +93,16 @@ public class Multiplayer extends ScreenAdapter {
     		if (inisiator)
     		{
     			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
-    			rival = new Socket();
-    			rival.connect(rivalAddress, 15000);
-    		}
-    		else
-    		{
-    			ActiveRival = new ServerSocket(port);
-				rival = ActiveRival.accept();
-    		}
-    		outToRival = new DataOutputStream(rival.getOutputStream());
-			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
-    		
-			
-			
-			if (inisiator)
-			{
-				Random r = new Random();
-				//downSpawn = r.nextInt(2) % 2;
-				//firstS += Integer.toString(downSpawn)+"-\n";
-				firstS="900-1-\n";
-				downSpawn = 1;
+     			rival = new Socket();
+    			rival.connect(rivalAddress, 150000);
+    			outToRival = new DataOutputStream(rival.getOutputStream());
+    			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+    			Random r = new Random();
+				downSpawn = r.nextInt(2) % 2;
+				firstS += Integer.toString(downSpawn)+"-\n";
+				
 				outToRival.writeBytes(firstS);
+				String recived= inFromRival.readLine();
 				firstM= new Message(inFromRival.readLine());
 				if (firstM.getType().compareTo("990-") == 0 )
 				{
@@ -121,11 +110,13 @@ public class Multiplayer extends ScreenAdapter {
 					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
 						playing= true;
 				}
-					
-			}
-    		
-			else
-			{
+    		}
+    		else
+    		{
+    			ActiveRival = new ServerSocket(port);
+				rival = ActiveRival.accept();
+				outToRival = new DataOutputStream(rival.getOutputStream());
+				inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
 				firstM= new Message(inFromRival.readLine());
 				if (firstM.getType().compareTo("990-") == 0 )
 				{
@@ -138,8 +129,12 @@ public class Multiplayer extends ScreenAdapter {
 					outToRival.writeBytes(firstS);
 					playing= true;
 				}
-					
-			}
+    		}
+    		
+    		
+			
+			
+		
 			if (!playing)
 				throw new Exception("Game Start Error");
 			
@@ -164,8 +159,10 @@ public class Multiplayer extends ScreenAdapter {
 		handler.execute();
 		reciver.execute();
 		
-    		
-		this.create();
+		if (playing)
+			this.create();
+		else
+			game.setScreen(new Menu(youHockey));
 	}
 
 	public void create () {

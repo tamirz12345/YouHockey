@@ -59,7 +59,7 @@ namespace HockeyServer
                 int recv = client.Receive(data);
                 Message msg = new Message(data);
 
-                if (msg.message != null)
+                if (msg.message != null && msg.cutOpcode() != "")
                 {
                     Mutex m = new Mutex();
                     string opcode = msg.cutOpcode();
@@ -97,7 +97,7 @@ namespace HockeyServer
 
                         // sending to the initiator:
                         string ipListener = p.listener.ip;
-                        ipListener.Split(':');
+                        words = ipListener.Split(':');
                         toSend = "301-" + words[0] + "-" + port + "-\n";
                         data = Encoding.ASCII.GetBytes(toSend);
                         p.initiator.socket.Send(data, toSend.Length, SocketFlags.None);

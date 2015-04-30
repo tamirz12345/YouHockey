@@ -11,7 +11,14 @@ namespace HockeyServer
 
         public Message(byte[] arr)
         {
-            this.message = Encoding.UTF8.GetString(arr, 0, arr.Length);
+            try
+            {
+                this.message = Encoding.UTF8.GetString(arr, 0, arr.Length);
+            }
+            catch(Exception e)
+            {
+                this.message = null; 
+            }
         }
 
         public Message(string message)
@@ -21,7 +28,14 @@ namespace HockeyServer
 
         public string cutOpcode() // returns the command number
         {
-            return this.message.Substring(0, message.IndexOf('-'));
+            try
+            {
+                return this.message.Substring(0, message.IndexOf('-'));
+            }
+            catch(Exception e)
+            {
+                return "";
+            }
         }
 
         public List<string> cutParameters()

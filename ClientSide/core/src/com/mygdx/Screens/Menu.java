@@ -44,7 +44,7 @@ public class Menu extends ScreenAdapter{
         		temp1.y,(float) ((float)20 * lim.getxUnit()),
         		(float) ((float)40 * lim.getyUnit()));
 
-        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 20, (float) (lim.getyUnit() * 60));
+        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 20, (float) (lim.getyUnit() * 50));
         PVPButton = new Rectangle(temp2.x,
                 temp2.y,(float) ((float)20 * lim.getxUnit()),
         		(float) ((float)40 * lim.getyUnit()));
