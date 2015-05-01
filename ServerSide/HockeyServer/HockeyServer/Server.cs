@@ -52,6 +52,7 @@ namespace HockeyServer
         void handleCommand(Socket client)
         {
             string toSend;
+            
             while (true)
             {
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
@@ -61,11 +62,8 @@ namespace HockeyServer
 
                 if (msg.message != null && msg.cutOpcode() != "")
                 {
-                    Mutex m = new Mutex();
                     string opcode = msg.cutOpcode();
-                    m.WaitOne();
                     Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
-                    m.ReleaseMutex();
                     List<string> parameters = msg.cutParameters();
 
 
