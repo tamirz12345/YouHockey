@@ -67,7 +67,6 @@ public class EndGame extends ScreenAdapter{
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(menuTexture, temp2.x, temp2.y , menuButton.width , menuButton.height);
 		batch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
 		batch.end();
 		

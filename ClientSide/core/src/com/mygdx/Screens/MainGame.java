@@ -161,7 +161,7 @@ public class MainGame extends ScreenAdapter {
 		if (lim.getScoreBottom() == SCORE_TO_WIN)
 			game.setScreen(new EndGame(game, true));
 		if (lim.getScoreTop() == SCORE_TO_WIN)
-			game.setScreen(new EndGame(game, true));
+			game.setScreen(new EndGame(game, false));
 		
 		
 	}
