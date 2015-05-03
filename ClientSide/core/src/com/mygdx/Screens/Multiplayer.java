@@ -17,6 +17,7 @@ import GameObjects.Limits;
 import GameObjects.Tool;
 import Network.Message;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -92,19 +93,25 @@ public class Multiplayer extends ScreenAdapter {
     	try {
     		if (inisiator)
     		{
+    			Log.d("myDebug", "Inisiating to : "+ rivalAddr);
     			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
      			rival = new Socket();
     			rival.connect(rivalAddress, 150000);
+    			Log.d("myDebug", "connected");
     			outToRival = new DataOutputStream(rival.getOutputStream());
     			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
+    			Log.d("myDebug", "streams constructed");
     			Random r = new Random();
 				downSpawn = r.nextInt(2) % 2;
 				firstS += Integer.toString(downSpawn)+"-\n";
-				
+				Log.d("myDebug", "sanding " + firstS);
 				outToRival.writeBytes(firstS);
+				Log.d("myDebug", "sent, now waiting");
 				String recived= inFromRival.readLine();
-				firstM= new Message(inFromRival.readLine());
-				if (firstM.getType().compareTo("990-") == 0 )
+				Log.d("myDebug", "recived : "+ recived);
+				firstM= new Message(recived);
+				Log.d("myDebug", "compare to 900 : ");
+				if (firstM.getType().compareTo("900") == 0 )
 				{
 					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
 					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
@@ -113,20 +120,31 @@ public class Multiplayer extends ScreenAdapter {
     		}
     		else
     		{
+    			Log.d("myDebug", "Waiting  to : "+ rivalAddr);
+    			
     			ActiveRival = new ServerSocket(port);
 				rival = ActiveRival.accept();
+				Log.d("YOUHOCKEY", "accepted : " + rival.getInetAddress().getHostAddress());
 				outToRival = new DataOutputStream(rival.getOutputStream());
 				inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
-				firstM= new Message(inFromRival.readLine());
-				if (firstM.getType().compareTo("990-") == 0 )
+				Log.d("myDebug", "now waiting to recive");
+				String recived = inFromRival.readLine();
+				Log.d("myDebug", "recived " + recived);
+				firstM= new Message(recived);
+				Log.d("myDebug", "compare To if..");
+				if (firstM.getType().compareTo("900") == 0 )
 				{
+					Log.d("myDebug", "parcing ...");
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
+					Log.d("myDebug", "parameter" + Integer.toString(downSpawn));
 					if (downSpawn==  1)
 						downSpawn = 0 ;
 					else
 						downSpawn = 1 ; 
-					firstS= "990-"+Integer.toString(downSpawn)+"-\n";
+					firstS= "900-"+Integer.toString(downSpawn)+"-\n";
+					Log.d("myDebug", "sending " +firstS);
 					outToRival.writeBytes(firstS);
+					Log.d("myDebug", "sent");
 					playing= true;
 				}
     		}
