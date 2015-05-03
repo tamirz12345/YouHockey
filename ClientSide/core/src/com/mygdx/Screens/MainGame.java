@@ -45,6 +45,7 @@ public class MainGame extends ScreenAdapter {
     Vector2 textBoxPos ;
     private String ScoreString;
     BitmapFont yourBitmapFontName;
+    final int SCORE_TO_WIN = 2; 
     public MainGame(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -132,6 +133,7 @@ public class MainGame extends ScreenAdapter {
 		yourBitmapFontName.setColor(Color.BLACK);
 		textBoxPos = bottomGoal.getSrc(true);
 		textBoxPos=  UnitConvertor.toGame(textBoxPos.x , textBoxPos.y);
+		
 		ScoreString = Integer.toString(lim.getScoreBottom()) + " : " + 
 				Integer.toString(lim.getScoreTop());
 		yourBitmapFontName.draw(batch, ScoreString,25,100);
@@ -155,6 +157,11 @@ public class MainGame extends ScreenAdapter {
 			
 		}
 		stage.act(delta);
+		
+		if (lim.getScoreBottom() == SCORE_TO_WIN)
+			game.setScreen(new EndGame(game, true));
+		if (lim.getScoreTop() == SCORE_TO_WIN)
+			game.setScreen(new EndGame(game, true));
 		
 		
 	}
