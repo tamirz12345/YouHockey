@@ -81,6 +81,7 @@ public class EndGame extends ScreenAdapter{
 	    }
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK)){
+			
 			game.setScreen(new Menu(game));
 		}
 		

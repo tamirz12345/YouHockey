@@ -111,11 +111,15 @@ public class Multiplayer extends ScreenAdapter {
 				Log.d("myDebug", "recived : "+ recived);
 				firstM= new Message(recived);
 				Log.d("myDebug", "compare to 900 : ");
-				if (firstM.getType().compareTo("900") == 0 )
+				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
 					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
 					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
 						playing= true;
+				}
+				else
+				{
+					Log.d("myDebug", "if not enterd massage was "+firstM.getType());
 				}
     		}
     		else
@@ -131,8 +135,8 @@ public class Multiplayer extends ScreenAdapter {
 				String recived = inFromRival.readLine();
 				Log.d("myDebug", "recived " + recived);
 				firstM= new Message(recived);
-				Log.d("myDebug", "compare To if..");
-				if (firstM.getType().compareTo("900") == 0 )
+				Log.d("myDebug", "compare To if.. msg type = " + firstM.getType());
+				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
 					Log.d("myDebug", "parcing ...");
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
@@ -146,6 +150,10 @@ public class Multiplayer extends ScreenAdapter {
 					outToRival.writeBytes(firstS);
 					Log.d("myDebug", "sent");
 					playing= true;
+				}
+				else
+				{
+					Log.d("myDebug", "if not enterd massage was "+firstM.getType());
 				}
     		}
     		
