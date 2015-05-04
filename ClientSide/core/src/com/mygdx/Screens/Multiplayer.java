@@ -223,8 +223,11 @@ public class Multiplayer extends ScreenAdapter {
 		handler = new Handler();
 		reciver = new Reciver();
 		reciver.execute();
-		handler.execute();
-	    sender.execute();
+		Log.d("asyncTamir", "reciver asynctask executed");
+		handler.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		Log.d("asyncTamir", "handler asynctask executed");
+		handler.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	    Log.d("asyncTamir", "sender asynctask executed");
 		
 	}
 
@@ -313,7 +316,7 @@ public class Multiplayer extends ScreenAdapter {
 
 		@Override
 		protected String doInBackground(String... params) {
-			Log.d("async", "reciver asynctask started");
+			Log.d("asyncTamir", "reciver asynctask started");
 			while (playing)
 			{
 				try {
@@ -341,7 +344,7 @@ public class Multiplayer extends ScreenAdapter {
 
 		@Override
 		protected String doInBackground(String... params) {
-			Log.d("async", "sender asynctask started");
+			Log.d("asyncTamir", "sender asynctask started");
 			while (playing)
 			{
 				try {
@@ -372,7 +375,7 @@ public class Multiplayer extends ScreenAdapter {
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
-			Log.d("async", "handler asynctask started");
+			Log.d("asyncTamir", "handler asynctask started");
 			while (playing)
 			{
 				try {
