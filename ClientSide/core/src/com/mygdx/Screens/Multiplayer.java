@@ -371,10 +371,27 @@ public class Multiplayer extends ScreenAdapter {
 	public class Handler implements Runnable 
 	{
 
-		
 
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			Log.d("threadTamir", "handler thread started");
+			while (playing)
+			{
+				try {
+					Message m = toHandel.take();
+					Log.d("handler" , "Handling : " + m.toString());
+					handel(m);
+					Log.d("handler" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("handler",e.toString());
+				}
+				
+				
+			}
+		}
 		
-
 		private void handel(Message m) {
 			// TODO Auto-generated method stub
 			String opCode = m.getType();
@@ -382,11 +399,12 @@ public class Multiplayer extends ScreenAdapter {
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
-				float x = Float.parseFloat(params[0]);
-				float y = Float.parseFloat(params[1]);
+				float x = Float.parseFloat(params[0])*lim.getGameWidth();
+				float y = Float.parseFloat(params[1])*lim.getGameHeight();
 				float time =  Float.parseFloat(params[2]);
+				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
-				Log.d("myDebug","Move tool to  x=  "+ x +" y= "+ y
+				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
 						+" time = "+ time);
 				boolean flag1 = x > lim.getLeft() && x < lim.getRight();
 				boolean flag2 = y > lim.getBottom() &&y < lim.getTop();
@@ -406,26 +424,6 @@ public class Multiplayer extends ScreenAdapter {
 
 			default:
 				break;
-			}
-		}
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			Log.d("threadTamir", "handler thread started");
-			while (playing)
-			{
-				try {
-					Message m = toHandel.take();
-					Log.d("handler" , "Handling : " + m.toString());
-					handel(m);
-					Log.d("handler" , "Sent ");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					Log.d("handler",e.toString());
-				}
-				
-				
 			}
 		}
 		

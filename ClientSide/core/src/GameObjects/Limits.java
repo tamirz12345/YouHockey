@@ -203,19 +203,21 @@ public class Limits {
 			System.out.println("Out Of Bound ( "+x+","+y+" )");
 		}
 		MoveToAction moveAction = new MoveToAction();
-		float oneF = 1f;
-		float speed = (int) Math.sqrt(Math.pow(a.getX()-  x , 2) 
-				+ Math.pow(a.getY()-y, 2)) /speedUnit* oneF;
+		
+		float speed =  (float) (Math.sqrt(Math.pow(a.getX()-  x , 2) 
+				+ Math.pow(a.getY()-y, 2)) /speedUnit);
 		if (speed == 0 )
 		{
-			speed = (float) (oneF * 0.4);
+			speed =0.2f;
 		}
 		moveAction.setDuration(speed);
 		moveAction.setPosition(x, y);
 		a.addAction(moveAction);
 		if (isMultiplayer && bottomTool)
 		{
-			String msg=  "901-"+Float.toString(x)+"-"+Float.toString(y)+
+			float newX = x / this.getGameWidth();
+			float newY= y / this.getGameHeight();
+			String msg=  "901-"+Float.toString(newX)+"-"+Float.toString(newY)+
 					"-"+Float.toString(speed)+"-";
 			Log.d("myDebug","adding to TOSend queue : " + msg);
 			toSend.add(msg);
