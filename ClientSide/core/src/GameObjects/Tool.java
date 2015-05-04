@@ -47,7 +47,7 @@ public class Tool  extends Actor{
     	Vector2 temp = game.validateTool(this , x , y);
         
         this.clearActions();
-        game.addMoveToAction(this, temp.x, temp.y);
+        game.addMoveToAction(this, temp.x, temp.y, isBelow);
         
         
     }
@@ -59,7 +59,7 @@ public class Tool  extends Actor{
     	Vector2 temp = game.validateTool(this , x , y);
         
         this.clearActions();
-        game.addMoveToAction(this, temp.x, temp.y);
+        game.addMoveToAction(this, temp.x, temp.y,time);
         
         
     }

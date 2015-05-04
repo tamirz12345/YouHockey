@@ -183,7 +183,7 @@ public class Disk  extends Actor {
 
 	public void addMoveToAction(float x , float y)
 	{
-		game.addMoveToAction(this, x, y);
+		game.addMoveToAction(this, x, y , false);
 		this.targetLoc = new Vector2(x,y);
 	}
  

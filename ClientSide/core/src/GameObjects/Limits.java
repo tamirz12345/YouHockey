@@ -3,6 +3,7 @@ package GameObjects;
 import java.util.concurrent.BlockingQueue;
 
 import Network.Message;
+import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -195,7 +196,7 @@ public class Limits {
 	}
 	
 	
-	public void addMoveToAction(Actor a, float x , float y)
+	public void addMoveToAction(Actor a, float x , float y , boolean bottomTool)
 	{
 		if (!this.inGameBounds(x, y))
 		{
@@ -212,7 +213,15 @@ public class Limits {
 		moveAction.setDuration(speed);
 		moveAction.setPosition(x, y);
 		a.addAction(moveAction);
-		
+		if (isMultiplayer && bottomTool)
+		{
+			String msg=  "901-"+Float.toString(x)+"-"+Float.toString(y)+
+					"-"+Float.toString(speed);
+			Log.d("myDebug","adding to TOSend queue : " + msg);
+			Message m = new Message(msg);
+			toSend.add(m);
+			Log.d("myDebug","addedto TOSend queue : ");
+		}
 	}
 	
 	
@@ -240,6 +249,20 @@ public class Limits {
 
 	public Integer getScoreTop() {
 		return ScoreTop;
+	}
+
+	public void addMoveToAction(Tool tool, float x, float y, float time) {
+		// TODO Auto-generated method stub
+		if (!this.inGameBounds(x, y))
+		{
+			System.out.println("Out Of Bound ( "+x+","+y+" )");
+		}
+		MoveToAction moveAction = new MoveToAction();
+		
+		
+		moveAction.setDuration(time);
+		moveAction.setPosition(x, y);
+		tool.addAction(moveAction);
 	}
 	
 	

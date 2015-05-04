@@ -179,14 +179,10 @@ public class Multiplayer extends ScreenAdapter {
 		}
     	
     	
-		sender = new Sender();
-		handler = new Handler();
-		reciver = new Reciver();
 		
 		
-    	sender.execute();
-		handler.execute();
-		reciver.execute();
+		
+    	
 		
 		if (playing)
 			this.create();
@@ -223,7 +219,13 @@ public class Multiplayer extends ScreenAdapter {
 	    
 	    ScoreString = "0 : 0";
 	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
-	    
+	    sender = new Sender();
+		handler = new Handler();
+		reciver = new Reciver();
+		reciver.execute();
+		handler.execute();
+	    sender.execute();
+		
 	}
 
 	public void render (float delta) {
@@ -311,19 +313,19 @@ public class Multiplayer extends ScreenAdapter {
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
+			Log.d("async", "reciver asynctask started");
 			while (playing)
 			{
 				try {
 					String tmp = inFromRival.readLine();
-					Log.d("myDebug", "recived : " + tmp);
+					Log.d("reciverT", "recived : " + tmp);
 					Message m = new Message(tmp);
 					
 					toHandel.add(m);
-					Log.d("myDebug",tmp + " added succesfuly to Queue");
+					Log.d("reciverT",tmp + " added succesfuly to Queue");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("myDebug",e.toString());
+					Log.d("reciverT",e.toString());
 					game.setScreen(new Menu(game));
 				}
 			}
@@ -339,19 +341,20 @@ public class Multiplayer extends ScreenAdapter {
 
 		@Override
 		protected String doInBackground(String... params) {
+			Log.d("async", "sender asynctask started");
 			while (playing)
 			{
 				try {
 					Message m = toSend.take();
-					Log.d("myDebug" , "Sending : " + m.toString());
+					Log.d("sender" , "Sending : " + m.toString());
 					outToRival.writeBytes(m.toString());
-					Log.d("myDebug" , "Sent ");
+					Log.d("sender" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("myDebug",e.toString());
+					Log.d("sender",e.toString());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("myDebug",e.toString());
+					Log.d("sender",e.toString());
 				}
 				
 				
@@ -369,16 +372,17 @@ public class Multiplayer extends ScreenAdapter {
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
+			Log.d("async", "handler asynctask started");
 			while (playing)
 			{
 				try {
 					Message m = toHandel.take();
-					Log.d("myDebug" , "Handling : " + m.toString());
+					Log.d("handler" , "Handling : " + m.toString());
 					handel(m);
-					Log.d("myDebug" , "Sent ");
+					Log.d("handler" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("myDebug",e.toString());
+					Log.d("handler",e.toString());
 				}
 				
 				
@@ -389,9 +393,30 @@ public class Multiplayer extends ScreenAdapter {
 		private void handel(Message m) {
 			// TODO Auto-generated method stub
 			String opCode = m.getType();
+			String[] params = m.getParameters();
 			switch (opCode) {
-			case 901:
-				
+			case "901":
+				Log.d("handler" , "case 901");
+				float x = Float.parseFloat(params[0]);
+				float y = Float.parseFloat(params[1]);
+				float time =  Float.parseFloat(params[2]);
+				y = lim.getGameHeight()  - y ; 
+				Log.d("myDebug","Move tool to  x=  "+ x +" y= "+ y
+						+" time = "+ time);
+				boolean flag1 = x > lim.getLeft() && x < lim.getRight();
+				boolean flag2 = y > lim.getBottom() &&y < lim.getTop();
+				boolean flag3 = time > 0 ; 
+				if (flag1 && flag2 && flag3)
+				{
+					Log.d("handler" , "info okay");
+					bot.clearActions();
+					bot.move(x, y, time);
+				}
+				else
+				{
+					//Send error Massage
+					Log.d("handler" , "info not  okay");
+				}
 				break;
 
 			default:
