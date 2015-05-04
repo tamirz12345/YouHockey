@@ -54,7 +54,7 @@ public class Multiplayer extends ScreenAdapter {
     
     
     
-    BlockingQueue<Message> toSend;
+    BlockingQueue<String> toSend;
 	BlockingQueue<Message> toHandel;
 	Socket rival ;
 	ServerSocket ActiveRival;
@@ -76,14 +76,13 @@ public class Multiplayer extends ScreenAdapter {
     DataOutputStream outToRival ;
 	BufferedReader inFromRival ;
     
-	Reciver reciver ;
-	Handler handler ;
-	Sender  sender  ;
+	Thread reciver , handler , sender ;
+	
 	Message firstM ;
 	String firstS= "900-";
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
-    	toSend = new LinkedBlockingDeque<Message>();
+    	toSend = new LinkedBlockingDeque<String>();
     	toHandel = new LinkedBlockingDeque<Message>();
     	
     	String[] temp = rivalAddr.split(":");
@@ -219,16 +218,14 @@ public class Multiplayer extends ScreenAdapter {
 	    
 	    ScoreString = "0 : 0";
 	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
-	    sender = new Sender();
-		handler = new Handler();
-		reciver = new Reciver();
-		reciver.execute();
-		Log.d("asyncTamir", "reciver asynctask executed");
-		handler.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		Log.d("asyncTamir", "handler asynctask executed");
-		handler.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	    Log.d("asyncTamir", "sender asynctask executed");
+	    sender = new Thread(new Sender());
+		handler = new Thread(new Handler());
+		reciver = new Thread(new Reciver());
 		
+		sender.start();
+		handler.start();
+		reciver.start();
+	    
 	}
 
 	public void render (float delta) {
@@ -309,14 +306,17 @@ public class Multiplayer extends ScreenAdapter {
 	}
 	
 	
-	public class Reciver extends AsyncTask<String, Void, String> 
+	public class Reciver implements Runnable
 	{
 		
 		
 
+		
+
 		@Override
-		protected String doInBackground(String... params) {
-			Log.d("asyncTamir", "reciver asynctask started");
+		public void run() {
+			// TODO Auto-generated method stub
+			Log.d("threadTamir", "reciver thread started");
 			while (playing)
 			{
 				try {
@@ -332,25 +332,27 @@ public class Multiplayer extends ScreenAdapter {
 					game.setScreen(new Menu(game));
 				}
 			}
-			return null;
 		}
 		
 	}
 	
-	public class Sender extends AsyncTask<String, Void, String> 
+	public class Sender implements Runnable
 	{
 
 		
 
+		
+
 		@Override
-		protected String doInBackground(String... params) {
-			Log.d("asyncTamir", "sender asynctask started");
+		public void run() {
+			// TODO Auto-generated method stub
+			Log.d("threadTamir", "sender thread started");
 			while (playing)
 			{
 				try {
-					Message m = toSend.take();
-					Log.d("sender" , "Sending : " + m.toString());
-					outToRival.writeBytes(m.toString());
+					String s  = toSend.take();
+					Log.d("sender" , "Sending : " + s);
+					outToRival.writeBytes(s+"\n");
 					Log.d("sender" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -362,36 +364,16 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			}
-			return null;
 		}
 		
 	}
 	
-	public class Handler extends AsyncTask<String, Void, String> 
+	public class Handler implements Runnable 
 	{
 
 		
 
-		@Override
-		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			Log.d("asyncTamir", "handler asynctask started");
-			while (playing)
-			{
-				try {
-					Message m = toHandel.take();
-					Log.d("handler" , "Handling : " + m.toString());
-					handel(m);
-					Log.d("handler" , "Sent ");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					Log.d("handler",e.toString());
-				}
-				
-				
-			}
-			return null;
-		}
+		
 
 		private void handel(Message m) {
 			// TODO Auto-generated method stub
@@ -424,6 +406,26 @@ public class Multiplayer extends ScreenAdapter {
 
 			default:
 				break;
+			}
+		}
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			Log.d("threadTamir", "handler thread started");
+			while (playing)
+			{
+				try {
+					Message m = toHandel.take();
+					Log.d("handler" , "Handling : " + m.toString());
+					handel(m);
+					Log.d("handler" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("handler",e.toString());
+				}
+				
+				
 			}
 		}
 		

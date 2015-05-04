@@ -35,9 +35,9 @@ public class Limits {
 	private double xUnit ;
 	private double yUnit;
 	
-	BlockingQueue<Message> toSend;
+	BlockingQueue<String> toSend;
 	public boolean isMultiplayer = false;
-    public Limits(BlockingQueue<Message> q)
+    public Limits(BlockingQueue<String> q)
     {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
@@ -216,10 +216,9 @@ public class Limits {
 		if (isMultiplayer && bottomTool)
 		{
 			String msg=  "901-"+Float.toString(x)+"-"+Float.toString(y)+
-					"-"+Float.toString(speed);
+					"-"+Float.toString(speed)+"-";
 			Log.d("myDebug","adding to TOSend queue : " + msg);
-			Message m = new Message(msg);
-			toSend.add(m);
+			toSend.add(msg);
 			Log.d("myDebug","addedto TOSend queue : ");
 		}
 	}
