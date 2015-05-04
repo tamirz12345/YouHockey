@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
@@ -167,18 +168,20 @@ public class Multiplayer extends ScreenAdapter {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			Log.d("myDebug", e.toString());
 			game.setScreen(new Menu(youHockey));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			Log.d("myDebug", e.toString());
 			game.setScreen(new Menu(youHockey));
 		}
     	
     	
-		sender = new Sender(toSend,outToRival);
-		handler = new Handler(toHandel);
-		reciver = new Reciver(toHandel, inFromRival);
+		sender = new Sender();
+		handler = new Handler();
+		reciver = new Reciver();
 		
 		
     	sender.execute();
@@ -284,7 +287,7 @@ public class Multiplayer extends ScreenAdapter {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
 			tempTouch = UnitConvertor.toNormal(tempTouch);
 			t1.move(tempTouch.x, tempTouch.y);
-            bot.move(t1.getX(), height - t1.getY());
+            
 			
             
 	    }
@@ -303,15 +306,27 @@ public class Multiplayer extends ScreenAdapter {
 	
 	public class Reciver extends AsyncTask<String, Void, String> 
 	{
-
-		public Reciver(BlockingQueue<Message> toHandel,
-				BufferedReader inFromRival) {
-			// TODO Auto-generated constructor stub
-		}
+		
+		
 
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
+			while (playing)
+			{
+				try {
+					String tmp = inFromRival.readLine();
+					Log.d("myDebug", "recived : " + tmp);
+					Message m = new Message(tmp);
+					
+					toHandel.add(m);
+					Log.d("myDebug",tmp + " added succesfuly to Queue");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Log.d("myDebug",e.toString());
+					game.setScreen(new Menu(game));
+				}
+			}
 			return null;
 		}
 		
@@ -320,14 +335,27 @@ public class Multiplayer extends ScreenAdapter {
 	public class Sender extends AsyncTask<String, Void, String> 
 	{
 
-		public Sender(BlockingQueue<Message> toSend,
-				DataOutputStream outToServer) {
-			// TODO Auto-generated constructor stub
-		}
+		
 
 		@Override
 		protected String doInBackground(String... params) {
-			// TODO Auto-generated method stub
+			while (playing)
+			{
+				try {
+					Message m = toSend.take();
+					Log.d("myDebug" , "Sending : " + m.toString());
+					outToRival.writeBytes(m.toString());
+					Log.d("myDebug" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("myDebug",e.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Log.d("myDebug",e.toString());
+				}
+				
+				
+			}
 			return null;
 		}
 		
@@ -336,14 +364,39 @@ public class Multiplayer extends ScreenAdapter {
 	public class Handler extends AsyncTask<String, Void, String> 
 	{
 
-		public Handler(BlockingQueue<Message> toHandel) {
-			// TODO Auto-generated constructor stub
-		}
+		
 
 		@Override
 		protected String doInBackground(String... params) {
 			// TODO Auto-generated method stub
+			while (playing)
+			{
+				try {
+					Message m = toHandel.take();
+					Log.d("myDebug" , "Handling : " + m.toString());
+					handel(m);
+					Log.d("myDebug" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("myDebug",e.toString());
+				}
+				
+				
+			}
 			return null;
+		}
+
+		private void handel(Message m) {
+			// TODO Auto-generated method stub
+			String opCode = m.getType();
+			switch (opCode) {
+			case 901:
+				
+				break;
+
+			default:
+				break;
+			}
 		}
 		
 	}

@@ -54,7 +54,15 @@ public class Tool  extends Actor{
 
     
 
-	
+    public void move(float x, float y, float time) {
+
+    	Vector2 temp = game.validateTool(this , x , y);
+        
+        this.clearActions();
+        game.addMoveToAction(this, temp.x, temp.y);
+        
+        
+    }
 
 	
 
