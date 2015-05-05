@@ -168,12 +168,12 @@ public class Multiplayer extends ScreenAdapter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			
-			Log.d("myDebug", e.toString());
+			Log.d("myExeption", e.toString());
 			game.setScreen(new Menu(youHockey));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			
-			Log.d("myDebug", e.toString());
+			Log.d("myExeption", e.toString());
 			game.setScreen(new Menu(youHockey));
 		}
     	
@@ -321,6 +321,18 @@ public class Multiplayer extends ScreenAdapter {
 			{
 				try {
 					String tmp = inFromRival.readLine();
+					if (tmp == null)
+					{
+						if (rival.isConnected())
+						{
+							Log.d("myExeption" , "recived null but connected");
+							continue;
+						}
+					
+							
+						else
+							throw new Exception("Rival disconected ");
+					}
 					Log.d("reciverT", "recived : " + tmp);
 					Message m = new Message(tmp);
 					
@@ -328,7 +340,11 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("reciverT",tmp + " added succesfuly to Queue");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("reciverT",e.toString());
+					Log.d("myExeption",e.toString());
+					game.setScreen(new Menu(game));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
 				}
 			}
@@ -356,10 +372,10 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("sender" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("sender",e.toString());
+					Log.d("myExeption",e.toString());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("sender",e.toString());
+					Log.d("myExeption",e.toString());
 				}
 				
 				
@@ -385,7 +401,8 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("handler" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("handler",e.toString());
+					Log.d("myExeption",e.toString());
+					game.setScreen(new Menu(game));
 				}
 				
 				
@@ -438,19 +455,24 @@ public class Multiplayer extends ScreenAdapter {
 				yDir = params[4];
 				flag4 = params[3].compareTo("left") == 0 ||
 						params[3].compareTo("right") == 0; 
-				flag5= params[3].compareTo("top") == 0 ||
-						params[3].compareTo("bottom") == 0; 
+				flag5= params[4].compareTo("top") == 0 ||
+						params[4].compareTo("bottom") == 0; 
 				
 				if (flag1 && flag2 && flag3 && flag4 && flag5)
 				{
+					Log.d("handler" , "info   okay ");
 					disk.setXdir(xDir);
 					disk.setXdir(yDir);
+					disk.clearActions();
 					lim.addMoveToAction(disk, x, y, 'D');
+					Log.d("handler" , "disk moving to x: "+x+" y: " +y 
+							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
 				}
 				else
 				{
 					//Send error Massage
-					Log.d("handler" , "info not  okay");
+					Log.d("handler" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
+							","+flag5);
 				}
 				
 				
