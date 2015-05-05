@@ -396,19 +396,22 @@ public class Multiplayer extends ScreenAdapter {
 			// TODO Auto-generated method stub
 			String opCode = m.getType();
 			String[] params = m.getParameters();
+			float x,y,time ; 
+			boolean flag1,flag2,flag3,flag4,flag5;
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
-				float x = Float.parseFloat(params[0])*lim.getGameWidth();
-				float y = Float.parseFloat(params[1])*lim.getGameHeight();
-				float time =  Float.parseFloat(params[2]);
+				x = Float.parseFloat(params[0])*lim.getGameWidth();
+				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
 				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
 						+" time = "+ time);
-				boolean flag1 = x > lim.getLeft() && x < lim.getRight();
-				boolean flag2 = y > lim.getBottom() &&y < lim.getTop();
-				boolean flag3 = time > 0 ; 
+				flag1 = x > lim.getLeft() && x < lim.getRight();
+				
+				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag3 = time > 0 ; 
 				if (flag1 && flag2 && flag3)
 				{
 					Log.d("handler" , "info okay");
@@ -421,7 +424,39 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("handler" , "info not  okay");
 				}
 				break;
-
+			case "906":
+				x = Float.parseFloat(params[0])*lim.getGameWidth();
+				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				time =  Float.parseFloat(params[2]);
+				x = lim.getGameWidth()   - x ;
+				y = lim.getGameHeight()  - y ; 
+				String xDir , yDir;
+				flag1 = x > lim.getLeft() && x < lim.getRight();
+				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag3 = time > 0 ; 
+				xDir = params[3];
+				yDir = params[4];
+				flag4 = params[3].compareTo("left") == 0 ||
+						params[3].compareTo("right") == 0; 
+				flag5= params[3].compareTo("top") == 0 ||
+						params[3].compareTo("bottom") == 0; 
+				
+				if (flag1 && flag2 && flag3 && flag4 && flag5)
+				{
+					disk.setXdir(xDir);
+					disk.setXdir(yDir);
+					lim.addMoveToAction(disk, x, y, 'D');
+				}
+				else
+				{
+					//Send error Massage
+					Log.d("handler" , "info not  okay");
+				}
+				
+				
+				
+				
+				
 			default:
 				break;
 			}

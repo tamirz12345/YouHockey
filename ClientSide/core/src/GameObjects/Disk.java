@@ -183,7 +183,7 @@ public class Disk  extends Actor {
 
 	public void addMoveToAction(float x , float y)
 	{
-		game.addMoveToAction(this, x, y , false);
+		game.addMoveToAction(this, x, y ,'d');
 		this.targetLoc = new Vector2(x,y);
 	}
  
@@ -265,8 +265,38 @@ public class Disk  extends Actor {
         	}
         }
     }
-
-
+    public String getXDir()
+    {
+    	if (wX == Wall.Left)
+    		return "left";
+    	else
+    		return "right";
+    }
+    
+    
+    public String getYDir()
+    {
+    	if (wX == Wall.Top)
+    		return "top";
+    	else
+    		return "bottom";
+    }
+    
+    public void setXdir(String dir)
+    {
+    	if (dir.compareTo("left") == 0 )
+    		wX = Wall.Left;
+    	else
+    		wX = Wall.Right;
+    }
+    public void setYdir(String dir)
+    {
+    	if (dir.compareTo("top") == 0 )
+    		wX = Wall.Top;
+    	else
+    		wX = Wall.Bottom;
+    }
+    
 	public void spawn() {
 		this.clearActions();
 		if (downSpawn)

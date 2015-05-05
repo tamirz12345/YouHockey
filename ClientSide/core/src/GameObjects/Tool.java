@@ -22,7 +22,7 @@ public class Tool  extends Actor{
     int moves;
     float R  ;
     Limits game ;
-    
+    Character typeC ;
     public Tool(String image_path, boolean isBelow,float radius , Limits game) {
         this.img = new Texture(Gdx.files.internal(image_path));
         this.isBelow = isBelow;
@@ -47,7 +47,12 @@ public class Tool  extends Actor{
     	Vector2 temp = game.validateTool(this , x , y);
         
         this.clearActions();
-        game.addMoveToAction(this, temp.x, temp.y, isBelow);
+        
+        if (isBelow)
+        	typeC  = 'h';
+        else
+        	typeC  = 'e';
+        game.addMoveToAction(this, x, y, typeC);
         
         
     }
