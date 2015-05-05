@@ -52,7 +52,7 @@ public class Tool  extends Actor{
         	typeC  = 'h';
         else
         	typeC  = 'e';
-        game.addMoveToAction(this, x, y, typeC);
+        game.addMoveToAction(this, temp.x, temp.y, typeC);
         
         
     }

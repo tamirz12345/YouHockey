@@ -187,12 +187,21 @@ public class Limits {
 		goalSound.play();
 	}
 	
-	public void incTop()
+	public void incTop(Disk d)
 	{
 		this.ScoreTop ++;
 		if (ohSound.isPlaying())
 			ohSound.stop();
 		ohSound.play();
+		if(isMultiplayer)
+		{
+			float newX = d.getX() / this.getGameWidth();
+			float newY = d.getY() / this.getGameHeight();
+			String msgS= "905-"+"1"+"-"+newX+"-"+newY+"-";
+			Log.d("myDebug","adding to TOSend queue : " + msgS);
+			toSend.add(msgS);
+			Log.d("myDebug","addedto TOSend queue. ");
+		}
 	}
 	
 	

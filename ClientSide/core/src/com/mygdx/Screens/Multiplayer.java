@@ -413,8 +413,8 @@ public class Multiplayer extends ScreenAdapter {
 			// TODO Auto-generated method stub
 			String opCode = m.getType();
 			String[] params = m.getParameters();
-			float x,y,time ; 
-			boolean flag1,flag2,flag3,flag4,flag5;
+			float x = 0,y=0,time ; 
+			boolean flag1,flag2,flag3,flag4 = false,flag5;
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
@@ -477,7 +477,47 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 				
+			case "905":
+				if (params.length == 3  && params[0].compareTo("1") == 0)
+				{
+					
+					x = Float.parseFloat(params[1])*lim.getGameWidth();
+					y = Float.parseFloat(params[2])*lim.getGameHeight();
+					x = lim.getGameWidth()   - x ;
+					y = lim.getGameHeight()  - y ;
+					flag1 = x > lim.getLeft() && x < lim.getRight();
+					flag2 = y > lim.getBottom() &&y < lim.getTop();
+					flag3 = true;
+					flag4 = true;
+				}
+				else if (params.length == 1  && params[0].compareTo("0") == 0)
+				{
+					flag1= true;
+					flag2 = true;
+					flag3= true;
+					flag4 = false;
+				}
+				else
+				{
+					flag3 = false;
+					flag1 = false;
+					flag2 = false;
+				}
 				
+				if (flag1 && flag2 && flag3)
+				{
+					Log.d("handler" , "info okay");
+					if (flag4)
+					{
+						disk.spawn(x,y);
+					}
+				}
+				else
+				{
+					//Send error Massage
+					
+					Log.d("handler" , "info not  okay");
+				}
 				
 			default:
 				break;

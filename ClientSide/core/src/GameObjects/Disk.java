@@ -2,6 +2,8 @@ package GameObjects;
 
 import java.util.Random;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -206,12 +208,14 @@ public class Disk  extends Actor {
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && this.getY() == bottomLim)
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth() -32 &&
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth()  &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
-        				this.game.incTop();
+        				this.spawn();
+        				this.game.incTop(this);
         				downSpawn = true;
-        				this.spawn();				
+        				
+        				
         				return;
         			}
         			wY = Wall.Top;
@@ -220,12 +224,15 @@ public class Disk  extends Actor {
         			
         		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop())
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth() - 32&&
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth() &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
         				this.game.incBottom();
         				downSpawn = false;
+        				
         				this.spawn();
+        				
+        				
         				return;
         			}
         			wY = Wall.Bottom;
@@ -319,6 +326,15 @@ public class Disk  extends Actor {
 		wX = null;
 		wY = null;
 		targetW = null;
+		
+	}
+
+	public void spawn(float x, float y) {
+		// TODO Auto-generated method stub
+		this.clearActions();
+		this.setX(x);
+		this.setY(y);
+		Log.d("handler" , "spawn x = " + x +"y = "+y);
 	}
     
     
