@@ -100,6 +100,8 @@ namespace HockeyServer
                         data = Encoding.ASCII.GetBytes(toSend);
                         p.initiator.socket.Send(data, toSend.Length, SocketFlags.None);
 
+                        this.pairQueue.deleteClient(p.initiator);
+                        this.pairQueue.deleteClient(p.listener); 
                     }
                 }
             }
