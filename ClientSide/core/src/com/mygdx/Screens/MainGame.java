@@ -159,9 +159,19 @@ public class MainGame extends ScreenAdapter {
 		stage.act(delta);
 		
 		if (lim.getScoreBottom() == SCORE_TO_WIN)
+		{
+			music.stop();
+			super.dispose();
 			game.setScreen(new EndGame(game, true));
+		}
+			
 		if (lim.getScoreTop() == SCORE_TO_WIN)
+		{
+			music.stop();
+			super.dispose();
 			game.setScreen(new EndGame(game, false));
+		}
+			
 		
 		
 	}

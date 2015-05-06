@@ -3,6 +3,7 @@ package GameObjects;
 import java.util.concurrent.BlockingQueue;
 
 import Network.Message;
+import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -34,9 +35,9 @@ public class Limits {
 	private double xUnit ;
 	private double yUnit;
 	
-	BlockingQueue<Message> toSend;
+	BlockingQueue<String> toSend;
 	public boolean isMultiplayer = false;
-    public Limits(BlockingQueue<Message> q)
+    public Limits(BlockingQueue<String> q)
     {
     	mid = (float) 0.5;
     	gameWidth = Gdx.graphics.getHeight();
@@ -195,24 +196,33 @@ public class Limits {
 	}
 	
 	
-	public void addMoveToAction(Actor a, float x , float y)
+	public void addMoveToAction(Actor a, float x , float y , boolean bottomTool)
 	{
 		if (!this.inGameBounds(x, y))
 		{
 			System.out.println("Out Of Bound ( "+x+","+y+" )");
 		}
 		MoveToAction moveAction = new MoveToAction();
-		float oneF = 1f;
-		float speed = (int) Math.sqrt(Math.pow(a.getX()-  x , 2) 
-				+ Math.pow(a.getY()-y, 2)) /speedUnit* oneF;
+		
+		float speed =  (float) (Math.sqrt(Math.pow(a.getX()-  x , 2) 
+				+ Math.pow(a.getY()-y, 2)) /speedUnit);
 		if (speed == 0 )
 		{
-			speed = (float) (oneF * 0.4);
+			speed =0.2f;
 		}
 		moveAction.setDuration(speed);
 		moveAction.setPosition(x, y);
 		a.addAction(moveAction);
-		
+		if (isMultiplayer && bottomTool)
+		{
+			float newX = x / this.getGameWidth();
+			float newY= y / this.getGameHeight();
+			String msg=  "901-"+Float.toString(newX)+"-"+Float.toString(newY)+
+					"-"+Float.toString(speed)+"-";
+			Log.d("myDebug","adding to TOSend queue : " + msg);
+			toSend.add(msg);
+			Log.d("myDebug","addedto TOSend queue : ");
+		}
 	}
 	
 	
@@ -240,6 +250,20 @@ public class Limits {
 
 	public Integer getScoreTop() {
 		return ScoreTop;
+	}
+
+	public void addMoveToAction(Tool tool, float x, float y, float time) {
+		// TODO Auto-generated method stub
+		if (!this.inGameBounds(x, y))
+		{
+			System.out.println("Out Of Bound ( "+x+","+y+" )");
+		}
+		MoveToAction moveAction = new MoveToAction();
+		
+		
+		moveAction.setDuration(time);
+		moveAction.setPosition(x, y);
+		tool.addAction(moveAction);
 	}
 	
 	

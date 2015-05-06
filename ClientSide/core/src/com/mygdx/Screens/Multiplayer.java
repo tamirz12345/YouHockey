@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
@@ -53,7 +54,7 @@ public class Multiplayer extends ScreenAdapter {
     
     
     
-    BlockingQueue<Message> toSend;
+    BlockingQueue<String> toSend;
 	BlockingQueue<Message> toHandel;
 	Socket rival ;
 	ServerSocket ActiveRival;
@@ -75,14 +76,13 @@ public class Multiplayer extends ScreenAdapter {
     DataOutputStream outToRival ;
 	BufferedReader inFromRival ;
     
-	Reciver reciver ;
-	Handler handler ;
-	Sender  sender  ;
+	Thread reciver , handler , sender ;
+	
 	Message firstM ;
 	String firstS= "900-";
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
     	this.game = youHockey;
-    	toSend = new LinkedBlockingDeque<Message>();
+    	toSend = new LinkedBlockingDeque<String>();
     	toHandel = new LinkedBlockingDeque<Message>();
     	
     	String[] temp = rivalAddr.split(":");
@@ -111,11 +111,15 @@ public class Multiplayer extends ScreenAdapter {
 				Log.d("myDebug", "recived : "+ recived);
 				firstM= new Message(recived);
 				Log.d("myDebug", "compare to 900 : ");
-				if (firstM.getType().compareTo("900") == 0 )
+				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
 					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
 					if ((otherSide == 1 && downSpawn == 0 ) || (otherSide == 0 && downSpawn == 1 ))
 						playing= true;
+				}
+				else
+				{
+					Log.d("myDebug", "if not enterd massage was "+firstM.getType());
 				}
     		}
     		else
@@ -131,8 +135,8 @@ public class Multiplayer extends ScreenAdapter {
 				String recived = inFromRival.readLine();
 				Log.d("myDebug", "recived " + recived);
 				firstM= new Message(recived);
-				Log.d("myDebug", "compare To if..");
-				if (firstM.getType().compareTo("900") == 0 )
+				Log.d("myDebug", "compare To if.. msg type = " + firstM.getType());
+				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
 					Log.d("myDebug", "parcing ...");
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
@@ -147,6 +151,10 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("myDebug", "sent");
 					playing= true;
 				}
+				else
+				{
+					Log.d("myDebug", "if not enterd massage was "+firstM.getType());
+				}
     		}
     		
     		
@@ -159,23 +167,21 @@ public class Multiplayer extends ScreenAdapter {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			Log.d("myDebug", e.toString());
 			game.setScreen(new Menu(youHockey));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			Log.d("myDebug", e.toString());
 			game.setScreen(new Menu(youHockey));
 		}
     	
     	
-		sender = new Sender(toSend,outToRival);
-		handler = new Handler(toHandel);
-		reciver = new Reciver(toHandel, inFromRival);
 		
 		
-    	sender.execute();
-		handler.execute();
-		reciver.execute();
+		
+    	
 		
 		if (playing)
 			this.create();
@@ -212,6 +218,13 @@ public class Multiplayer extends ScreenAdapter {
 	    
 	    ScoreString = "0 : 0";
 	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
+	    sender = new Thread(new Sender());
+		handler = new Thread(new Handler());
+		reciver = new Thread(new Reciver());
+		
+		sender.start();
+		handler.start();
+		reciver.start();
 	    
 	}
 
@@ -276,7 +289,7 @@ public class Multiplayer extends ScreenAdapter {
 			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
 			tempTouch = UnitConvertor.toNormal(tempTouch);
 			t1.move(tempTouch.x, tempTouch.y);
-            bot.move(t1.getX(), height - t1.getY());
+            
 			
             
 	    }
@@ -293,49 +306,125 @@ public class Multiplayer extends ScreenAdapter {
 	}
 	
 	
-	public class Reciver extends AsyncTask<String, Void, String> 
+	public class Reciver implements Runnable
 	{
+		
+		
 
-		public Reciver(BlockingQueue<Message> toHandel,
-				BufferedReader inFromRival) {
-			// TODO Auto-generated constructor stub
-		}
+		
 
 		@Override
-		protected String doInBackground(String... params) {
+		public void run() {
 			// TODO Auto-generated method stub
-			return null;
+			Log.d("threadTamir", "reciver thread started");
+			while (playing)
+			{
+				try {
+					String tmp = inFromRival.readLine();
+					Log.d("reciverT", "recived : " + tmp);
+					Message m = new Message(tmp);
+					
+					toHandel.add(m);
+					Log.d("reciverT",tmp + " added succesfuly to Queue");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Log.d("reciverT",e.toString());
+					game.setScreen(new Menu(game));
+				}
+			}
 		}
 		
 	}
 	
-	public class Sender extends AsyncTask<String, Void, String> 
+	public class Sender implements Runnable
 	{
 
-		public Sender(BlockingQueue<Message> toSend,
-				DataOutputStream outToServer) {
-			// TODO Auto-generated constructor stub
-		}
+		
+
+		
 
 		@Override
-		protected String doInBackground(String... params) {
+		public void run() {
 			// TODO Auto-generated method stub
-			return null;
+			Log.d("threadTamir", "sender thread started");
+			while (playing)
+			{
+				try {
+					String s  = toSend.take();
+					Log.d("sender" , "Sending : " + s);
+					outToRival.writeBytes(s+"\n");
+					Log.d("sender" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("sender",e.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					Log.d("sender",e.toString());
+				}
+				
+				
+			}
 		}
 		
 	}
 	
-	public class Handler extends AsyncTask<String, Void, String> 
+	public class Handler implements Runnable 
 	{
 
-		public Handler(BlockingQueue<Message> toHandel) {
-			// TODO Auto-generated constructor stub
-		}
 
 		@Override
-		protected String doInBackground(String... params) {
+		public void run() {
 			// TODO Auto-generated method stub
-			return null;
+			Log.d("threadTamir", "handler thread started");
+			while (playing)
+			{
+				try {
+					Message m = toHandel.take();
+					Log.d("handler" , "Handling : " + m.toString());
+					handel(m);
+					Log.d("handler" , "Sent ");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					Log.d("handler",e.toString());
+				}
+				
+				
+			}
+		}
+		
+		private void handel(Message m) {
+			// TODO Auto-generated method stub
+			String opCode = m.getType();
+			String[] params = m.getParameters();
+			switch (opCode) {
+			case "901":
+				Log.d("handler" , "case 901");
+				float x = Float.parseFloat(params[0])*lim.getGameWidth();
+				float y = Float.parseFloat(params[1])*lim.getGameHeight();
+				float time =  Float.parseFloat(params[2]);
+				x = lim.getGameWidth()   - x ;
+				y = lim.getGameHeight()  - y ; 
+				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
+						+" time = "+ time);
+				boolean flag1 = x > lim.getLeft() && x < lim.getRight();
+				boolean flag2 = y > lim.getBottom() &&y < lim.getTop();
+				boolean flag3 = time > 0 ; 
+				if (flag1 && flag2 && flag3)
+				{
+					Log.d("handler" , "info okay");
+					bot.clearActions();
+					bot.move(x, y, time);
+				}
+				else
+				{
+					//Send error Massage
+					Log.d("handler" , "info not  okay");
+				}
+				break;
+
+			default:
+				break;
+			}
 		}
 		
 	}

@@ -29,6 +29,16 @@ public class Message implements IMessage {
 			return (parts.length == 3);
 		case "300":
 			return (parts.length == 1);
+		case "900":
+			return (parts.length == 2 && (parts[1].compareTo("0")==0
+			|| parts[1].compareTo("1")==0));
+		case "905":
+			return (parts.length == 2 && (parts[1].compareTo("0")==0
+			|| parts[1].compareTo("1")==0));
+		case "906":
+			return parts.length == 6;
+		case "901":
+			return parts.length == 4 ;
 		default:
 			return false;
 			
