@@ -168,12 +168,12 @@ public class Multiplayer extends ScreenAdapter {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			
-			Log.d("myDebug", e.toString());
+			Log.d("myExeption", e.toString());
 			game.setScreen(new Menu(youHockey));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			
-			Log.d("myDebug", e.toString());
+			Log.d("myExeption", e.toString());
 			game.setScreen(new Menu(youHockey));
 		}
     	
@@ -321,6 +321,18 @@ public class Multiplayer extends ScreenAdapter {
 			{
 				try {
 					String tmp = inFromRival.readLine();
+					if (tmp == null)
+					{
+						if (rival.isConnected())
+						{
+							Log.d("myExeption" , "recived null but connected");
+							continue;
+						}
+					
+							
+						else
+							throw new Exception("Rival disconected ");
+					}
 					Log.d("reciverT", "recived : " + tmp);
 					Message m = new Message(tmp);
 					
@@ -328,7 +340,11 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("reciverT",tmp + " added succesfuly to Queue");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("reciverT",e.toString());
+					Log.d("myExeption",e.toString());
+					game.setScreen(new Menu(game));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
 				}
 			}
@@ -356,10 +372,10 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("sender" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("sender",e.toString());
+					Log.d("myExeption",e.toString());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					Log.d("sender",e.toString());
+					Log.d("myExeption",e.toString());
 				}
 				
 				
@@ -385,7 +401,8 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("handler" , "Sent ");
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					Log.d("handler",e.toString());
+					Log.d("myExeption",e.toString());
+					game.setScreen(new Menu(game));
 				}
 				
 				
@@ -396,19 +413,22 @@ public class Multiplayer extends ScreenAdapter {
 			// TODO Auto-generated method stub
 			String opCode = m.getType();
 			String[] params = m.getParameters();
+			float x = 0,y=0,time ; 
+			boolean flag1,flag2,flag3,flag4 = false,flag5;
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
-				float x = Float.parseFloat(params[0])*lim.getGameWidth();
-				float y = Float.parseFloat(params[1])*lim.getGameHeight();
-				float time =  Float.parseFloat(params[2]);
+				x = Float.parseFloat(params[0])*lim.getGameWidth();
+				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
 				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
 						+" time = "+ time);
-				boolean flag1 = x > lim.getLeft() && x < lim.getRight();
-				boolean flag2 = y > lim.getBottom() &&y < lim.getTop();
-				boolean flag3 = time > 0 ; 
+				flag1 = x > lim.getLeft() && x < lim.getRight();
+				
+				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag3 = time > 0 ; 
 				if (flag1 && flag2 && flag3)
 				{
 					Log.d("handler" , "info okay");
@@ -421,7 +441,84 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("handler" , "info not  okay");
 				}
 				break;
-
+			case "906":
+				x = Float.parseFloat(params[0])*lim.getGameWidth();
+				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				time =  Float.parseFloat(params[2]);
+				x = lim.getGameWidth()   - x ;
+				y = lim.getGameHeight()  - y ; 
+				String xDir , yDir;
+				flag1 = x > lim.getLeft() && x < lim.getRight();
+				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag3 = time > 0 ; 
+				xDir = params[3];
+				yDir = params[4];
+				flag4 = params[3].compareTo("left") == 0 ||
+						params[3].compareTo("right") == 0; 
+				flag5= params[4].compareTo("top") == 0 ||
+						params[4].compareTo("bottom") == 0; 
+				
+				if (flag1 && flag2 && flag3 && flag4 && flag5)
+				{
+					Log.d("handler" , "info   okay ");
+					disk.setXdir(xDir);
+					disk.setXdir(yDir);
+					disk.clearActions();
+					lim.addMoveToAction(disk, x, y, 'D');
+					Log.d("handler" , "disk moving to x: "+x+" y: " +y 
+							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
+				}
+				else
+				{
+					//Send error Massage
+					Log.d("handler" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
+							","+flag5);
+				}
+				
+				
+				
+			case "905":
+				if (params.length == 3  && params[0].compareTo("1") == 0)
+				{
+					
+					x = Float.parseFloat(params[1])*lim.getGameWidth();
+					y = Float.parseFloat(params[2])*lim.getGameHeight();
+					x = lim.getGameWidth()   - x ;
+					y = lim.getGameHeight()  - y ;
+					flag1 = x > lim.getLeft() && x < lim.getRight();
+					flag2 = y > lim.getBottom() &&y < lim.getTop();
+					flag3 = true;
+					flag4 = true;
+				}
+				else if (params.length == 1  && params[0].compareTo("0") == 0)
+				{
+					flag1= true;
+					flag2 = true;
+					flag3= true;
+					flag4 = false;
+				}
+				else
+				{
+					flag3 = false;
+					flag1 = false;
+					flag2 = false;
+				}
+				
+				if (flag1 && flag2 && flag3)
+				{
+					Log.d("handler" , "info okay");
+					if (flag4)
+					{
+						disk.spawn(x,y);
+					}
+				}
+				else
+				{
+					//Send error Massage
+					
+					Log.d("handler" , "info not  okay");
+				}
+				
 			default:
 				break;
 			}

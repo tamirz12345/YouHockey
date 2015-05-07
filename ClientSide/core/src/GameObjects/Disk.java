@@ -2,6 +2,8 @@ package GameObjects;
 
 import java.util.Random;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -183,7 +185,7 @@ public class Disk  extends Actor {
 
 	public void addMoveToAction(float x , float y)
 	{
-		game.addMoveToAction(this, x, y , false);
+		game.addMoveToAction(this, x, y ,'d');
 		this.targetLoc = new Vector2(x,y);
 	}
  
@@ -206,12 +208,14 @@ public class Disk  extends Actor {
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && this.getY() == bottomLim)
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth() -32 &&
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth()  &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
-        				this.game.incTop();
+        				this.spawn();
+        				this.game.incTop(this);
         				downSpawn = true;
-        				this.spawn();				
+        				
+        				
         				return;
         			}
         			wY = Wall.Top;
@@ -220,12 +224,15 @@ public class Disk  extends Actor {
         			
         		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop())
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth() - 32&&
+        			if (this.getX() >= game.leftGoal  * game.getGameWidth() &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
         				this.game.incBottom();
         				downSpawn = false;
+        				
         				this.spawn();
+        				
+        				
         				return;
         			}
         			wY = Wall.Bottom;
@@ -265,8 +272,38 @@ public class Disk  extends Actor {
         	}
         }
     }
-
-
+    public String getXDir()
+    {
+    	if (wX == Wall.Left)
+    		return "left";
+    	else
+    		return "right";
+    }
+    
+    
+    public String getYDir()
+    {
+    	if (wX == Wall.Top)
+    		return "top";
+    	else
+    		return "bottom";
+    }
+    
+    public void setXdir(String dir)
+    {
+    	if (dir.compareTo("left") == 0 )
+    		wX = Wall.Left;
+    	else
+    		wX = Wall.Right;
+    }
+    public void setYdir(String dir)
+    {
+    	if (dir.compareTo("top") == 0 )
+    		wX = Wall.Top;
+    	else
+    		wX = Wall.Bottom;
+    }
+    
 	public void spawn() {
 		this.clearActions();
 		if (downSpawn)
@@ -289,6 +326,15 @@ public class Disk  extends Actor {
 		wX = null;
 		wY = null;
 		targetW = null;
+		
+	}
+
+	public void spawn(float x, float y) {
+		// TODO Auto-generated method stub
+		this.clearActions();
+		this.setX(x);
+		this.setY(y);
+		Log.d("handler" , "spawn x = " + x +"y = "+y);
 	}
     
     

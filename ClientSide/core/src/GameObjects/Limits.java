@@ -187,16 +187,25 @@ public class Limits {
 		goalSound.play();
 	}
 	
-	public void incTop()
+	public void incTop(Disk d)
 	{
 		this.ScoreTop ++;
 		if (ohSound.isPlaying())
 			ohSound.stop();
 		ohSound.play();
+		if(isMultiplayer)
+		{
+			float newX = d.getX() / this.getGameWidth();
+			float newY = d.getY() / this.getGameHeight();
+			String msgS= "905-"+"1"+"-"+newX+"-"+newY+"-";
+			Log.d("myDebug","adding to TOSend queue : " + msgS);
+			toSend.add(msgS);
+			Log.d("myDebug","addedto TOSend queue. ");
+		}
 	}
 	
 	
-	public void addMoveToAction(Actor a, float x , float y , boolean bottomTool)
+	public void addMoveToAction(Actor a, float x , float y , Character typeC)
 	{
 		if (!this.inGameBounds(x, y))
 		{
@@ -213,16 +222,33 @@ public class Limits {
 		moveAction.setDuration(speed);
 		moveAction.setPosition(x, y);
 		a.addAction(moveAction);
-		if (isMultiplayer && bottomTool)
+		if (isMultiplayer)
 		{
-			float newX = x / this.getGameWidth();
-			float newY= y / this.getGameHeight();
-			String msg=  "901-"+Float.toString(newX)+"-"+Float.toString(newY)+
-					"-"+Float.toString(speed)+"-";
-			Log.d("myDebug","adding to TOSend queue : " + msg);
-			toSend.add(msg);
-			Log.d("myDebug","addedto TOSend queue : ");
+			if ( typeC == 'h')
+			{
+				float newX = x / this.getGameWidth();
+				float newY= y / this.getGameHeight();
+				String msg=  "901-"+Float.toString(newX)+"-"+Float.toString(newY)+
+						"-"+Float.toString(speed)+"-";
+				Log.d("myDebug","adding to TOSend queue : " + msg);
+				toSend.add(msg);
+				Log.d("myDebug","addedto TOSend queue : ");
+			}
+			else if (typeC == 'd' && a.getY() < this.calcMid())
+			{
+				float newX = x / this.getGameWidth();
+				float newY= y / this.getGameHeight();
+				String xDir , yDir;
+				xDir = ((Disk) a).getXDir();
+				yDir = ((Disk) a).getYDir();
+				String msg=  "906-"+Float.toString(newX)+"-"+Float.toString(newY)+
+						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-";
+				Log.d("myDebug","adding to TOSend queue : " + msg);
+				toSend.add(msg);
+				Log.d("myDebug","addedto TOSend queue : ");
+			}
 		}
+		
 	}
 	
 	
