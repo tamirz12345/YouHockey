@@ -23,9 +23,9 @@ namespace HockeyServer
             foreach (Pair pair in this.pairQueue)
             {
                 if (pair.listener != null && pair.listener.isEqual(checkClient))
-                {
-                    return true;
+                {  
                     m.ReleaseMutex();
+                    return true;
                 }
 
                 if (pair.initiator != null && pair.initiator.isEqual(checkClient))
@@ -113,13 +113,16 @@ namespace HockeyServer
             m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
-                if (pair.listener.isEqual(client))
-                    return i; 
+                if (pair.listener != null && pair.initiator != null)
+                {
+                    if (pair.listener.isEqual(client))
+                        return i;
 
-                else if (pair.initiator.isEqual(client))
-                    return i;
+                    else if (pair.initiator.isEqual(client))
+                        return i;
 
-                i++;
+                    i++;
+                }
             }
             m.ReleaseMutex();
             return i;
