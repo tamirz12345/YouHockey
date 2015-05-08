@@ -140,16 +140,19 @@ namespace HockeyServer
             m.WaitOne();
             foreach (Pair pair in this.pairQueue)
             {
-                if (pair.listener.isEqual(client))
+                if (pair.listener != null && pair.initiator != null)
                 {
-                    m.ReleaseMutex();
-                    return pair;
-                }
+                    if (pair.listener.isEqual(client))
+                    {
+                        m.ReleaseMutex();
+                        return pair;
+                    }
 
-                else if (pair.initiator.isEqual(client))
-                {
-                    m.ReleaseMutex();
-                    return pair;
+                    else if (pair.initiator.isEqual(client))
+                    {
+                        m.ReleaseMutex();
+                        return pair;
+                    }
                 }
             }
             m.ReleaseMutex();
