@@ -40,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 
 public class Multiplayer extends ScreenAdapter {
+	private static final Integer SCORE_TO_WIN = 2;
 	YouHockey game;
 	SpriteBatch batch;
 	OrthographicCamera camera;
@@ -301,7 +302,19 @@ public class Multiplayer extends ScreenAdapter {
 			
 		}
 		stage.act(delta);
-		
+		if (lim.getScoreBottom() == SCORE_TO_WIN)
+		{
+			music.stop();
+			super.dispose();
+			game.setScreen(new EndGame(game, true));
+		}
+			
+		if (lim.getScoreTop() == SCORE_TO_WIN)
+		{
+			music.stop();
+			super.dispose();
+			game.setScreen(new EndGame(game, false));
+		}
 		
 	}
 	
@@ -396,6 +409,8 @@ public class Multiplayer extends ScreenAdapter {
 			{
 				try {
 					Message m = toHandel.take();
+					if (m == null)
+						throw new Exception("null msg in the queue wtf?");
 					Log.d("handler" , "Handling : " + m.toString());
 					handel(m);
 					Log.d("handler" , "Sent ");
@@ -403,6 +418,10 @@ public class Multiplayer extends ScreenAdapter {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					Log.d("myExeption",e.toString());
+					e.printStackTrace();
 				}
 				
 				
@@ -478,47 +497,35 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			case "905":
-				if (params.length == 3  && params[0].compareTo("1") == 0)
+				if (params[0].compareTo("1")==0)
 				{
 					
-					x = Float.parseFloat(params[1])*lim.getGameWidth();
-					y = Float.parseFloat(params[2])*lim.getGameHeight();
-					x = lim.getGameWidth()   - x ;
-					y = lim.getGameHeight()  - y ;
-					flag1 = x > lim.getLeft() && x < lim.getRight();
-					flag2 = y > lim.getBottom() &&y < lim.getTop();
-					flag3 = true;
-					flag4 = true;
+					Log.d("goalTamir" , "i scored");
+					lim.incBottom();
+					disk.downSpawn = false;
+					disk.spawn();
+					String response = "905-0-";
+					toSend.add(response);
+					Log.d("goalTamir" , response + " added to toSend");
+					Log.d("goalTamir" , "Score me : " + lim.getScoreBottom()
+							+"Score rival : " + lim.getScoreTop());
 				}
-				else if (params.length == 1  && params[0].compareTo("0") == 0)
+				else if (params[0].compareTo("0")==0 && disk.isWaiting())
 				{
-					flag1= true;
-					flag2 = true;
-					flag3= true;
-					flag4 = false;
+					Log.d("goalTamir" , "rival  scored and accepted it");
+					Log.d("goalTamir" , "Score me : " + lim.getScoreBottom()
+							+"Score rival : " + lim.getScoreTop());
+					disk.wakeUp();
+					disk.downSpawn = true;
+					disk.spawn();
+				
 				}
 				else
 				{
-					flag3 = false;
-					flag1 = false;
-					flag2 = false;
+					Log.d("goalTamir" , "something is wrong");
 				}
-				
-				if (flag1 && flag2 && flag3)
-				{
-					Log.d("handler" , "info okay");
-					if (flag4)
-					{
-						disk.spawn(x,y);
-					}
-				}
-				else
-				{
-					//Send error Massage
-					
-					Log.d("handler" , "info not  okay");
-				}
-				
+			
+			
 			default:
 				break;
 			}
