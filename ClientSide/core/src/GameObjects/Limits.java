@@ -235,7 +235,7 @@ public class Limits {
 			}
 			else if (typeC == 'd' && a.getY() < this.calcMid())
 			{
-				speed = 2f;
+				speed = 1f;
 				float newX = x / this.getGameWidth();
 				float newY= y / this.getGameHeight();
 				String xDir , yDir;

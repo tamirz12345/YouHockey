@@ -495,7 +495,7 @@ public class Multiplayer extends ScreenAdapter {
 				}
 				
 				
-				
+				break;
 			case "905":
 				if (params[0].compareTo("1")==0)
 				{
@@ -524,7 +524,7 @@ public class Multiplayer extends ScreenAdapter {
 				{
 					Log.d("goalTamir" , "something is wrong");
 				}
-			
+				break;
 			
 			default:
 				break;
