@@ -306,16 +306,16 @@ public class Disk  extends Actor {
     public void setXdir(String dir)
     {
     	if (dir.compareTo("left") == 0 )
-    		wX = Wall.Left;
-    	else
     		wX = Wall.Right;
+    	else
+    		wX = Wall.Left;
     }
     public void setYdir(String dir)
     {
     	if (dir.compareTo("top") == 0 )
-    		wX = Wall.Top;
-    	else
     		wX = Wall.Bottom;
+    	else
+    		wX = Wall.Top;
     }
     public boolean isWaiting()
     {

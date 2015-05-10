@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -228,7 +229,35 @@ public class Multiplayer extends ScreenAdapter {
 		reciver.start();
 	    
 	}
-
+	
+	public void CloseStuff()
+	{
+		Log.d("CloseTamir", "CloseStuff() Activated");
+		try {
+			playing = false;
+			Log.d("CloseTamir", "interupting threads");
+			reciver.interrupt();
+			sender.interrupt();
+			handler.interrupt();
+			Log.d("CloseTamir", "Joining finished");
+			rival.close();
+			Log.d("CloseTamir", "Socket Closed");
+			if (!inisiator)
+			{
+				ActiveRival.close();
+				Log.d("CloseTamir", "ServerSocketClosed");
+			}
+				
+			music.stop();
+			super.dispose();
+			Log.d("CloseTamir", "Disposed()");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+	}
+	
 	public void render (float delta) {
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -303,16 +332,14 @@ public class Multiplayer extends ScreenAdapter {
 		}
 		stage.act(delta);
 		if (lim.getScoreBottom() == SCORE_TO_WIN)
-		{
-			music.stop();
-			super.dispose();
+		{			
+			CloseStuff();
 			game.setScreen(new EndGame(game, true));
 		}
 			
 		if (lim.getScoreTop() == SCORE_TO_WIN)
 		{
-			music.stop();
-			super.dispose();
+			CloseStuff();
 			game.setScreen(new EndGame(game, false));
 		}
 		
@@ -351,16 +378,30 @@ public class Multiplayer extends ScreenAdapter {
 					
 					toHandel.add(m);
 					Log.d("reciverT",tmp + " added succesfuly to Queue");
-				} catch (IOException e) {
+				}
+				catch(SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
-				} catch (Exception e) {
+					
+				} 
+				
+				catch (InterruptedException e)
+				{
+					Log.d("myExeption",e.toString());
+					
+				}
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
 				}
 			}
+			Log.d("loop", "Reciver loop finished");
 		}
 		
 	}
@@ -383,7 +424,12 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("sender" , "Sending : " + s);
 					outToRival.writeBytes(s+"\n");
 					Log.d("sender" , "Sent ");
-				} catch (InterruptedException e) {
+				}
+				catch (SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 				} catch (IOException e) {
@@ -393,6 +439,8 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			}
+			
+			Log.d("loop", "sender loop finished");
 		}
 		
 	}
@@ -417,8 +465,13 @@ public class Multiplayer extends ScreenAdapter {
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
-					game.setScreen(new Menu(game));
-				} catch (Exception e) {
+					
+				}
+				catch (SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					e.printStackTrace();
@@ -426,6 +479,7 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			}
+			Log.d("loop", "Handler loop finished");
 		}
 		
 		private void handel(Message m) {
@@ -444,9 +498,9 @@ public class Multiplayer extends ScreenAdapter {
 				y = lim.getGameHeight()  - y ; 
 				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
 						+" time = "+ time);
-				flag1 = x > lim.getLeft() && x < lim.getRight();
+				flag1 = x >= lim.getLeft() && x <= lim.getRight();
 				
-				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag2 = y >= lim.getBottom() &&y <= lim.getTop();
 				flag3 = time > 0 ; 
 				if (flag1 && flag2 && flag3)
 				{
@@ -461,14 +515,15 @@ public class Multiplayer extends ScreenAdapter {
 				}
 				break;
 			case "906":
+				Log.d("diskTamir","handling : " + m.toString());
 				x = Float.parseFloat(params[0])*lim.getGameWidth();
 				y = Float.parseFloat(params[1])*lim.getGameHeight();
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
 				String xDir , yDir;
-				flag1 = x > lim.getLeft() && x < lim.getRight();
-				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
+				flag2 = y >= lim.getBottom() && y <= lim.getTop();
 				flag3 = time > 0 ; 
 				xDir = params[3];
 				yDir = params[4];
@@ -479,23 +534,23 @@ public class Multiplayer extends ScreenAdapter {
 				
 				if (flag1 && flag2 && flag3 && flag4 && flag5)
 				{
-					Log.d("handler" , "info   okay ");
+					Log.d("diskTamir" , "info   okay ");
 					disk.setXdir(xDir);
 					disk.setXdir(yDir);
 					disk.clearActions();
 					lim.addMoveToAction(disk, x, y, 'D');
-					Log.d("handler" , "disk moving to x: "+x+" y: " +y 
+					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
 							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
 				}
 				else
 				{
 					//Send error Massage
-					Log.d("handler" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
+					Log.d("diskTamir" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
 							","+flag5);
 				}
 				
 				
-				
+				break;
 			case "905":
 				if (params[0].compareTo("1")==0)
 				{
@@ -524,13 +579,21 @@ public class Multiplayer extends ScreenAdapter {
 				{
 					Log.d("goalTamir" , "something is wrong");
 				}
-			
+				break;
 			
 			default:
 				break;
 			}
 		}
 		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		CloseStuff();
+		playing = false; 
+		super.dispose();
 	}
 	
 }
