@@ -80,12 +80,17 @@ namespace HockeyServer
             {
                 foreach (Pair pair in this.pairQueue)
                 {
-                    if (pair.listener.isEqual(client))
-                        this.pairQueue.ElementAt(index).listener = null;
+                    if (pair.listener != null)
+                    {
+                        if (pair.listener.isEqual(client))
+                            this.pairQueue.ElementAt(index).listener = null;
+                    }
 
-                    else if (pair.initiator.isEqual(client))
-                        this.pairQueue.ElementAt(index).initiator = null;
-
+                    if (pair.initiator != null)
+                    {
+                        if (pair.initiator.isEqual(client))
+                            this.pairQueue.ElementAt(index).initiator = null;
+                    }
                     index++;
                 }
             }

@@ -7,19 +7,15 @@ namespace HockeyServer
 {
     class Message
     {
-        public string message;
-        public string cutMessage;
-        public string opCode; 
-        public List<string> parameters; 
+        public string message; 
+        
         public Message(byte[] arr)
         {
             try
             {
                 this.message = Encoding.UTF8.GetString(arr, 0, arr.Length);
-                string temp = this.message; 
-                this.parameters = this.cutParameters();
-                this.opCode = this.cutOpcode();
-                this.cutMessage = temp.Substring(0, message.LastIndexOf('-'));
+               
+               //.Substring(0, message.LastIndexOf('-'));
             }
             catch (Exception e)
             {
