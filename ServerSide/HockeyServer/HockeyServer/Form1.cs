@@ -18,6 +18,8 @@ namespace HockeyServer
             InitializeComponent();
             this.Visible = false; 
             Server server = new Server(port);
+            
+            this.Hide(); 
         }
 
         // returns the ip address of current computer
@@ -30,6 +32,11 @@ namespace HockeyServer
         public void appendLine(string s)
         {
             textBox1.Text += s; 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
