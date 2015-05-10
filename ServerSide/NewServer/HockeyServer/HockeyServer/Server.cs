@@ -61,7 +61,7 @@ namespace HockeyServer
                 if (msg.message != null && msg.cutOpcode() != "")
                 {
                     string opcode = msg.cutOpcode();
-                    Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
+                    Console.WriteLine("Message: '" + msg.cutMessage + "' Received from: " + clientep.ToString());
                     List<string> parameters = msg.cutParameters();
 
 
