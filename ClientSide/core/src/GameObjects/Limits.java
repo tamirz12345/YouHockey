@@ -243,9 +243,9 @@ public class Limits {
 				yDir = ((Disk) a).getYDir();
 				String msg=  "906-"+Float.toString(newX)+"-"+Float.toString(newY)+
 						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-";
-				Log.d("myDebug","adding to TOSend queue : " + msg);
+				Log.d("diskTamir","adding to TOSend queue : " + msg);
 				toSend.add(msg);
-				Log.d("myDebug","addedto TOSend queue : ");
+				Log.d("diskTamir","addedto TOSend queue : ");
 			}
 		}
 		

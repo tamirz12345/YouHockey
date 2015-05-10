@@ -16,20 +16,20 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Menu extends ScreenAdapter{
 	YouHockey game;
-	Rectangle PlayButton, PVPButton;
-	Texture playTexture , pvpTexture;
+	Rectangle PlayButton, PVPButton , Logo;
+	Texture playTexture , pvpTexture , LogoTexture;
 	Limits lim;
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	Vector3 tempTouch;
-	Vector2 temp1, temp2;
+	Vector2 temp1, temp2 , logoLoc;
 	Music m ;
 	boolean started = false;
 	public Menu(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
 	}
-
+	
 	public void create () {
     	lim = new Limits(null);
 		batch = new SpriteBatch();
@@ -37,7 +37,10 @@ public class Menu extends ScreenAdapter{
 		
 		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
 		
-		
+		logoLoc = UnitConvertor.toGame((float)lim.getxUnit() * 20 , (float) (lim.getyUnit() *90));
+		Logo = new Rectangle(logoLoc.x,
+				logoLoc.y,(float) ((float)20 * lim.getxUnit()),
+        		(float) ((float)40 * lim.getyUnit()));
 		temp1 = UnitConvertor.toGame((float)lim.getxUnit() * 20 , (float) (lim.getyUnit() * 70));
 		m =  Gdx.audio.newMusic(Gdx.files.internal("areYouReadyKids.mp3"));
         PlayButton = new Rectangle(temp1.x,
@@ -52,6 +55,7 @@ public class Menu extends ScreenAdapter{
         tempTouch = new Vector3();
         playTexture = new Texture("bot.png");
         pvpTexture = new Texture("pvp.png");
+        LogoTexture = new Texture("uhockey.png");
         Gdx.input.setCatchBackKey(true);
 	}
 
@@ -59,6 +63,8 @@ public class Menu extends ScreenAdapter{
 		Gdx.gl.glClearColor(1, 10, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		batch.draw(LogoTexture, logoLoc.x, logoLoc.y , 
+				PlayButton.width , PlayButton.height);
 		batch.draw(playTexture, temp1.x, temp1.y , 
 				PlayButton.width , PlayButton.height);
 		

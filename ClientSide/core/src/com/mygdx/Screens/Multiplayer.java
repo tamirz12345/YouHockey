@@ -228,7 +228,23 @@ public class Multiplayer extends ScreenAdapter {
 		reciver.start();
 	    
 	}
-
+	
+	public void CloseStuff()
+	{
+		try {
+			playing = false;
+			rival.close();
+			if (!inisiator)
+				ActiveRival.close();
+			music.stop();
+			super.dispose();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void render (float delta) {
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -303,16 +319,14 @@ public class Multiplayer extends ScreenAdapter {
 		}
 		stage.act(delta);
 		if (lim.getScoreBottom() == SCORE_TO_WIN)
-		{
-			music.stop();
-			super.dispose();
+		{			
+			CloseStuff();
 			game.setScreen(new EndGame(game, true));
 		}
 			
 		if (lim.getScoreTop() == SCORE_TO_WIN)
 		{
-			music.stop();
-			super.dispose();
+			CloseStuff();
 			game.setScreen(new EndGame(game, false));
 		}
 		
@@ -444,9 +458,9 @@ public class Multiplayer extends ScreenAdapter {
 				y = lim.getGameHeight()  - y ; 
 				Log.d("handler","Move tool to  x=  "+ x +" y= "+ y
 						+" time = "+ time);
-				flag1 = x > lim.getLeft() && x < lim.getRight();
+				flag1 = x >= lim.getLeft() && x <= lim.getRight();
 				
-				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag2 = y >= lim.getBottom() &&y <= lim.getTop();
 				flag3 = time > 0 ; 
 				if (flag1 && flag2 && flag3)
 				{
@@ -461,14 +475,15 @@ public class Multiplayer extends ScreenAdapter {
 				}
 				break;
 			case "906":
+				Log.d("diskTamir","handling : " + m.toString());
 				x = Float.parseFloat(params[0])*lim.getGameWidth();
 				y = Float.parseFloat(params[1])*lim.getGameHeight();
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
 				String xDir , yDir;
-				flag1 = x > lim.getLeft() && x < lim.getRight();
-				flag2 = y > lim.getBottom() &&y < lim.getTop();
+				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
+				flag2 = y >= lim.getBottom() && y <= lim.getTop();
 				flag3 = time > 0 ; 
 				xDir = params[3];
 				yDir = params[4];
@@ -479,18 +494,18 @@ public class Multiplayer extends ScreenAdapter {
 				
 				if (flag1 && flag2 && flag3 && flag4 && flag5)
 				{
-					Log.d("handler" , "info   okay ");
+					Log.d("diskTamir" , "info   okay ");
 					disk.setXdir(xDir);
 					disk.setXdir(yDir);
 					disk.clearActions();
 					lim.addMoveToAction(disk, x, y, 'D');
-					Log.d("handler" , "disk moving to x: "+x+" y: " +y 
+					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
 							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
 				}
 				else
 				{
 					//Send error Massage
-					Log.d("handler" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
+					Log.d("diskTamir" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
 							","+flag5);
 				}
 				
@@ -531,6 +546,14 @@ public class Multiplayer extends ScreenAdapter {
 			}
 		}
 		
+	}
+
+	@Override
+	public void dispose() {
+		// TODO Auto-generated method stub
+		CloseStuff();
+		playing = false; 
+		super.dispose();
 	}
 	
 }
