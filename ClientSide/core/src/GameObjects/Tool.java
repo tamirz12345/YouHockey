@@ -31,11 +31,11 @@ public class Tool  extends Actor{
         this.setWidth((float) (R * 2));
         this.setHeight(this.getWidth());
         if (this.isBelow) {
-            this.setPosition((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() - 0.3)));
+            this.setPosition((float) (game.getGameWidth()*0.5),(float)0.5 * game.calcMid());
             this.TimeToMove = 3;
         } else {
           
-            this.setPosition((float) (game.getGameWidth()*0.5),(float) (game.getGameHeight() * (game.getMid() + 0.3)));
+            this.setPosition((float) (game.getGameWidth()*0.5),(float)1.5 * game.calcMid());
             this.TimeToMove = 10;
         }
         
@@ -76,6 +76,7 @@ public class Tool  extends Actor{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		//this.update();
+		float densityIndependentSize = Gdx.graphics.getDensity();
 		Vector2 v = UnitConvertor.toGame(this.getX(), this.getY());
 		batch.draw(img , v.x , v.y , this.getWidth() , this.getHeight());
 	}

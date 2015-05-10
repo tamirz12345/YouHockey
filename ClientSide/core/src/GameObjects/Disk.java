@@ -18,13 +18,14 @@ public class Disk  extends Actor {
 	float radius  ; 
 	boolean toHuman = false;
 	Vector2 targetLoc = null;
-	boolean moving , downSpawn;
+	public boolean moving , downSpawn;
 	float m, n; // y = mx + n
     
 	Limits game;
 	Wall targetW = null;
 	Wall wY = null , wX = null;
 	Line l;
+	boolean wait = false;
     Music hitBall;
     Music hitWall;
     float rSize = 7;
@@ -53,6 +54,10 @@ public class Disk  extends Actor {
 
 	@Override
 	public void draw(Batch batch, float alpha){
+		if (wait)
+    		return;
+		float densityIndependentSize = Gdx.graphics.getDensity();
+		Log.d("tamir1","density = " + densityIndependentSize);
 		Vector2 v = UnitConvertor.toGame(super.getX(),super.getY());
         batch.draw(texture,v.x,v.y,this.getWidth(), this.getHeight());
     }
@@ -191,6 +196,8 @@ public class Disk  extends Actor {
  
     public void update(Tool t1 , Tool t2)
     {
+    	if (wait)
+    		return;
     	this.checkCollision(t1);
     	if (t2 != null)
     	{
@@ -206,14 +213,18 @@ public class Disk  extends Actor {
         		
         		boolean changed = false;
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
-        		if (targetW == Wall.Bottom && this.getY() == bottomLim)
+        		if (targetW == Wall.Bottom && (int)this.getY() == (int)bottomLim)
         		{
         			if (this.getX() >= game.leftGoal  * game.getGameWidth()  &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
         			{
-        				this.spawn();
-        				this.game.incTop(this);
+        				Log.d("goalTamir","scored Buttom Goal");
         				downSpawn = true;
+        				
+        				this.spawn();
+        				wait = true;
+        				this.game.incTop(this);
+        				
         				
         				
         				return;
@@ -262,14 +273,15 @@ public class Disk  extends Actor {
         		else
         		{
             		System.out.println("Disk stoped because of a problem somewhere");
-            		this.spawn();
+            		//this.spawn();
             	}
         	}
-
+        	
         	if (!game.inGameBounds(this))
         	{
         		this.spawn();
         	}
+        	
         }
     }
     public String getXDir()
@@ -303,18 +315,28 @@ public class Disk  extends Actor {
     	else
     		wX = Wall.Bottom;
     }
+    public boolean isWaiting()
+    {
+    	return wait;
+    }
+    
+    public void wakeUp()
+    {
+    	wait = false;
+    }
     
 	public void spawn() {
+		
 		this.clearActions();
 		if (downSpawn)
 		{
 			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
-					(float) (game.getGameHeight() * 0.4 - this.getHeight()/2));
+					(float) (game.calcMid()*0.8 - this.getHeight()/2));
 		}
 		else
 		{
 			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
-					(float) (game.getGameHeight() * 0.6 + this.getHeight()/2));
+					(float) (game.calcMid() *1.2+ this.getHeight()/2));
 		}
 	}
 
