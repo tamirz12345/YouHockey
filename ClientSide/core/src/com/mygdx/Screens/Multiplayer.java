@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -231,17 +232,29 @@ public class Multiplayer extends ScreenAdapter {
 	
 	public void CloseStuff()
 	{
+		Log.d("CloseTamir", "CloseStuff() Activated");
 		try {
 			playing = false;
+			Log.d("CloseTamir", "interupting threads");
+			reciver.interrupt();
+			sender.interrupt();
+			handler.interrupt();
+			Log.d("CloseTamir", "Joining finished");
 			rival.close();
+			Log.d("CloseTamir", "Socket Closed");
 			if (!inisiator)
+			{
 				ActiveRival.close();
+				Log.d("CloseTamir", "ServerSocketClosed");
+			}
+				
 			music.stop();
 			super.dispose();
+			Log.d("CloseTamir", "Disposed()");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
 	}
 	
@@ -365,16 +378,30 @@ public class Multiplayer extends ScreenAdapter {
 					
 					toHandel.add(m);
 					Log.d("reciverT",tmp + " added succesfuly to Queue");
-				} catch (IOException e) {
+				}
+				catch(SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (IOException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
-				} catch (Exception e) {
+					
+				} 
+				
+				catch (InterruptedException e)
+				{
+					Log.d("myExeption",e.toString());
+					
+				}
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					game.setScreen(new Menu(game));
 				}
 			}
+			Log.d("loop", "Reciver loop finished");
 		}
 		
 	}
@@ -397,7 +424,12 @@ public class Multiplayer extends ScreenAdapter {
 					Log.d("sender" , "Sending : " + s);
 					outToRival.writeBytes(s+"\n");
 					Log.d("sender" , "Sent ");
-				} catch (InterruptedException e) {
+				}
+				catch (SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 				} catch (IOException e) {
@@ -407,6 +439,8 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			}
+			
+			Log.d("loop", "sender loop finished");
 		}
 		
 	}
@@ -431,8 +465,13 @@ public class Multiplayer extends ScreenAdapter {
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
-					game.setScreen(new Menu(game));
-				} catch (Exception e) {
+					
+				}
+				catch (SocketException e)
+				{
+					Log.d("myExeption",e.toString());
+				}
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					Log.d("myExeption",e.toString());
 					e.printStackTrace();
@@ -440,6 +479,7 @@ public class Multiplayer extends ScreenAdapter {
 				
 				
 			}
+			Log.d("loop", "Handler loop finished");
 		}
 		
 		private void handel(Message m) {
