@@ -82,7 +82,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 }
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
-		public String ipS = "192.168.1.100";
+		public String ipS = "192.168.1.106";
 	  	public int portS = 3000;
 	  	
 	  	InetSocketAddress serverAddress;
@@ -93,7 +93,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 		BufferedReader inFromServer ;
 	  	Socket clientSocket = null;
 	  	String rival;
-	  	ServerSocket freePort;
+	  	int freePort;
 		
 		
         protected String doInBackground(String... params) {
@@ -109,7 +109,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				  {
 					  System.out.println("Waiting To rival \n");
 				  }
-				  rival = pairUp(freePort.getLocalPort());
+				  rival = pairUp(freePort);
 				  
 				  
 				  
@@ -144,7 +144,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 				@Override
 				public void run() {
 					game.setScreen(new Multiplayer(game,
-							ipS+":" + Integer.toString(portS), res,freePort.getLocalPort()));
+							ipS+":" + Integer.toString(portS), res,freePort));
 					
 				}
 			});
@@ -159,15 +159,15 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
         
         
         
-        public ServerSocket findPort(int start , int end) throws IOException
+        public int findPort(int start , int end) throws IOException
         {
-        	
+        	ServerSocket s = new ServerSocket(0);
         	
         	for (int i = start ; i < end ; i ++ ) {
                 try {
                 	
                     ServerSocket temp = new ServerSocket(i);
-                    return temp;
+                    return i;
                 } catch (IOException ex) {
                     continue; // try next port
                 }
