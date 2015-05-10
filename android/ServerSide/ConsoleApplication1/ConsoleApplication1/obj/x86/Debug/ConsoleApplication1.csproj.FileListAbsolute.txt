@@ -1,0 +1,4 @@
+D:\Users\user-pc\Documents\Magshimim\YouHockey\android\ServerSide\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe
+D:\Users\user-pc\Documents\Magshimim\YouHockey\android\ServerSide\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.pdb
+D:\Users\user-pc\Documents\Magshimim\YouHockey\android\ServerSide\ConsoleApplication1\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.exe
+D:\Users\user-pc\Documents\Magshimim\YouHockey\android\ServerSide\ConsoleApplication1\ConsoleApplication1\obj\x86\Debug\ConsoleApplication1.pdb

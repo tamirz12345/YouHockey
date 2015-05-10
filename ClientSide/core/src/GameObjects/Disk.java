@@ -196,12 +196,14 @@ public class Disk  extends Actor {
  
     public void update(Tool t1 , Tool t2)
     {
+    	// t2 = bot 
+    	// add boolean is single player
     	if (wait)
     		return;
     	this.checkCollision(t1);
     	if (t2 != null)
     	{
-    		this.checkCollision(t2);//Collision isn't chacked in multiplayer
+    		this.checkCollision(t2); //Collision isn't chacked in multiplayer
     	}
 		
 		
