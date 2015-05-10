@@ -18,6 +18,8 @@ namespace HockeyServer
             InitializeComponent();
             this.Visible = false; 
             Server server = new Server(port);
+            lblInfo.Text = "Listen at: " + getIpAddress().ToString() + ":" + port.ToString();
+            this.Hide(); 
         }
 
         // returns the ip address of current computer
@@ -25,11 +27,6 @@ namespace HockeyServer
         {
             IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName());
             return Convert.ToString(localIP[localIP.Length - 2]);
-        }
-
-        public void appendLine(string s)
-        {
-            textBox1.Text += s; 
         }
     }
 }

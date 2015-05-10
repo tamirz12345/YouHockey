@@ -19,7 +19,6 @@ namespace HockeyServer
         PairQueue pairQueue = new PairQueue();
         IPEndPoint ip;
         Socket socket;
-        Form1 f = new Form1();
 
         public Server(int port)
         {
@@ -39,11 +38,11 @@ namespace HockeyServer
             while (true)
             {
                 socket.Listen(10);
-                this.f.appendLine("Listening...");
+                Console.WriteLine("Listening...");
                 Socket client = socket.Accept();
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
                 m.WaitOne();
-                this.f.appendLine(clientep.ToString() + " Accepted!");
+                Console.WriteLine(clientep.ToString() + " Accepted!");
                 m.ReleaseMutex();
                 Thread handleThread =  new Thread(() => handleCommand(client)); // handle command thread for each client
                 handleThread.Start();            
@@ -53,9 +52,8 @@ namespace HockeyServer
         void handleCommand(Socket client)
         {
             string toSend;
-            Boolean isFinished = false; 
-
-            while (!isFinished)
+            
+            while (true)
             {
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
                 byte[] data = new byte[1024];
@@ -65,7 +63,7 @@ namespace HockeyServer
                 if (msg.message != null && msg.cutOpcode() != "")
                 {
                     string opcode = msg.cutOpcode();
-                    this.f.appendLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
+                    Console.WriteLine("Message: '" + msg.message + "' Received from: " + clientep.ToString());
                     List<string> parameters = msg.cutParameters();
 
 
@@ -103,9 +101,7 @@ namespace HockeyServer
                         p.initiator.socket.Send(data, toSend.Length, SocketFlags.None);
 
                         this.pairQueue.deleteClient(p.initiator);
-                        this.pairQueue.deleteClient(p.listener);
-
-                        isFinished = true; 
+                        this.pairQueue.deleteClient(p.listener); 
                     }
                 }
             }

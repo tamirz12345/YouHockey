@@ -14,7 +14,7 @@ namespace HockeyServer
             try
             {
                 this.message = Encoding.UTF8.GetString(arr, 0, arr.Length);
-                this.message.Substring(0, message.LastIndexOf('-') + 1);
+                message.Substring(0, message.LastIndexOf('-') + 1);
             }
             catch(Exception e)
             {
