@@ -52,6 +52,28 @@ public class Disk  extends Actor {
 		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
 	}
 
+	public Disk(Limits lim, int spawnL, float w, float h) {
+		super();
+		this.game = lim;
+		this.radius  = w;
+		this.setWidth(w * 2 );
+		this.setHeight(h * 2);
+		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+		this.hitWall= Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
+		if (game.isMultiplayer)
+		{
+			downSpawn = spawnL == 1 ;
+		}
+		else	
+		{
+			Random r = new Random();
+			downSpawn = r.nextInt(2) % 2 == 0;
+		}
+		
+		bottomLim = game.getBottom() + this.getHeight();
+		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
+	}
+
 	@Override
 	public void draw(Batch batch, float alpha){
 		if (wait)
@@ -64,7 +86,7 @@ public class Disk  extends Actor {
 	
 	
 	public void checkCollision(Tool tool){
-        long hitTime = 0;
+        
         float diskX = this.getX();
         float diskY = this.getY() ;
 
@@ -198,7 +220,7 @@ public class Disk  extends Actor {
     {
     	// t2 = bot 
     	// add boolean is single player
-    	if (wait)
+    	if (wait || (game.isMultiplayer && this.getY()  > game.calcMid() ))
     		return;
     	this.checkCollision(t1);
     	if (t2 != null)
@@ -235,7 +257,7 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop())
+        		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop() && !game.isMultiplayer)
         		{
         			if (this.getX() >= game.leftGoal  * game.getGameWidth() &&
         					this.getX() <= game.rightGoal * game.getGameWidth())

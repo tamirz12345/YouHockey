@@ -24,12 +24,18 @@ public class Tool  extends Actor{
     Limits game ;
     Character typeC ;
     public Tool(String image_path, boolean isBelow,float radius , Limits game) {
-        this.img = new Texture(Gdx.files.internal(image_path));
+        
+        
+       
+    }
+
+    public Tool(String image_path, boolean isBelow, float w, float h, Limits lim) {
+    	this.img = new Texture(Gdx.files.internal(image_path));
         this.isBelow = isBelow;
-        this.game = game;
-        this.R  = (float) (radius *  game.getxUnit());
-        this.setWidth((float) (R * 2));
-        this.setHeight(this.getWidth());
+        this.game = lim;
+        this.R  = w;
+        this.setWidth(2*w);
+        this.setHeight(2*h);
         if (this.isBelow) {
             this.setPosition((float) (game.getGameWidth()*0.5),(float)0.5 * game.calcMid());
             this.TimeToMove = 3;
@@ -38,11 +44,9 @@ public class Tool  extends Actor{
             this.setPosition((float) (game.getGameWidth()*0.5),(float)1.5 * game.calcMid());
             this.TimeToMove = 10;
         }
-        
-       
-    }
+	}
 
-    public void move(float x, float y) {
+	public void move(float x, float y) {
 
     	Vector2 temp = game.validateTool(this , x , y);
         

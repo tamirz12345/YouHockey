@@ -2,3 +2,8 @@ D:\Users\user-pc\Documents\Magshimim\YouHockey\ServerSide\NewServer\HockeyServer
 D:\Users\user-pc\Documents\Magshimim\YouHockey\ServerSide\NewServer\HockeyServer\HockeyServer\bin\Debug\HockeyServer.pdb
 D:\Users\user-pc\Documents\Magshimim\YouHockey\ServerSide\NewServer\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.exe
 D:\Users\user-pc\Documents\Magshimim\YouHockey\ServerSide\NewServer\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.pdb
+C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\NewServer\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.exe
+C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\NewServer\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.pdb
+C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\NewServer\HockeyServer\HockeyServer\bin\Debug\HockeyServer.exe
+C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\NewServer\HockeyServer\HockeyServer\bin\Debug\HockeyServer.pdb
+C:\Users\Tamir\git\airhockey\AirHockey\ServerSide\NewServer\HockeyServer\HockeyServer\obj\x86\Debug\HockeyServer.csprojResolveAssemblyReference.cache

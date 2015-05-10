@@ -32,7 +32,7 @@ public class Message implements IMessage {
 		case "300":
 			return (parts.length == 1);
 		case "900":
-			return (parts.length == 2 && (parts[1].compareTo("0")==0
+			return ((parts.length == 2 || parts.length == 6) && (parts[1].compareTo("0")==0
 			|| parts[1].compareTo("1")==0));
 		case "905":
 			return (parts.length == 2 && (parts[1].compareTo("0")==0

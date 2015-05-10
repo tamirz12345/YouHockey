@@ -79,7 +79,7 @@ public class Multiplayer extends ScreenAdapter {
 	BufferedReader inFromRival ;
     
 	Thread reciver , handler , sender ;
-	
+	float RdX, RdY , RtX , RtY; 
 	Message firstM ;
 	String firstS= "900-";
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
@@ -89,30 +89,38 @@ public class Multiplayer extends ScreenAdapter {
     	
     	String[] temp = rivalAddr.split(":");
     	inisiator = temp.length == 2 ; 
-    	
+    	lim = new Limits(toSend);
     	
     	
     	try {
     		if (inisiator)
     		{
-    			Log.d("myDebug", "Inisiating to : "+ rivalAddr);
+    			
+    			Log.d("starterTamir", "Inisiating to : "+ rivalAddr);
     			rivalAddress = new InetSocketAddress(temp[0], Integer.parseInt(temp[1]));
      			rival = new Socket();
     			rival.connect(rivalAddress, 150000);
-    			Log.d("myDebug", "connected");
+    			Log.d("starterTamir", "connected");
     			outToRival = new DataOutputStream(rival.getOutputStream());
     			inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
-    			Log.d("myDebug", "streams constructed");
+    			Log.d("starterTamir", "streams constructed");
     			Random r = new Random();
 				downSpawn = r.nextInt(2) % 2;
-				firstS += Integer.toString(downSpawn)+"-\n";
-				Log.d("myDebug", "sanding " + firstS);
+				RdX = (float) (7 * lim.getxUnit()) ;
+				RdY = (float) (7 * lim.getxUnit()) ;
+				RtX = (float) (5 * lim.getxUnit()) ;
+				RtY = (float) (5 * lim.getxUnit()) ;
+				
+				firstS += Integer.toString(downSpawn)+"-"+Float.toString(RdX/ lim.getGameWidth())+"-"
+						+Float.toString(RdY/ lim.getGameHeight())+"-"+Float.toString(RtX/ lim.getGameWidth())+
+						"-"+Float.toString(RtY/ lim.getGameHeight())+"-"+"-\n";
+				Log.d("starterTamir", "sanding " + firstS);
 				outToRival.writeBytes(firstS);
-				Log.d("myDebug", "sent, now waiting");
+				Log.d("starterTamir", "sent, now waiting");
 				String recived= inFromRival.readLine();
-				Log.d("myDebug", "recived : "+ recived);
+				Log.d("starterTamir", "recived : "+ recived);
 				firstM= new Message(recived);
-				Log.d("myDebug", "compare to 900 : ");
+				Log.d("starterTamir", "compare to 900 : ");
 				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
 					int otherSide=Integer.parseInt(firstM.getParameters()[0]);
@@ -121,36 +129,41 @@ public class Multiplayer extends ScreenAdapter {
 				}
 				else
 				{
-					Log.d("myDebug", "if not enterd massage was "+firstM.getType());
+					Log.d("starterTamir", "if not enterd massage was "+firstM.getType());
 				}
     		}
     		else
     		{
-    			Log.d("myDebug", "Waiting  to : "+ rivalAddr);
+    			Log.d("starterTamir", "Waiting  to : "+ rivalAddr);
     			
     			ActiveRival = new ServerSocket(port);
 				rival = ActiveRival.accept();
-				Log.d("YOUHOCKEY", "accepted : " + rival.getInetAddress().getHostAddress());
+				Log.d("starterTamir", "accepted : " + rival.getInetAddress().getHostAddress());
 				outToRival = new DataOutputStream(rival.getOutputStream());
 				inFromRival = new BufferedReader(new InputStreamReader(rival.getInputStream()));
-				Log.d("myDebug", "now waiting to recive");
+				Log.d("starterTamir", "now waiting to recive");
 				String recived = inFromRival.readLine();
-				Log.d("myDebug", "recived " + recived);
+				Log.d("starterTamir", "recived " + recived);
 				firstM= new Message(recived);
-				Log.d("myDebug", "compare To if.. msg type = " + firstM.getType());
+				Log.d("starterTamir", "compare To if.. msg type = " + firstM.getType());
 				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
-					Log.d("myDebug", "parcing ...");
+					String[] params = firstM.getParameters();
+					Log.d("starterTamir", "parcing ...");
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
-					Log.d("myDebug", "parameter" + Integer.toString(downSpawn));
+					Log.d("starterTamir", "parameter" + Integer.toString(downSpawn));
 					if (downSpawn==  1)
 						downSpawn = 0 ;
 					else
-						downSpawn = 1 ; 
+						downSpawn = 1 ;
+					RdX = Float.parseFloat(params[1]) * lim.getGameWidth();
+					RdY = Float.parseFloat(params[2]) * lim.getGameHeight();
+					RtX = Float.parseFloat(params[3]) * lim.getGameWidth();
+					RtY = Float.parseFloat(params[4]) * lim.getGameHeight();
 					firstS= "900-"+Integer.toString(downSpawn)+"-\n";
-					Log.d("myDebug", "sending " +firstS);
+					Log.d("starterTamir", "sending " +firstS);
 					outToRival.writeBytes(firstS);
-					Log.d("myDebug", "sent");
+					Log.d("starterTamir", "sent");
 					playing= true;
 				}
 				else
@@ -192,19 +205,19 @@ public class Multiplayer extends ScreenAdapter {
 	}
 
 	public void create () {
-    	lim = new Limits(toSend);
+    	
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
 		height = Gdx.graphics.getWidth();
 		width = Gdx.graphics.getHeight();
 		camera.setToOrtho(false, height, width);
-        t1 = new Tool("player2.png", true, TOOL_R , lim);
-        bot = new Tool("player2.png", false, TOOL_R,lim);
+        t1 = new Tool("player2.png", true, RtX , RtY, lim);
+        bot = new Tool("player2.png", false, RtX , RtY,lim);
         
         tempTouch = new Vector3();
         
-        disk = new Disk(lim, downSpawn);
+        disk = new Disk(lim, downSpawn , RdX , RdY);
         disk.spawn();
         stage = new Stage();
         stage.addActor(bot);
