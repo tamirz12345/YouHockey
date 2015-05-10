@@ -9,6 +9,9 @@ namespace HockeyServer
     {
         static void Main(string[] args)
         {
+            int port = 3000;
+            Server server = new Server(port);
         }
+        
     }
 }
