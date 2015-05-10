@@ -83,7 +83,7 @@ public class MultiplayerLoadingScreen  extends ScreenAdapter{
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
 	  	public int portS = 3000;
-	  	
+	  	public String ipS = "192.168.0.103"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;
