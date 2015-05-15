@@ -43,12 +43,15 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    playTexture = new Texture(Gdx.files.internal("bot.png"));
 	    pvpTexture = new Texture(Gdx.files.internal("pvp.png"));
 	    LogoTexture = new Texture(Gdx.files.internal("uhockey.png"));
+	    Logo = new Rectangle(25, 70 , 50 , 20);
+	    PlayButton = new Rectangle(25, 50 , 50 , 20);
+	    PVPButton = new Rectangle(25, 30 , 50 , 20 );
 	    camera = new OrthographicCamera();
 	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
 	    viewport.apply();
 	    
 	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
-
+	    Gdx.input.setInputProcessor(this);
 
 	}
 
@@ -60,9 +63,9 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    batch.setProjectionMatrix(camera.combined); //make batch draw to location defined by camera
 	    batch.begin();
 	  
-	    UnitConvertor.draw(batch , LogoTexture ,25, 70 , 20 , 50 );
-	    UnitConvertor.draw(batch , playTexture ,25, 50 , 20 , 50 );
-	    UnitConvertor.draw(batch , pvpTexture ,25, 30 , 20 , 50 );
+	    UnitConvertor.draw(batch , LogoTexture ,Logo.x,Logo.y , Logo.height , Logo.width );
+	    UnitConvertor.draw(batch , playTexture ,PlayButton.x,PlayButton.y , PlayButton.height , PlayButton.width );
+	    UnitConvertor.draw(batch , pvpTexture ,PVPButton.x,PVPButton.y , PVPButton.height , PVPButton.width );
 	    batch.end();
 		
 	}
@@ -101,6 +104,16 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
 	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
+	    
+	    if (PlayButton.contains(pos.x, pos.y))
+	    {
+	    	game.setScreen(new MainGame(game));
+	    }
+	    else if (PVPButton.contains(pos.x, pos.y))
+	    {
+	    	game.setScreen(new MultiplayerLoadingScreen(game));
+	    }
+	 
 	    return false;
 	 }
 
