@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 
 //Class that converts cordinates of game to cordinates of math
 public class UnitConvertor {
-	static float height = Gdx.graphics.getWidth();
+	static float height =100;
 	public static Vector2 toNormal(float x , float y)
 	{
 		Vector2 v = new Vector2();
@@ -24,10 +24,10 @@ public class UnitConvertor {
 		Vector2 temp =   toNormal(param.x, param.y);
 		return new Vector3(temp.x,temp.y,0);
 	}
-	public static void draw(SpriteBatch batch ,Texture t,float x , float y , float w , float h )
+	public static void draw(SpriteBatch batch ,Texture t,float x , float y , float h , float w )
 	{
 		Vector2 pos = UnitConvertor.toGame(x, y + h);
-		batch.draw(t ,pos.x,  pos.y , w , h);
+		batch.draw(t ,pos.x,  pos.y , h , w);
 	}
 	public static Vector2 toGame(float x , float y)
 	{
