@@ -134,7 +134,7 @@ public class Limits {
         }
         	
         if (y - t.getHeight()< bottom )
-        	y = bottom + t.getHeight();
+        	y = bottom ;
         if (y > top)
         	y = top;
          
@@ -210,9 +210,21 @@ public class Limits {
 			System.out.println("Out Of Bound ( "+x+","+y+" )");
 		}
 		MoveToAction moveAction = new MoveToAction();
+		float distance , speed = 0;
+		distance  =  (float) (Math.sqrt(Math.pow(a.getX()-  x , 2) + Math.pow(a.getY()-y, 2)));
+		if  (!isMultiplayer||  typeC != 'd' )
+		{
+			if (typeC != 'd' )
+			{
+				speed =  distance /	70f;
+			}
+			else if ( typeC == 'd')
+			{
+				speed =  distance /	80f;
+			}
+				
+		}
 		
-		float speed =  (float) (Math.sqrt(Math.pow(a.getX()-  x , 2) 
-				+ Math.pow(a.getY()-y, 2)) /speedUnit);
 		if (speed == 0 )
 		{
 			speed =0.2f;

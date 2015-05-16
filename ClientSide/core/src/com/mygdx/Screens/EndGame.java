@@ -17,6 +17,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class EndGame  extends ApplicationAdapter implements InputProcessor, Screen {
 	
@@ -24,16 +26,17 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 	Rectangle menuButton;
 	Texture menuTexture; // menu = pvp
 	Limits lim;
-	SpriteBatch batch;
+	public SpriteBatch batch;
 	OrthographicCamera camera;
 	Vector3 tempTouch;
 	Vector2 temp1, temp2;
 	Music m ;
 	boolean started = false;
 	boolean isVictory; 
+	Viewport viewport;
 	public static Texture backgroundTexture;
     public static Sprite backgroundSprite;
-    private SpriteBatch spriteBatch;
+    
 	
 	public EndGame(YouHockey youHockey, boolean isVictory) {
     	this.game = youHockey;
@@ -49,28 +52,29 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 			backgroundTexture = new Texture(Gdx.files.internal("defeat.png"));
 		}
 		
-        spriteBatch = new SpriteBatch();
-    	lim = new Limits(null);
 		batch = new SpriteBatch();
+		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, lim.getGameHeight(), lim.getGameWidth());
-		temp1 = UnitConvertor.toGame((float)lim.getxUnit() * 20 , (float) (lim.getyUnit() * 70));
-
-        temp2 = UnitConvertor.toGame((float)lim.getxUnit() * 20, (float) (lim.getyUnit() * 50));
-        menuButton = new Rectangle(temp2.x,
-                temp2.y,(float) ((float)20 * lim.getxUnit()),
-        		(float) ((float)40 * lim.getyUnit()));
+	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
+	    viewport.apply();
+	    
+	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
+		
+        
 
         tempTouch = new Vector3();
         menuTexture = new Texture("MENUBTN.jpg");
         Gdx.input.setCatchBackKey(true);
+        Gdx.input.setInputProcessor(this);
 	}
 
 	public void render (float delta) {
-		Gdx.gl.glClearColor(1, 10, 1, 1);
+		camera.update();
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
+		UnitConvertor.draw(batch , backgroundTexture , 0 , 0 , 50 ,50);
 		batch.end();
 		
 		

@@ -49,7 +49,9 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
     Vector2 textBoxPos ;
     private String ScoreString;
     BitmapFont yourBitmapFontName;
-    final int SCORE_TO_WIN = 2; 
+    final int SCORE_TO_WIN = 3; 
+    Vector3 worldCoordinates;
+    Vector2 pos;
     public MainGame(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -139,11 +141,12 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 		batch.begin();
 		
 		yourBitmapFontName.setColor(Color.BLACK);
+		yourBitmapFontName.setScale(0.75f);
 		textBoxPos = bottomGoal.getSrc(true);
 		textBoxPos=  UnitConvertor.toGame(textBoxPos.x , textBoxPos.y);
 		
-		ScoreString = Integer.toString(lim.getScoreBottom()) + "  " + 
-				Integer.toString(lim.getScoreTop());
+		ScoreString = Integer.toString(lim.getScoreTop()) + "  " + 
+				Integer.toString(lim.getScoreBottom());
 		yourBitmapFontName.draw(batch, ScoreString,25,100);
 		t1.draw(batch);
 		bot.draw(batch);
@@ -198,12 +201,12 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0)); //obtain the touch in world coordinates: similar to InputTransform used above
+		worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0)); //obtain the touch in world coordinates: similar to InputTransform used above
 	    Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
 	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
-	    //t1.move(pos.x, pos.y);
-        //bot.move(t1.getX(), lim.getGameHeight() - t1.getY());
+	    t1.move(pos.x, pos.y);
+        bot.move(t1.getX(), lim.getGameHeight() - t1.getY());
 	    
 	    
 	    return false;
@@ -219,6 +222,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// TODO Auto-generated method stub
+		/*
 		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
 		Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
@@ -229,7 +233,9 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	    }
 	    t1.setPosition(pos.x, pos.y);
 	    bot.setPosition(pos.x, lim.getGameHeight() - pos.y);
+	    */
 		return false;
+		
 	}
 
 	@Override

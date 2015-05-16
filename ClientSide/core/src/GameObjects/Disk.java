@@ -30,7 +30,7 @@ public class Disk  extends Actor {
     Music hitBall;
     Music hitWall;
     float rSize = 7;
-    
+    float myTop , myRight ; 
     public Disk(Limits game, int spawnL) {
 		super();
 		this.game = game;
@@ -48,7 +48,8 @@ public class Disk  extends Actor {
 			Random r = new Random();
 			downSpawn = r.nextInt(2) % 2 == 0;
 		}
-		
+		myTop = game.getTop() -this.getHeight();
+		myRight = game.getRight()   - this.getRight();
 		
 	}
 
@@ -138,7 +139,7 @@ public class Disk  extends Actor {
 	    
 	    if (YDirection == Wall.Top && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(game.getLeft())  > game.getBottom() && l.getY(game.getLeft()) < game.getTop())
+	    	if (l.getY(game.getLeft())  > game.getBottom() && l.getY(game.getLeft()) < myTop)
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -150,7 +151,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Top && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getRight()) > game.getBottom()  && l.getY(game.getRight()) < game.getTop())
+	    	if (l.getY(myRight) > game.getBottom()  && l.getY(myRight) < myTop)
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -163,7 +164,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(game.getLeft()) > game.getBottom() && l.getY(game.getLeft()) < game.getTop())
+	    	if (l.getY(game.getLeft()) > game.getBottom() && l.getY(game.getLeft()) < myTop)
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -175,7 +176,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(game.getRight()) > game.getBottom() && l.getY(game.getRight()) < game.getTop())
+	    	if (l.getY(myRight) > game.getBottom() && l.getY(myRight) < myTop)
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -193,14 +194,14 @@ public class Disk  extends Actor {
 	    	this.addMoveToAction(l.getX(game.getBottom()), game.getBottom());
 	    	break;
 	    case Top:
-	    	this.addMoveToAction(l.getX(game.getTop()),game.getTop());
+	    	this.addMoveToAction(l.getX(myTop),myTop);
 	    	break;
 	    case Left:
 	    	this.addMoveToAction(game.getLeft(), l.getY(game.getLeft()));
 	    	break;
 	    	
 	    case Right:
-	    	this.addMoveToAction(game.getRight(),l.getY(game.getRight()));
+	    	this.addMoveToAction(myRight,l.getY(myRight));
 	    	break;
 	    }
 	}
@@ -234,14 +235,18 @@ public class Disk  extends Actor {
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth()  &&
-        					this.getX() <= game.rightGoal * game.getGameWidth())
+        			if (this.getX() >= game.leftGoal   && 
+        					this.getX() <= game.rightGoal )
         			{
         				Log.d("goalTamir","scored Buttom Goal");
         				downSpawn = true;
         				
         				this.spawn();
-        				wait = true;
+        				if (game.isMultiplayer)
+        				{
+        					wait = true;
+        				}
+        					
         				this.game.incTop(this);
         				
         				
@@ -252,10 +257,11 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Top && (int)this.getY() == (int)game.getTop() && !game.isMultiplayer)
+        		if (targetW == Wall.Top && 
+        				(int)this.getY() == (int)myTop && !game.isMultiplayer)
         		{
-        			if (this.getX() >= game.leftGoal  * game.getGameWidth() &&
-        					this.getX() <= game.rightGoal * game.getGameWidth())
+        			if (this.getX() >= game.leftGoal   &&
+        					this.getX() <= game.rightGoal )
         			{
         				this.game.incBottom();
         				downSpawn = false;
@@ -275,7 +281,7 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Right && (int)this.getX() == (int)game.getRight())
+        		if (targetW == Wall.Right && (int)this.getX() == (int)myRight)
         		{
         			wX = Wall.Left;
         			changed = true;

@@ -52,13 +52,19 @@ public class Tool  extends Actor{
         this.setWidth(2*w);
         this.setHeight(2*h);
         if (this.isBelow) {
-            this.setPosition((float) (game.getGameWidth()*0.5),(float)0.5 * game.calcMid());
+            super.setPosition((float) (game.getGameWidth()*0.5),(float)0.5 * game.calcMid());
             
         } else {
           
-            this.setPosition((float) (game.getGameWidth()*0.5),(float)1.5 * game.calcMid());
+            super.setPosition((float) (game.getGameWidth()*0.5),(float)1.5 * game.calcMid());
             
         }
+	}
+    
+	@Override
+	public void setPosition(float x, float y) {
+		// TODO Auto-generated method stub
+		super.setPosition(x, y);
 	}
 
 	public void move(float x, float y) {
