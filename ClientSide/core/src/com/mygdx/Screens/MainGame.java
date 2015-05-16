@@ -24,6 +24,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class MainGame  extends ApplicationAdapter implements InputProcessor, Screen  {
@@ -38,7 +40,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	float height,width;
 	ShapeRenderer  shaper;
     final int TOOL_R = 5;
-    
+    Viewport viewport;
     Disk disk;
     Texture diskT ;
     Limits lim;
@@ -58,11 +60,14 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
-		height = Gdx.graphics.getWidth();
-		width = Gdx.graphics.getHeight();
-		camera.setToOrtho(false, height, width);
-        t1 = new Tool("player2.png", true, TOOL_R , lim);
-        bot = new Tool("player2.png", false, TOOL_R,lim);
+	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
+	    viewport.apply();
+	    
+	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
+	    Gdx.input.setInputProcessor(this);
+
+        t1 = new Tool("player2.png", true,  lim);
+        bot = new Tool("player2.png", false , lim);
         
         tempTouch = new Vector3();
         
@@ -72,7 +77,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         stage.addActor(bot);
         stage.addActor(t1);
         stage.addActor(disk);
-        Gdx.input.setInputProcessor(stage);
+        
         Gdx.input.setCatchBackKey(true);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
@@ -86,9 +91,10 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	}
 
 	public void render (float delta) {
+		camera.update();
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//delta = Gdx.graphics.getDeltaTime();
+		
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
         
@@ -97,9 +103,9 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         Vector2 leftT = lim.leftTopCorner();
         Vector2 rightB = lim.rightBottomCorner();
         Vector2 rightT = lim.rightTopCorner();
-       
+        shaper.setProjectionMatrix(camera.combined);
         shaper.begin(ShapeType.Line);
-        Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
+        Gdx.gl20.glLineWidth(40);
         
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
@@ -129,28 +135,22 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         
         
         
-        
+        batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
 		yourBitmapFontName.setColor(Color.BLACK);
 		textBoxPos = bottomGoal.getSrc(true);
 		textBoxPos=  UnitConvertor.toGame(textBoxPos.x , textBoxPos.y);
 		
-		ScoreString = Integer.toString(lim.getScoreBottom()) + " : " + 
+		ScoreString = Integer.toString(lim.getScoreBottom()) + "  " + 
 				Integer.toString(lim.getScoreTop());
 		yourBitmapFontName.draw(batch, ScoreString,25,100);
-		
-		stage.draw();
+		t1.draw(batch);
+		bot.draw(batch);
+		disk.draw(batch);
 		batch.end();
 
-		if(Gdx.input.isTouched()) {
-			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
-			tempTouch = UnitConvertor.toNormal(tempTouch);
-			t1.move(tempTouch.x, tempTouch.y);
-            bot.move(t1.getX(), height - t1.getY());
-			
-            
-	    }
+		
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK)){
 			music.stop();
@@ -198,19 +198,37 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
+		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0)); //obtain the touch in world coordinates: similar to InputTransform used above
+	    Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
+	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
+	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
+	    //t1.move(pos.x, pos.y);
+        //bot.move(t1.getX(), lim.getGameHeight() - t1.getY());
+	    
+	    
+	    return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// TODO Auto-generated method stub
+		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
+		Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
+	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
+	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
+	    if (pos.y > lim.calcMid())
+	    {
+	    	pos.y = lim.calcMid();
+	    }
+	    t1.setPosition(pos.x, pos.y);
+	    bot.setPosition(pos.x, lim.getGameHeight() - pos.y);
 		return false;
 	}
 

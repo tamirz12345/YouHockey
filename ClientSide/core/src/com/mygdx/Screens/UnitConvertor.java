@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
 //Class that converts cordinates of game to cordinates of math
@@ -29,6 +30,9 @@ public class UnitConvertor {
 		Vector2 pos = UnitConvertor.toGame(x, y + h);
 		batch.draw(t ,pos.x,  pos.y , h , w);
 	}
+	
+	
+	
 	public static Vector2 toGame(float x , float y)
 	{
 		Vector2 v = new Vector2();

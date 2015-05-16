@@ -1,8 +1,11 @@
 package GameObjects;
 
+import javax.swing.plaf.SpinnerUI;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -23,10 +26,22 @@ public class Tool  extends Actor{
     float R  ;
     Limits game ;
     Character typeC ;
-    public Tool(String image_path, boolean isBelow,float radius , Limits game) {
+    public Tool(String image_path, boolean isBelow, Limits game) {
+        this.img = new Texture(Gdx.files.internal(image_path));
+        this.game = game;
+        this.isBelow = isBelow;
+        this.R= 3 ; 
+        this.setWidth(2 * R);
+        this.setHeight(2 * R);
         
-        
-       
+        if (this.isBelow) {
+            this.setPosition(50 , 20 );
+            
+        } else {
+          
+            this.setPosition(50 , 80 );
+            
+        }
     }
 
     public Tool(String image_path, boolean isBelow, float w, float h, Limits lim) {
@@ -38,11 +53,11 @@ public class Tool  extends Actor{
         this.setHeight(2*h);
         if (this.isBelow) {
             this.setPosition((float) (game.getGameWidth()*0.5),(float)0.5 * game.calcMid());
-            this.TimeToMove = 3;
+            
         } else {
           
             this.setPosition((float) (game.getGameWidth()*0.5),(float)1.5 * game.calcMid());
-            this.TimeToMove = 10;
+            
         }
 	}
 
@@ -77,12 +92,11 @@ public class Tool  extends Actor{
 
 	
 	
-	@Override
-	public void draw(Batch batch, float parentAlpha) {
+	public void draw(SpriteBatch batch) {
 		//this.update();
-		float densityIndependentSize = Gdx.graphics.getDensity();
-		Vector2 v = UnitConvertor.toGame(this.getX(), this.getY());
-		batch.draw(img , v.x , v.y , this.getWidth() , this.getHeight());
+		
+		UnitConvertor.draw(batch , img, this.getX(),this.getY(), this.getWidth() , this.getHeight());
+		
 	}
     
     

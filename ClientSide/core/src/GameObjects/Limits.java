@@ -24,9 +24,9 @@ public class Limits {
 	public float right ; 
 	public float bottom;
 	
-	public float leftGoal = (float) 0.35  ;
-	public float rightGoal = (float) 0.65 ;
-	private float  speedUnit = (float) 0.55; 
+	public float leftGoal = 35  ;
+	public float rightGoal = 65 ;
+	private float  speedUnit = 55; 
 	private Integer ScoreBottom;
 	private Integer ScoreTop;
 	private Music goalSound ;
@@ -40,25 +40,24 @@ public class Limits {
     public Limits(BlockingQueue<String> q)
     {
     	mid = (float) 0.5;
-    	gameWidth = Gdx.graphics.getHeight();
-    	gameHeight = Gdx.graphics.getWidth();
     	
+    	gameHeight = 100;
+    	gameWidth  = 100;
     	
     	
     	ScoreBottom = 0 ;
     	ScoreTop = 0;
-    	speedUnit = (float) (speedUnit * Math.sqrt(Math.pow(gameHeight , 2 ) + Math.pow(gameWidth , 2 )));
+    	
     	goalSound = Gdx.audio.newMusic(Gdx.files.internal("score.mp3"));
     	ohSound = Gdx.audio.newMusic(Gdx.files.internal("oh.mp3"));
     	
-    	xUnit = 0.01 * gameWidth ;
-    	yUnit = 0.01 * gameHeight;
     	
     	
     	
     	
-    	left = 0;
-    	bottom = (float) (5 * yUnit)  ;
+    	
+    	left = 5;
+    	bottom = 5  ;
     	top =gameHeight - bottom  ;
     	right= gameWidth -  left;
     	
@@ -225,9 +224,8 @@ public class Limits {
 		{
 			if ( typeC == 'h')
 			{
-				float newX = x / this.getGameWidth();
-				float newY= y / this.getGameHeight();
-				String msg=  "901-"+Float.toString(newX)+"-"+Float.toString(newY)+
+				
+				String msg=  "901-"+Float.toString(x)+"-"+Float.toString(y)+
 						"-"+Float.toString(speed)+"-";
 				Log.d("myDebug","adding to TOSend queue : " + msg);
 				toSend.add(msg);
@@ -236,12 +234,11 @@ public class Limits {
 			else if (typeC == 'd' && a.getY() < this.calcMid())
 			{
 				speed = 6f;
-				float newX = x / this.getGameWidth();
-				float newY= y / this.getGameHeight();
+				
 				String xDir , yDir;
 				xDir = ((Disk) a).getXDir();
 				yDir = ((Disk) a).getYDir();
-				String msg=  "906-"+Float.toString(newX)+"-"+Float.toString(newY)+
+				String msg=  "906-"+Float.toString(x)+"-"+Float.toString(y)+
 						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-";
 				Log.d("diskTamir","adding to TOSend queue : " + msg);
 				toSend.add(msg);

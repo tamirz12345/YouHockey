@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
@@ -29,11 +30,11 @@ public class Disk  extends Actor {
     Music hitBall;
     Music hitWall;
     float rSize = 7;
-    private float bottomLim , rightLim;
+    
     public Disk(Limits game, int spawnL) {
 		super();
 		this.game = game;
-		this.radius  = (float) (rSize * game.getxUnit() );
+		this.radius  = 5;
 		this.setWidth(radius * 2 );
 		this.setHeight(radius * 2);
 		this.hitBall = Gdx.audio.newMusic(Gdx.files.internal("hit.mp3"));
@@ -48,8 +49,7 @@ public class Disk  extends Actor {
 			downSpawn = r.nextInt(2) % 2 == 0;
 		}
 		
-		bottomLim = game.getBottom() + this.getHeight();
-		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
+		
 	}
 
 	public Disk(Limits lim, int spawnL, float w, float h) {
@@ -70,18 +70,13 @@ public class Disk  extends Actor {
 			downSpawn = r.nextInt(2) % 2 == 0;
 		}
 		
-		bottomLim = game.getBottom() + this.getHeight();
-		rightLim = (float) (game.getRight() - this.getWidth() * 0.75);
+		
 	}
 
-	@Override
-	public void draw(Batch batch, float alpha){
+	public void draw(SpriteBatch batch){
 		if (wait)
     		return;
-		float densityIndependentSize = Gdx.graphics.getDensity();
-		Log.d("tamir1","density = " + densityIndependentSize);
-		Vector2 v = UnitConvertor.toGame(super.getX(),super.getY());
-        batch.draw(texture,v.x,v.y,this.getWidth(), this.getHeight());
+		UnitConvertor.draw(batch , texture, this.getX(),this.getY(), this.getWidth() , this.getHeight());
     }
 	
 	
@@ -143,7 +138,7 @@ public class Disk  extends Actor {
 	    
 	    if (YDirection == Wall.Top && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(game.getLeft())  > bottomLim && l.getY(game.getLeft()) < game.getTop())
+	    	if (l.getY(game.getLeft())  > game.getBottom() && l.getY(game.getLeft()) < game.getTop())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -155,7 +150,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Top && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(rightLim) > bottomLim  && l.getY(rightLim) < game.getTop())
+	    	if (l.getY(game.getRight()) > game.getBottom()  && l.getY(game.getRight()) < game.getTop())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -168,7 +163,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Left)
 	    {
-	    	if (l.getY(game.getLeft()) > bottomLim && l.getY(game.getLeft()) < game.getTop())
+	    	if (l.getY(game.getLeft()) > game.getBottom() && l.getY(game.getLeft()) < game.getTop())
 	    	{
 	    		targetW = Wall.Left;
 	    	}
@@ -180,7 +175,7 @@ public class Disk  extends Actor {
 	    
 	    else if (YDirection == Wall.Bottom && XDirection == Wall.Right)
 	    {
-	    	if (l.getY(rightLim) > bottomLim && l.getY(rightLim) < game.getTop())
+	    	if (l.getY(game.getRight()) > game.getBottom() && l.getY(game.getRight()) < game.getTop())
 	    	{
 	    		targetW = Wall.Right;
 	    	}
@@ -195,7 +190,7 @@ public class Disk  extends Actor {
 	    switch (targetW)
 	    {
 	    case Bottom:
-	    	this.addMoveToAction(l.getX(bottomLim), bottomLim);
+	    	this.addMoveToAction(l.getX(game.getBottom()), game.getBottom());
 	    	break;
 	    case Top:
 	    	this.addMoveToAction(l.getX(game.getTop()),game.getTop());
@@ -205,7 +200,7 @@ public class Disk  extends Actor {
 	    	break;
 	    	
 	    case Right:
-	    	this.addMoveToAction(rightLim,l.getY(rightLim));
+	    	this.addMoveToAction(game.getRight(),l.getY(game.getRight()));
 	    	break;
 	    }
 	}
@@ -237,7 +232,7 @@ public class Disk  extends Actor {
         		
         		boolean changed = false;
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
-        		if (targetW == Wall.Bottom && (int)this.getY() == (int)bottomLim)
+        		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
         		{
         			if (this.getX() >= game.leftGoal  * game.getGameWidth()  &&
         					this.getX() <= game.rightGoal * game.getGameWidth())
@@ -280,7 +275,7 @@ public class Disk  extends Actor {
         			changed = true;
         		}
         			
-        		if (targetW == Wall.Right && (int)this.getX() == (int)rightLim)
+        		if (targetW == Wall.Right && (int)this.getX() == (int)game.getRight())
         		{
         			wX = Wall.Left;
         			changed = true;
@@ -354,13 +349,11 @@ public class Disk  extends Actor {
 		this.clearActions();
 		if (downSpawn)
 		{
-			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
-					(float) (game.calcMid()*0.8 - this.getHeight()/2));
+			this.setPosition(50, 40);
 		}
 		else
 		{
-			this.setPosition(game.getGameWidth()/2 - this.getWidth()/2 , 
-					(float) (game.calcMid() *1.2+ this.getHeight()/2));
+			this.setPosition(50, 60);
 		}
 	}
 

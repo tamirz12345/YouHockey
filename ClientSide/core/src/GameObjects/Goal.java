@@ -12,18 +12,14 @@ public class Goal {
     public Limits game;
     public Goal(boolean isBottom , Limits game ) {
         if (isBottom) {
-            this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
-            		, (float) game.bottom);
-            this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
-            		(float) game.bottom);
+            this.src = new Vector2(game.leftGoal, game.bottom);
+            this.dst = new Vector2(game.rightGoal, game.bottom);
             
         }
         else
         {
-        	this.src = new Vector2((float) (game.getGameWidth() *game.leftGoal)
-            		, (float) game.top);
-            this.dst = new Vector2((float )(game.getGameWidth() * game.rightGoal), 
-            		(float)game.top);
+        	this.src = new Vector2( game.leftGoal, game.top);
+            this.dst = new Vector2( game.rightGoal, game.top);
         }
         
         
