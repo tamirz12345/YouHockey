@@ -114,7 +114,7 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
+		game.setScreen(new Menu(game));
 		return false;
 	}
 

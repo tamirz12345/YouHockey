@@ -202,7 +202,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 
 	public void create () {
     	
-		lim = new Limits(null);
+		lim = new Limits(toSend);
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
@@ -233,6 +233,16 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 	    
 	    ScoreString = "0 : 0";
 	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
+	    
+	    
+	    
+	    sender = new Thread(new Sender());
+		handler = new Thread(new Handler());
+		reciver = new Thread(new Reciver());
+		
+		sender.start();
+		handler.start();
+		reciver.start();
 	    
 	}
 	
@@ -279,7 +289,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
         Vector2 rightT = lim.rightTopCorner();
         shaper.setProjectionMatrix(camera.combined);
         shaper.begin(ShapeType.Line);
-        Gdx.gl20.glLineWidth(40);
+        Gdx.gl20.glLineWidth(20);
         
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
@@ -587,17 +597,17 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				}
 				break;
 			case "907":
-				Log.d("diskTamir","handling : " + m.toString());
+				Log.d("toolTamir","handling : " + m.toString());
 				x = lim.getGameWidth() -   Float.parseFloat(params[0]);
 				y = lim.getGameHeight() -Float.parseFloat(params[1]);
 				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
 				flag2 = y >= lim.getBottom() && y <= lim.getTop();
 				if (flag1 && flag2)
 				{
-					Log.d("diskTamir" , "info   okay ");
-					;
-					disk.clearActions();
-					lim.addMoveToAction(disk, x, y, 'D');
+					Log.d("toolTamir" , "info   okay ");
+					bot.setPosition(x, y);
+					
+					
 					Log.d("toolTamir" , "tool move to x: "+x+" y: ");
 				}
 				else

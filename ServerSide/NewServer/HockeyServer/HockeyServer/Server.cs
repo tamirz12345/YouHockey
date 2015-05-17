@@ -50,7 +50,7 @@ namespace HockeyServer
         void handleCommand(Socket client)
         {
             string toSend;
-
+            Console.WriteLine("handel started");
             while (true)
             {
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;

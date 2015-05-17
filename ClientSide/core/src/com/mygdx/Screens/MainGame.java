@@ -40,7 +40,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	float height,width;
 	ShapeRenderer  shaper;
     final int TOOL_R = 5;
-    Viewport viewport;
+    StretchViewport viewport;
     Disk disk;
     Texture diskT ;
     Limits lim;
@@ -107,7 +107,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         Vector2 rightT = lim.rightTopCorner();
         shaper.setProjectionMatrix(camera.combined);
         shaper.begin(ShapeType.Line);
-        Gdx.gl20.glLineWidth(40);
+        Gdx.gl20.glLineWidth(20);
         
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);

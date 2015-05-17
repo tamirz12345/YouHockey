@@ -26,7 +26,7 @@ public class Limits {
 	
 	public float leftGoal = 35  ;
 	public float rightGoal = 65 ;
-	private float  speedUnit = 55; 
+	
 	private Integer ScoreBottom;
 	private Integer ScoreTop;
 	private Music goalSound ;
@@ -35,7 +35,7 @@ public class Limits {
 	private double xUnit ;
 	private double yUnit;
 	
-	BlockingQueue<String> toSend;
+	public BlockingQueue<String> toSend;
 	public boolean isMultiplayer = false;
     public Limits(BlockingQueue<String> q)
     {
@@ -120,7 +120,7 @@ public class Limits {
         }
 
         else {
-          y= (float) Math.max(y, this.calcMid())  ;
+          y= (float) Math.max(y, this.calcMid() -t.getHeight())  ;
             
         }
         
