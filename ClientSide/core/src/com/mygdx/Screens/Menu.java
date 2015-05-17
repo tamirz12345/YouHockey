@@ -35,10 +35,12 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	boolean started = false;
 	public Menu(YouHockey youHockey) {
     	this.game = youHockey;
+    	
 		this.create();
 	}
 	
 	public void create () {
+		
 		batch = new SpriteBatch();
 	    playTexture = new Texture(Gdx.files.internal("bot.png"));
 	    pvpTexture = new Texture(Gdx.files.internal("pvp.png"));
@@ -108,6 +110,7 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    if (PlayButton.contains(pos.x, pos.y))
 	    {
 	    	game.setScreen(new MainGame(game));
+	    	
 	    }
 	    else if (PVPButton.contains(pos.x, pos.y))
 	    {

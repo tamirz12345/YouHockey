@@ -20,6 +20,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+
+
+
 public class EndGame  extends ApplicationAdapter implements InputProcessor, Screen {
 	
 	YouHockey game;
@@ -34,7 +37,7 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 	boolean started = false;
 	boolean isVictory; 
 	Viewport viewport;
-	public static Texture backgroundTexture;
+	public static Texture backgroundTexture , texture;
     public static Sprite backgroundSprite;
     
 	
@@ -45,102 +48,95 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 	}
 
 	public void create () {
-		if (isVictory) {
-			backgroundTexture = new Texture(Gdx.files.internal("victory-11.png"));
-		}
-		else {
-			backgroundTexture = new Texture(Gdx.files.internal("defeat.png"));
-		}
-		
 		batch = new SpriteBatch();
-		
-		camera = new OrthographicCamera();
+		if (isVictory)
+		{
+			texture = new Texture(Gdx.files.internal("victory-11.png"));
+		}
+		else
+		{
+			texture = new Texture(Gdx.files.internal("defeat.png"));
+		}
+	   
+	    
+
+	    camera = new OrthographicCamera();
 	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
 	    viewport.apply();
-	    
-	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
-		
-        
 
-        tempTouch = new Vector3();
-        menuTexture = new Texture("MENUBTN.jpg");
-        Gdx.input.setCatchBackKey(true);
-        Gdx.input.setInputProcessor(this);
+	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
+	    Gdx.input.setInputProcessor(this);
 	}
 
 	public void render (float delta) {
-		camera.update();
-		Gdx.gl.glClearColor(1, 1, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		UnitConvertor.draw(batch , backgroundTexture , 0 , 0 , 50 ,50);
-		batch.end();
-		
-		
-		if(Gdx.input.isTouched()) {
-			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
+		 	camera.update();
+		    Gdx.gl.glClearColor(1, 1, 1, 1);
+		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            if (menuButton.contains(tempTouch.x, tempTouch.y))
-            {
-                game.setScreen(new Menu(game));
-            }
-	    }
-		
-		if (Gdx.input.isKeyPressed(Keys.BACK)){
-			
-			game.setScreen(new Menu(game));
-		}
+		    batch.setProjectionMatrix(camera.combined); //make batch draw to location defined by camera
+		    batch.begin();
+		  
+		    UnitConvertor.draw(batch ,  texture ,0,0 , 100 , 100 );
+		    batch.end();
 		
 	}
 
 	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 public void dispose(){
+	    
+	 }
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 @Override
+	 public void resize(int width, int height){
+	    viewport.update(width, height);
+	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+	 }
 
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 @Override
+	 public boolean keyDown(int keycode) {
+	    return false;
+	 }
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		game.setScreen(new Menu(game));
-		return false;
-	}
+	 @Override
+	 public boolean keyUp(int keycode) {
+	    return false;
+	 }
 
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 @Override
+	 public boolean keyTyped(char character) {
+	    return false;
+	 }
 
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 @Override
+	 public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	    
+	    Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0)); //obtain the touch in world coordinates: similar to InputTransform used above
+	    Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
+	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
+	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
+	    return false;
+	 }
 
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	 @Override
+	 public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+	    return false;
+	 }
+
+	 @Override
+	 public boolean touchDragged(int screenX, int screenY, int pointer) {
+	    return false;
+	 }
+
+	 @Override
+	 public boolean mouseMoved(int screenX, int screenY) {
+	    return false;
+	 }
+
+	 @Override
+	 public boolean scrolled(int amount) {
+	    return false;
+	 }
 
 	@Override
 	public void show() {
@@ -153,7 +149,6 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 		// TODO Auto-generated method stub
 		
 	}
-	
 	
 	
 }
