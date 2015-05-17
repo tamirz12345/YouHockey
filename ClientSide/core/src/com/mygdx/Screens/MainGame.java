@@ -201,13 +201,14 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		/*
 		worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0)); //obtain the touch in world coordinates: similar to InputTransform used above
 	    Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
 	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
 	    t1.move(pos.x, pos.y);
         bot.move(t1.getX(), lim.getGameHeight() - t1.getY());
-	    
+	    */
 	    
 	    return false;
 	}
@@ -222,18 +223,19 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// TODO Auto-generated method stub
-		/*
+		
 		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
 		Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
+	   
 	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
-	    if (pos.y > lim.calcMid())
+	    if (pos.y > lim.calcMid() - t1.getHeight())
 	    {
-	    	pos.y = lim.calcMid();
+	    	pos.y = lim.calcMid() - t1.getHeight();
 	    }
 	    t1.setPosition(pos.x, pos.y);
 	    bot.setPosition(pos.x, lim.getGameHeight() - pos.y);
-	    */
+	    
 		return false;
 		
 	}

@@ -116,11 +116,11 @@ public class Limits {
     {
         
         if (t.isBelow) {
-            y = (float) Math.min(y , this.calcMid()) ;
+            y = (float) Math.min(y , this.calcMid() - t.getHeight()) ;
         }
 
         else {
-          y= (float) Math.max(y, this.calcMid())+ t.getHeight()  ;
+          y= (float) Math.max(y, this.calcMid())  ;
             
         }
         

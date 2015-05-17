@@ -35,11 +35,11 @@ public class Tool  extends Actor{
         this.setHeight(2 * R);
         
         if (this.isBelow) {
-            this.setPosition(50 , 20 );
+           super.setPosition(50 , 20 );
             
         } else {
           
-            this.setPosition(50 , 80 );
+            super.setPosition(50 , 80 );
             
         }
     }
@@ -63,8 +63,11 @@ public class Tool  extends Actor{
     
 	@Override
 	public void setPosition(float x, float y) {
-		// TODO Auto-generated method stub
-		super.setPosition(x, y);
+		double distance = Math.sqrt(Math.pow(x-  this.getX(), 2 )+ Math.pow(y-  this.getY(), 2 ));
+		if (distance > this.R)
+			this.move(x,y);
+		else
+			super.setPosition(x, y);
 	}
 
 	public void move(float x, float y) {

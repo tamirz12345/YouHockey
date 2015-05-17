@@ -236,7 +236,7 @@ public class Disk  extends Actor {
         		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
         		{
         			if (this.getX() >= game.leftGoal   && 
-        					this.getX() <= game.rightGoal )
+        					this.getX()  + this.getWidth()<= game.rightGoal )
         			{
         				Log.d("goalTamir","scored Buttom Goal");
         				downSpawn = true;
@@ -261,7 +261,7 @@ public class Disk  extends Actor {
         				(int)this.getY() == (int)myTop && !game.isMultiplayer)
         		{
         			if (this.getX() >= game.leftGoal   &&
-        					this.getX() <= game.rightGoal )
+        					this.getX()+ this.getWidth() <= game.rightGoal )
         			{
         				this.game.incBottom();
         				downSpawn = false;
