@@ -2,6 +2,8 @@ package GameObjects;
 
 import javax.swing.plaf.SpinnerUI;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -65,9 +67,22 @@ public class Tool  extends Actor{
 	public void setPosition(float x, float y) {
 		double distance = Math.sqrt(Math.pow(x-  this.getX(), 2 )+ Math.pow(y-  this.getY(), 2 ));
 		if (distance > this.R)
+		{
 			this.move(x,y);
+		}
+			
 		else
+		{
 			super.setPosition(x, y);
+			if (game.isMultiplayer)
+			{
+				String msg = "907-"+x+"-"+y+"-";
+				
+				game.toSend.add(msg);
+				Log.d("toolTamir", msg + "added to queue");
+			}
+		}
+			
 	}
 
 	public void move(float x, float y) {

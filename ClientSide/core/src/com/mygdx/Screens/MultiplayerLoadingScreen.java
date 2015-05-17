@@ -86,7 +86,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
 	  	public int portS = 3000;
-	  	public String ipS = "192.168.1.106"; 
+	  	public String ipS = "192.168.1.113"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;

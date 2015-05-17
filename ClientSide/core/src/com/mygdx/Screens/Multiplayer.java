@@ -40,6 +40,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,  Screen  {
@@ -64,7 +66,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 	ServerSocket ActiveRival;
 	InetSocketAddress rivalAddress;
 	
-	
+	Viewport viewport;
 	int downSpawn;
     Disk disk;
     Texture diskT ;
@@ -81,7 +83,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 	BufferedReader inFromRival ;
     
 	Thread reciver , handler , sender ;
-	float RdX, RdY , RtX , RtY; 
+	
 	Message firstM ;
 	String firstS= "900-";
     public Multiplayer(YouHockey youHockey ,String serverAddr ,String rivalAddr , int port) {
@@ -108,14 +110,9 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
     			Log.d("starterTamir", "streams constructed");
     			Random r = new Random();
 				downSpawn = r.nextInt(2) % 2;
-				RdX = (float) (7 * lim.getxUnit()) ;
-				RdY = (float) (7 * lim.getxUnit()) ;
-				RtX = (float) (5 * lim.getxUnit()) ;
-				RtY = (float) (5 * lim.getxUnit()) ;
 				
-				firstS += Integer.toString(downSpawn)+"-"+Float.toString(RdX/ lim.getGameWidth())+"-"
-						+Float.toString(RdY/ lim.getGameHeight())+"-"+Float.toString(RtX/ lim.getGameWidth())+
-						"-"+Float.toString(RtY/ lim.getGameHeight())+"-"+"-\n";
+				
+				firstS += Integer.toString(downSpawn)+"-\n";
 				Log.d("starterTamir", "sanding " + firstS);
 				outToRival.writeBytes(firstS);
 				Log.d("starterTamir", "sent, now waiting");
@@ -150,7 +147,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				Log.d("starterTamir", "compare To if.. msg type = " + firstM.getType());
 				if (firstM != null && firstM.getType().compareTo("900") == 0 )
 				{
-					String[] params = firstM.getParameters();
+				
 					Log.d("starterTamir", "parcing ...");
 					downSpawn =Integer.parseInt(firstM.getParameters()[0]);
 					Log.d("starterTamir", "parameter" + Integer.toString(downSpawn));
@@ -158,10 +155,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 						downSpawn = 0 ;
 					else
 						downSpawn = 1 ;
-					RdX = Float.parseFloat(params[1]) * lim.getGameWidth();
-					RdY = Float.parseFloat(params[2]) * lim.getGameHeight();
-					RtX = Float.parseFloat(params[3]) * lim.getGameWidth();
-					RtY = Float.parseFloat(params[4]) * lim.getGameHeight();
+					
 					firstS= "900-"+Integer.toString(downSpawn)+"-\n";
 					Log.d("starterTamir", "sending " +firstS);
 					outToRival.writeBytes(firstS);
@@ -208,24 +202,28 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 
 	public void create () {
     	
+		lim = new Limits(null);
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
-		height = Gdx.graphics.getWidth();
-		width = Gdx.graphics.getHeight();
-		camera.setToOrtho(false, height, width);
-        t1 = new Tool("player2.png", true, RtX , RtY, lim);
-        bot = new Tool("player2.png", false, RtX , RtY,lim);
+	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
+	    viewport.apply();
+	    
+	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
+	    Gdx.input.setInputProcessor(this);
+
+        t1 = new Tool("player2.png", true,  lim);
+        bot = new Tool("player2.png", false , lim);
         
         tempTouch = new Vector3();
         
-        disk = new Disk(lim, downSpawn , RdX , RdY);
+        disk = new Disk(lim , downSpawn);
         disk.spawn();
         stage = new Stage();
         stage.addActor(bot);
         stage.addActor(t1);
         stage.addActor(disk);
-        Gdx.input.setInputProcessor(stage);
+        
         Gdx.input.setCatchBackKey(true);
 	    music = Gdx.audio.newMusic(Gdx.files.internal("backroundMusic.mp3"));
 	    music.setLooping(true);
@@ -235,13 +233,6 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 	    
 	    ScoreString = "0 : 0";
 	    yourBitmapFontName =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
-	    sender = new Thread(new Sender());
-		handler = new Thread(new Handler());
-		reciver = new Thread(new Reciver());
-		
-		sender.start();
-		handler.start();
-		reciver.start();
 	    
 	}
 	
@@ -274,20 +265,21 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 	}
 	
 	public void render (float delta) {
+		camera.update();
 		Gdx.gl.glClearColor(1,1,1,1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		//delta = Gdx.graphics.getDeltaTime();
+		
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
         
-        disk.update(t1, null);
+        disk.update(t1, bot);
         Vector2 leftB = lim.leftBottomCorner();
         Vector2 leftT = lim.leftTopCorner();
         Vector2 rightB = lim.rightBottomCorner();
         Vector2 rightT = lim.rightTopCorner();
-       
+        shaper.setProjectionMatrix(camera.combined);
         shaper.begin(ShapeType.Line);
-        Gdx.gl20.glLineWidth((float) (2 * lim.getyUnit()/ camera.zoom));
+        Gdx.gl20.glLineWidth(40);
         
         Vector2  src=  bottomGoal.getSrc(true);
         Vector2  dst = bottomGoal.getDst(true);
@@ -317,27 +309,23 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
         
         
         
-        
+        batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		
 		yourBitmapFontName.setColor(Color.BLACK);
+		yourBitmapFontName.setScale(0.75f);
 		textBoxPos = bottomGoal.getSrc(true);
 		textBoxPos=  UnitConvertor.toGame(textBoxPos.x , textBoxPos.y);
-		ScoreString = Integer.toString(lim.getScoreBottom()) + " : " + 
-				Integer.toString(lim.getScoreTop());
-		yourBitmapFontName.draw(batch, ScoreString,25,100);
 		
-		stage.draw();
+		ScoreString = Integer.toString(lim.getScoreTop()) + "  " + 
+				Integer.toString(lim.getScoreBottom());
+		yourBitmapFontName.draw(batch, ScoreString,25,100);
+		t1.draw(batch);
+		bot.draw(batch);
+		disk.draw(batch);
 		batch.end();
 
-		if(Gdx.input.isTouched()) {
-			camera.unproject(tempTouch.set(Gdx.input.getX(), Gdx.input.getY(),0));
-			tempTouch = UnitConvertor.toNormal(tempTouch);
-			t1.move(tempTouch.x, tempTouch.y);
-            
-			
-            
-	    }
+		
 		
 		if (Gdx.input.isKeyPressed(Keys.BACK)){
 			music.stop();
@@ -346,15 +334,18 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 			
 		}
 		stage.act(delta);
+		
 		if (lim.getScoreBottom() == SCORE_TO_WIN)
-		{			
-			CloseStuff();
+		{
+			music.stop();
+			super.dispose();
 			game.setScreen(new EndGame(game, true));
 		}
 			
 		if (lim.getScoreTop() == SCORE_TO_WIN)
 		{
-			CloseStuff();
+			music.stop();
+			super.dispose();
 			game.setScreen(new EndGame(game, false));
 		}
 		
@@ -506,8 +497,8 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
-				x = Float.parseFloat(params[0])*lim.getGameWidth();
-				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				x = Float.parseFloat(params[0]);
+				y = Float.parseFloat(params[1]);
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
@@ -531,8 +522,8 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				break;
 			case "906":
 				Log.d("diskTamir","handling : " + m.toString());
-				x = Float.parseFloat(params[0])*lim.getGameWidth();
-				y = Float.parseFloat(params[1])*lim.getGameHeight();
+				x = Float.parseFloat(params[0]);
+				y = Float.parseFloat(params[1]);
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
@@ -595,7 +586,27 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					Log.d("goalTamir" , "something is wrong");
 				}
 				break;
-			
+			case "907":
+				Log.d("diskTamir","handling : " + m.toString());
+				x = lim.getGameWidth() -   Float.parseFloat(params[0]);
+				y = lim.getGameHeight() -Float.parseFloat(params[1]);
+				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
+				flag2 = y >= lim.getBottom() && y <= lim.getTop();
+				if (flag1 && flag2)
+				{
+					Log.d("diskTamir" , "info   okay ");
+					;
+					disk.clearActions();
+					lim.addMoveToAction(disk, x, y, 'D');
+					Log.d("toolTamir" , "tool move to x: "+x+" y: ");
+				}
+				else
+				{
+					//Send error Massage
+					Log.d("toolTamir" , "info not  okay flags :" + flag1+","+flag2);
+				}
+				
+				break;
 			default:
 				break;
 			}
@@ -643,7 +654,19 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
+		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
+		Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
+	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
+	   
+	    Gdx.app.log("Mouse Event","Projected at " + pos.x + "," + pos.y);
+	    if (pos.y > lim.calcMid() - t1.getHeight())
+	    {
+	    	pos.y = lim.calcMid() - t1.getHeight();
+	    }
+	    t1.setPosition(pos.x, pos.y);
+	    
+	    
+		
 		return false;
 	}
 

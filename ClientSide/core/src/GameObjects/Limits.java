@@ -239,9 +239,9 @@ public class Limits {
 				
 				String msg=  "901-"+Float.toString(x)+"-"+Float.toString(y)+
 						"-"+Float.toString(speed)+"-";
-				Log.d("myDebug","adding to TOSend queue : " + msg);
+				Log.d("toolTamir","adding to TOSend queue : " + msg);
 				toSend.add(msg);
-				Log.d("myDebug","addedto TOSend queue : ");
+				Log.d("toolTamir","addedto TOSend queue : ");
 			}
 			else if (typeC == 'd' && a.getY() < this.calcMid())
 			{
