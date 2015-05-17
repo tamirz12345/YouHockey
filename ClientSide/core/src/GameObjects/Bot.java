@@ -5,16 +5,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bot extends Tool{
+		boolean kadosh = false;
 	    public Bot(String image_path, boolean isBelow, Limits game) {
 	    	super(image_path, false, game);
 	    }
 	    
 	    public void update(Disk d) {
+	    	if (kadosh)
+	    	{
+	    		if (this.getActions().size >0)
+	    			return;
+	    		kadosh = false;
+	    	}
+	    		
 	    	if (d.getY() >= game.calcMid() )
 	    	{
-	    		if (d.getY() > this.getY())
+	    		if (d.getY() > this.getY()) // if disk is behind
 	    		{
-	    			this.setPosition(d.getX(), game.getTop());
+	    			this.setPosition(game.getGameWidth()/2, game.getTop());
+	    			kadosh = true;
 	    		}
 	    		else 
 	    		{

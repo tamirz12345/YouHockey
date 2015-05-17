@@ -76,7 +76,7 @@ public class Tool  extends Actor{
 			Vector2 temp = game.validateTool(this , x , y);
 			
 			
-			super.setPosition(x, y);
+			super.setPosition(temp.x, temp.y);
 			if (game.isMultiplayer)
 			{
 				String msg = "907-"+x+"-"+y+"-";
