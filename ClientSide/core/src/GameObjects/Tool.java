@@ -73,6 +73,8 @@ public class Tool  extends Actor{
 			
 		else
 		{
+			if (!isBelow)
+				y=y- this.getHeight();
 			super.setPosition(x, y);
 			if (game.isMultiplayer)
 			{

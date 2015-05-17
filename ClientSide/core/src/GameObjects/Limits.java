@@ -120,7 +120,7 @@ public class Limits {
         }
 
         else {
-          y= (float) Math.max(y, this.calcMid() -t.getHeight())  ;
+          y= (float) Math.max(y-t.getHeight(), this.calcMid() -t.getHeight())  ;
             
         }
         
