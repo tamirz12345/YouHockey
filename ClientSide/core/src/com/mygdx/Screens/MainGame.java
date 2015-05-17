@@ -1,5 +1,6 @@
 package com.mygdx.Screens;
 
+import GameObjects.Bot;
 import GameObjects.Disk;
 import GameObjects.Goal;
 import GameObjects.Limits;
@@ -34,7 +35,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	OrthographicCamera camera;
 	Music music;
 	Tool t1;
-    Tool bot;
+    Bot bot;
     //resetButton resetB;
 	Vector3 tempTouch;
 	float height,width;
@@ -69,7 +70,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	    Gdx.input.setInputProcessor(this);
 
         t1 = new Tool("player2.png", true,  lim);
-        bot = new Tool("player2.png", false , lim);
+        bot = new Bot("player2.png", false , lim);
         
         tempTouch = new Vector3();
         
@@ -101,6 +102,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         Goal topGoal = new Goal(false , lim );
         
         disk.update(t1, bot);
+        bot.update(disk);
         Vector2 leftB = lim.leftBottomCorner();
         Vector2 leftT = lim.leftTopCorner();
         Vector2 rightB = lim.rightBottomCorner();
@@ -234,7 +236,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	    	pos.y = lim.calcMid() - t1.getHeight();
 	    }
 	    t1.setPosition(pos.x, pos.y);
-	    bot.setPosition(pos.x, lim.getGameHeight() - pos.y);
+	    //bot.setPosition(pos.x, lim.getGameHeight() - pos.y);
 	    
 		return false;
 		
