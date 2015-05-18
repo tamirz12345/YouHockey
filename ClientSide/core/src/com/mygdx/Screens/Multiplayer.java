@@ -503,7 +503,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 			String opCode = m.getType();
 			String[] params = m.getParameters();
 			float x = 0,y=0,time ; 
-			boolean flag1,flag2,flag3,flag4 = false,flag5;
+			boolean flag1,flag2,flag3,flag4 = false,flag5 = false , flag6;
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
@@ -537,32 +537,37 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
-				String xDir , yDir;
+				String Dir , xDir  , yDir ;
 				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
 				flag2 = y >= lim.getBottom() && y <= lim.getTop();
-				flag3 = time > 0 ; 
+				flag3 = time > 0 ;
 				xDir = params[3];
 				yDir = params[4];
-				flag4 = params[3].compareTo("left") == 0 ||
-						params[3].compareTo("right") == 0; 
-				flag5= params[4].compareTo("top") == 0 ||
-						params[4].compareTo("bottom") == 0; 
+				Dir = params[5];
 				
-				if (flag1 && flag2 && flag3 && flag4 && flag5)
+				flag6 = Dir.compareTo("left") == 0 ||
+						Dir.compareTo("right") == 0 || 
+						Dir.compareTo("top") == 0 ||
+						Dir.compareTo("bottom") == 0; 
+				
+				
+				if (flag1 && flag2 && flag3 && flag4 && flag5 && flag6  )
 				{
 					Log.d("diskTamir" , "info   okay ");
+					
+					disk.setDir(Dir);
 					disk.setXdir(xDir);
-					disk.setXdir(yDir);
+					disk.setYdir(yDir);
 					disk.clearActions();
 					lim.addMoveToAction(disk, x, y, 'D');
 					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
-							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
+							+" time " + time + "Dir = " + Dir );
 				}
 				else
 				{
 					//Send error Massage
-					Log.d("diskTamir" , "info not  okay flags :" + flag1+","+flag2+","+flag3+","+flag4+
-							","+flag5);
+					Log.d("diskTamir" , "info not  okay flags :" + flag1+","+flag2+","+flag3+
+							","+flag4+","+flag5+","+flag6);
 				}
 				
 				
@@ -608,7 +613,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					bot.setPosition(x, y);
 					
 					
-					Log.d("toolTamir" , "tool move to x: "+x+" y: ");
+					Log.d("toolTamir" , "tool move to x: "+x+" y: " + y);
 				}
 				else
 				{

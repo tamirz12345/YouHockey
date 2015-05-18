@@ -66,6 +66,7 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 
 	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
 	    Gdx.input.setInputProcessor(this);
+	    Gdx.input.setCatchBackKey(true);
 	}
 
 	public void render (float delta) {
@@ -78,7 +79,10 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 		  
 		    UnitConvertor.draw(batch ,  texture ,0,0 , 100 , 100 );
 		    batch.end();
-		
+		    if (Gdx.input.isKeyPressed(Keys.BACK)){
+				
+				game.setScreen(new Menu(game));
+			}
 	}
 
 	@Override
@@ -96,7 +100,7 @@ public class EndGame  extends ApplicationAdapter implements InputProcessor, Scre
 	 public boolean keyDown(int keycode) {
 	    return false;
 	 }
-
+	 
 	 @Override
 	 public boolean keyUp(int keycode) {
 	    return false;
