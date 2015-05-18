@@ -73,7 +73,31 @@ public class Disk  extends Actor {
 		
 		
 	}
+	
+	public String getDir() {
+		if (targetW == Wall.Top)
+			return "top";
+		else if (targetW == Wall.Bottom)
+			return "bottom";
+		else if (targetW == Wall.Right)
+			return "right";
+		else if (targetW == Wall.Left)
+			return "left";
+		return null;
+	}
 
+	public void setDir(String dir) {
+		// TODO Auto-generated method stub
+		if (dir.compareTo("bottom")==0)
+			targetW = Wall.Top;
+		else if (dir.compareTo("top")==0)
+			targetW = Wall.Bottom;
+		else if (dir.compareTo("left")==0)
+			targetW = Wall.Right;
+		else if (dir.compareTo("right")==0)
+			targetW = Wall.Left;
+	}
+	
 	public void draw(SpriteBatch batch){
 		if (wait)
     		return;

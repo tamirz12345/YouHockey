@@ -282,7 +282,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
         Goal bottomGoal = new Goal(true , lim );
         Goal topGoal = new Goal(false , lim );
         
-        disk.update(t1, bot);
+        disk.update(t1,null);
         Vector2 leftB = lim.leftBottomCorner();
         Vector2 leftT = lim.leftTopCorner();
         Vector2 rightB = lim.rightBottomCorner();
@@ -340,6 +340,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 		if (Gdx.input.isKeyPressed(Keys.BACK)){
 			music.stop();
 			super.dispose();
+			CloseStuff();
 			game.setScreen(new Menu(game));
 			
 		}
@@ -349,6 +350,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 		{
 			music.stop();
 			super.dispose();
+			CloseStuff();
 			game.setScreen(new EndGame(game, true));
 		}
 			
@@ -356,6 +358,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 		{
 			music.stop();
 			super.dispose();
+			CloseStuff();
 			game.setScreen(new EndGame(game, false));
 		}
 		
@@ -503,7 +506,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 			String opCode = m.getType();
 			String[] params = m.getParameters();
 			float x = 0,y=0,time ; 
-			boolean flag1,flag2,flag3,flag4 = false,flag5;
+			boolean flag1,flag2,flag3,flag4 = false,flag5 , flag6;
 			switch (opCode) {
 			case "901":
 				Log.d("handler" , "case 901");
@@ -537,7 +540,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				time =  Float.parseFloat(params[2]);
 				x = lim.getGameWidth()   - x ;
 				y = lim.getGameHeight()  - y ; 
-				String xDir , yDir;
+				String xDir , yDir , dir ;
 				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
 				flag2 = y >= lim.getBottom() && y <= lim.getTop();
 				flag3 = time > 0 ; 
@@ -547,16 +550,22 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 						params[3].compareTo("right") == 0; 
 				flag5= params[4].compareTo("top") == 0 ||
 						params[4].compareTo("bottom") == 0; 
-				
-				if (flag1 && flag2 && flag3 && flag4 && flag5)
+				dir  = params[5];
+				flag6 = dir.compareTo("left") == 0 ||
+						dir.compareTo("right") == 0||
+						dir.compareTo("top") == 0 ||
+						dir.compareTo("bottom") == 0;
+				if (flag1 && flag2 && flag3 && flag4 && flag5 && flag6)
 				{
 					Log.d("diskTamir" , "info   okay ");
+					disk.clearActions();
 					disk.setXdir(xDir);
 					disk.setXdir(yDir);
-					disk.clearActions();
-					lim.addMoveToAction(disk, x, y, 'D');
+					disk.setDir(dir);
+					
+					lim.addMoveToAction(disk, x, y, time);
 					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
-							+" time " + time + "xDir = " + xDir + "yDir =" + yDir);
+							+" time " + time + "xDir = " + xDir + "yDir =" + yDir +"dir : " + dir);
 				}
 				else
 				{

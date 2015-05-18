@@ -220,7 +220,7 @@ public class Limits {
 			}
 			else if ( typeC == 'd')
 			{
-				speed =  distance /	80f;
+				speed =  distance / 70f;
 			}
 				
 		}
@@ -245,13 +245,13 @@ public class Limits {
 			}
 			else if (typeC == 'd' && a.getY() < this.calcMid())
 			{
-				speed = 6f;
-				
-				String xDir , yDir;
+				speed =  distance / 70f;
+				String xDir , yDir   , dir;
 				xDir = ((Disk) a).getXDir();
 				yDir = ((Disk) a).getYDir();
+				dir  = ((Disk) a).getDir();
 				String msg=  "906-"+Float.toString(x)+"-"+Float.toString(y)+
-						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-";
+						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-"+dir+"-";
 				Log.d("diskTamir","adding to TOSend queue : " + msg);
 				toSend.add(msg);
 				Log.d("diskTamir","addedto TOSend queue : ");
@@ -299,6 +299,17 @@ public class Limits {
 		moveAction.setDuration(time);
 		moveAction.setPosition(x, y);
 		tool.addAction(moveAction);
+	}
+
+	public void addMoveToAction(Disk disk, float x, float y, float time) {
+		// TODO Auto-generated method stub
+		disk.clearActions();
+		MoveToAction moveAction = new MoveToAction();
+		
+		
+		moveAction.setDuration(time);
+		moveAction.setPosition(x, y);
+		disk.addAction(moveAction);
 	}
 	
 	
