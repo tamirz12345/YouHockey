@@ -37,11 +37,11 @@ public class Tool  extends Actor{
         this.setHeight(2 * R);
         
         if (this.isBelow) {
-           super.setPosition(50 , 15 );
+           super.setPosition(50 , 20 );
             
         } else {
           
-            super.setPosition(50 , 85 );
+            super.setPosition(50 , 80 );
             
         }
     }

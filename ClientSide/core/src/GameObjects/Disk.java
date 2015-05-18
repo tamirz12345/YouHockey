@@ -235,7 +235,6 @@ public class Disk  extends Actor {
         		l = new Line(newA, new Vector2(this.getX() , this.getY()));
         		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
         		{
-        			Log.d("diskTamir", "Bottom wall hit");
         			if (this.getX() >= game.leftGoal   && 
         					this.getX()  + this.getWidth()<= game.rightGoal )
         			{
@@ -261,7 +260,6 @@ public class Disk  extends Actor {
         		if (targetW == Wall.Top && 
         				(int)this.getY() == (int)myTop && !game.isMultiplayer)
         		{
-        			Log.d("diskTamir", "Top wall hit");
         			if (this.getX() >= game.leftGoal   &&
         					this.getX()+ this.getWidth() <= game.rightGoal )
         			{
@@ -279,14 +277,12 @@ public class Disk  extends Actor {
         			
         		if (targetW == Wall.Left && (int)this.getX() == (int)game.getLeft())
         		{
-        			Log.d("diskTamir", "Left wall hit");
         			wX = Wall.Right;
         			changed = true;
         		}
         			
         		if (targetW == Wall.Right && (int)this.getX() == (int)myRight)
         		{
-        			Log.d("diskTamir", "Right wall hit");
         			wX = Wall.Left;
         			changed = true;
         		}
@@ -359,11 +355,11 @@ public class Disk  extends Actor {
 		this.clearActions();
 		if (downSpawn)
 		{
-			this.setPosition(50, 30);
+			this.setPosition(50, 40);
 		}
 		else
 		{
-			this.setPosition(50, 70);
+			this.setPosition(50, 60);
 		}
 	}
 
@@ -385,31 +381,6 @@ public class Disk  extends Actor {
 		this.setY(y);
 		Log.d("handler" , "spawn x = " + x +"y = "+y);
 	}
-
-	public String getDir() {
-		if (targetW == Wall.Top)
-			return "top";
-		else if (targetW == Wall.Bottom)
-			return "bottom";
-		else if (targetW == Wall.Right)
-			return "right";
-		else if (targetW == Wall.Right)
-			return "left";
-		return null;
-	}
-
-	public void setDir(String dir) {
-		// TODO Auto-generated method stub
-		if (dir.compareTo("bottom")==0)
-			targetW = Wall.Top;
-		else if (dir.compareTo("top")==0)
-			targetW = Wall.Bottom;
-		else if (dir.compareTo("left")==0)
-			targetW = Wall.Right;
-		else if (dir.compareTo("right")==0)
-			targetW = Wall.Left;
-	}
-	
     
     
 }

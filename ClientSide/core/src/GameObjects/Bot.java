@@ -20,7 +20,7 @@ public class Bot extends Tool{
 	    		
 	    	if (d.getY() >= game.calcMid() )
 	    	{
-	    		if (d.getY() >= this.getY()) // if disk is behind
+	    		if (d.getY() > this.getY()) // if disk is behind
 	    		{
 	    			this.setPosition(game.getGameWidth()/2, game.getTop());
 	    			kadosh = true;

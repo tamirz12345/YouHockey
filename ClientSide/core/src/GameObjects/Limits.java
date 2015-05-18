@@ -205,13 +205,10 @@ public class Limits {
 	
 	public void addMoveToAction(Actor a, float x , float y , Character typeC)
 	{
-		
 		if (!this.inGameBounds(x, y))
 		{
-			Log.d("myExeption", "Out Of Bound ( "+x+","+y+" )");
-			return ;
+			System.out.println("Out Of Bound ( "+x+","+y+" )");
 		}
-		a.clearActions();
 		MoveToAction moveAction = new MoveToAction();
 		float distance , speed = 0;
 		distance  =  (float) (Math.sqrt(Math.pow(a.getX()-  x , 2) + Math.pow(a.getY()-y, 2)));
@@ -223,7 +220,7 @@ public class Limits {
 			}
 			else if ( typeC == 'd')
 			{
-				speed =  distance /	40f;
+				speed =  distance /	80f;
 			}
 				
 		}
@@ -248,14 +245,13 @@ public class Limits {
 			}
 			else if (typeC == 'd' && a.getY() < this.calcMid())
 			{
+				speed = 6f;
 				
-				
-				String Dir ,xDir , yDir;
-				Dir = ((Disk) a).getDir();
+				String xDir , yDir;
 				xDir = ((Disk) a).getXDir();
 				yDir = ((Disk) a).getYDir();
 				String msg=  "906-"+Float.toString(x)+"-"+Float.toString(y)+
-						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-"+Dir+"-";
+						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-";
 				Log.d("diskTamir","adding to TOSend queue : " + msg);
 				toSend.add(msg);
 				Log.d("diskTamir","addedto TOSend queue : ");
