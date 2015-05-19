@@ -563,7 +563,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					disk.setXdir(yDir);
 					disk.setDir(dir);
 					
-					lim.addMoveToAction(disk, x, y, time);
+					lim.reciveAction(disk, x, y, time);
 					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
 							+" time " + time + "xDir = " + xDir + "yDir =" + yDir +"dir : " + dir);
 				}

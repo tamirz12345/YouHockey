@@ -122,7 +122,7 @@ public class Disk  extends Actor {
         	}
         	
         	tool.clearActions();
-            this.clearActions();
+            super.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
            
             l = new Line(a, new Vector2(diskX , diskY));
@@ -376,7 +376,7 @@ public class Disk  extends Actor {
     
 	public void spawn() {
 		
-		this.clearActions();
+		this.clear();
 		if (downSpawn)
 		{
 			this.setPosition(50, 40);
@@ -388,7 +388,7 @@ public class Disk  extends Actor {
 	}
 
 	@Override
-	public void clearActions() {
+	public void clear() {
 		
 		super.clearActions();
 		targetLoc = null;
@@ -400,7 +400,7 @@ public class Disk  extends Actor {
 
 	public void spawn(float x, float y) {
 		// TODO Auto-generated method stub
-		this.clearActions();
+		this.clear();
 		this.setX(x);
 		this.setY(y);
 		Log.d("handler" , "spawn x = " + x +"y = "+y);

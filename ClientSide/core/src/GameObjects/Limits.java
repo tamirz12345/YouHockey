@@ -301,7 +301,7 @@ public class Limits {
 		tool.addAction(moveAction);
 	}
 
-	public void addMoveToAction(Disk disk, float x, float y, float time) {
+	public void reciveAction(Disk disk, float x, float y, float time) {
 		// TODO Auto-generated method stub
 		disk.clearActions();
 		MoveToAction moveAction = new MoveToAction();
