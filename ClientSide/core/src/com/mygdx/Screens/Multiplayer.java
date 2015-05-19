@@ -93,7 +93,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
     	
     	String[] temp = rivalAddr.split(":");
     	inisiator = temp.length == 2 ; 
-    	lim = new Limits(toSend);
+    	
     	
     	
     	try {
@@ -202,7 +202,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 
 	public void create () {
     	
-		lim = new Limits(toSend);
+		lim = new Limits(toSend , inisiator);
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
@@ -538,8 +538,8 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				x = Float.parseFloat(params[0]);
 				y = Float.parseFloat(params[1]);
 				time =  Float.parseFloat(params[2]);
-				x = lim.getGameWidth()   - x ;
-				y = lim.getGameHeight()  - y ; 
+				x = lim.getGameWidth()   - x -disk.getWidth();
+				y = lim.getGameHeight()  - y - disk.getHeight(); 
 				String xDir , yDir , dir ;
 				flag1 = x >= lim.getLeft()   && x <= lim.getRight();
 				flag2 = y >= lim.getBottom() && y <= lim.getTop();
@@ -560,9 +560,9 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					Log.d("diskTamir" , "info   okay ");
 					disk.clearActions();
 					disk.setXdir(xDir);
-					disk.setXdir(yDir);
+					disk.setYdir(yDir);
 					disk.setDir(dir);
-					
+					disk.targetLoc = new Vector2(x,y);
 					lim.reciveAction(disk, x, y, time);
 					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
 							+" time " + time + "xDir = " + xDir + "yDir =" + yDir +"dir : " + dir);
@@ -640,7 +640,11 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 		playing = false; 
 		super.dispose();
 	}
-
+	@Override
+	 public void resize(int width, int height){
+	    viewport.update(width, height);
+	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+	 }
 	@Override
 	public boolean keyDown(int keycode) {
 		// TODO Auto-generated method stub

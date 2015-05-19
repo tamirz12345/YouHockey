@@ -59,7 +59,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	}
 
 	public void create () {
-    	lim = new Limits(null);
+    	lim = new Limits(null  , false);
 		batch = new SpriteBatch();
 		
 		camera = new OrthographicCamera();
@@ -247,7 +247,11 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	@Override
+	 public void resize(int width, int height){
+	    viewport.update(width, height);
+	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+	 }
 	@Override
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub

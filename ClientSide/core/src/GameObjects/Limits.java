@@ -37,7 +37,8 @@ public class Limits {
 	
 	public BlockingQueue<String> toSend;
 	public boolean isMultiplayer = false;
-    public Limits(BlockingQueue<String> q)
+	public boolean inisiator;
+    public Limits(BlockingQueue<String> q , boolean insi)
     {
     	mid = (float) 0.5;
     	
@@ -50,7 +51,7 @@ public class Limits {
     	
     	goalSound = Gdx.audio.newMusic(Gdx.files.internal("score.mp3"));
     	ohSound = Gdx.audio.newMusic(Gdx.files.internal("oh.mp3"));
-    	
+    	inisiator = insi;
     	
     	
     	
@@ -243,7 +244,8 @@ public class Limits {
 				toSend.add(msg);
 				Log.d("toolTamir","addedto TOSend queue : ");
 			}
-			else if (typeC == 'd' && a.getY() < this.calcMid())
+			else if (typeC == 'd' && (a.getY() < this.calcMid() || 
+					this.inisiator && a.getY() == this.calcMid()))
 			{
 				speed =  distance / 70f;
 				String xDir , yDir   , dir;

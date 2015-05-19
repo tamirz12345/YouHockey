@@ -57,7 +57,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 
 	public void create () {
 		backgroundTexture = new Texture(Gdx.files.internal("loading.png"));
-        lim = new Limits(null);
+        lim = new Limits(null , false);
         spriteBatch = new SpriteBatch();
         
         ServerChat Schat = new ServerChat();
@@ -86,7 +86,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
 	  	public int portS = 3000;
-	  	public String ipS = "192.168.1.113"; 
+	  	public String ipS = "192.168.1.104"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;
@@ -169,6 +169,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
                 try {
                 	
                     ServerSocket temp = new ServerSocket(i);
+                    temp.close();
                     return i;
                 } catch (IOException ex) {
                     continue; // try next port

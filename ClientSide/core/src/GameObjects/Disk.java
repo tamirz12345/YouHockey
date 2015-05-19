@@ -18,7 +18,7 @@ public class Disk  extends Actor {
 	Texture texture = new Texture("disk.png");
 	float radius  ; 
 	boolean toHuman = false;
-	Vector2 targetLoc = null;
+	public Vector2 targetLoc = null;
 	public boolean moving , downSpawn;
 	float m, n; // y = mx + n
     
@@ -107,11 +107,11 @@ public class Disk  extends Actor {
 	
 	public void checkCollision(Tool tool){
         
-        float diskX = this.getX();
-        float diskY = this.getY() ;
+        float diskX = this.getX() + this.radius;
+        float diskY = this.getY() + this.radius;
 
-        float toolX = tool.getX() ;
-        float toolY = tool.getY() ;
+        float toolX = tool.getX() + tool.R;
+        float toolY = tool.getY() + tool.R;
 
         if (Math.sqrt( Math.pow(diskX - toolX, 2) + Math.pow(diskY - toolY, 2))
         		<= (this.radius + tool.R) * 0.8)
@@ -337,32 +337,48 @@ public class Disk  extends Actor {
     {
     	if (wX == Wall.Left)
     		return "left";
-    	else
+    	else if (wX == Wall.Right)
     		return "right";
+    	else
+    	{
+    		Log.d("diskTamir", "problemaa!!!#!@#!!#");
+    		return null;
+    	}
+    		
     }
     
     
     public String getYDir()
     {
-    	if (wX == Wall.Top)
+    	if (wY == Wall.Top)
     		return "top";
-    	else
+    	else if (wY == Wall.Bottom)
     		return "bottom";
+    	else
+    	{
+    		Log.d("diskTamir", "problemaa!!!#!@#!!#");
+    		return null;
+    	}
+    		
     }
     
     public void setXdir(String dir)
     {
     	if (dir.compareTo("left") == 0 )
     		wX = Wall.Right;
-    	else
+    	else if (dir.compareTo("right") == 0 )
     		wX = Wall.Left;
+    	else
+    		Log.d("diskTamir", "problemaa!!!#!@#!!#");
     }
     public void setYdir(String dir)
     {
     	if (dir.compareTo("top") == 0 )
-    		wX = Wall.Bottom;
+    		wY = Wall.Bottom;
+    	else if (dir.compareTo("bottom") == 0 )
+    		wY = Wall.Top;
     	else
-    		wX = Wall.Top;
+    		Log.d("diskTamir", "problemaa!!!#!@#!!#");
     }
     public boolean isWaiting()
     {
