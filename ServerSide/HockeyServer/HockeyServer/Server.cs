@@ -52,8 +52,8 @@ namespace HockeyServer
         void handleCommand(Socket client)
         {
             string toSend;
-            
-            while (true)
+            Boolean matched = false; 
+            while (!matched)
             {
                 IPEndPoint clientep = (IPEndPoint)client.RemoteEndPoint;
                 byte[] data = new byte[1024];
@@ -101,7 +101,9 @@ namespace HockeyServer
                         p.initiator.socket.Send(data, toSend.Length, SocketFlags.None);
 
                         this.pairQueue.deleteClient(p.initiator);
-                        this.pairQueue.deleteClient(p.listener); 
+                        this.pairQueue.deleteClient(p.listener);
+
+                        matched = true; 
                     }
                 }
             }
