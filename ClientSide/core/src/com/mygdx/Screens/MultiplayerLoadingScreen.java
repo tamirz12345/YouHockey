@@ -86,7 +86,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
 	  	public int portS = 3000;
-	  	public String ipS = "192.168.1.104"; 
+	  	public String ipS = "192.168.1.110"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;
@@ -174,6 +174,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
                 } catch (IOException ex) {
                     continue; // try next port
                 }
+                
             }
 
             // if the program gets here, no port in the range was found

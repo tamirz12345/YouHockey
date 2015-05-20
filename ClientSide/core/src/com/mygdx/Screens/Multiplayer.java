@@ -15,6 +15,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import GameObjects.Disk;
 import GameObjects.Goal;
 import GameObjects.Limits;
+import GameObjects.Line;
 import GameObjects.Tool;
 import Network.Message;
 import android.os.AsyncTask;
@@ -551,6 +552,8 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 				flag5= params[4].compareTo("top") == 0 ||
 						params[4].compareTo("bottom") == 0; 
 				dir  = params[5];
+				
+				
 				flag6 = dir.compareTo("left") == 0 ||
 						dir.compareTo("right") == 0||
 						dir.compareTo("top") == 0 ||
@@ -563,9 +566,14 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					disk.setYdir(yDir);
 					disk.setDir(dir);
 					disk.targetLoc = new Vector2(x,y);
+					float m1 = (y - disk.getY()) / (x - disk.getX());
+					
+					disk.line= new Line(m1 ,new Vector2(disk.getX(),disk.getY()));
 					lim.reciveAction(disk, x, y, time);
+					
 					Log.d("diskTamir" , "disk moving to x: "+x+" y: " +y 
-							+" time " + time + "xDir = " + xDir + "yDir =" + yDir +"dir : " + dir);
+							+" time " + time + " xDir = " + xDir + " yDir =" + yDir +" dir : " + dir
+							+"  shipuha  = " + m1);
 				}
 				else
 				{
@@ -582,6 +590,14 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 					
 					Log.d("goalTamir" , "i scored");
 					lim.incBottom();
+					Gdx.app.postRunnable(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							lim.playGoodSound();
+						}
+					});
 					disk.downSpawn = false;
 					disk.spawn();
 					String response = "905-0-";

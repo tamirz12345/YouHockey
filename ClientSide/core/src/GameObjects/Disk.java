@@ -25,7 +25,7 @@ public class Disk  extends Actor {
 	Limits game;
 	Wall targetW = null;
 	Wall wY = null , wX = null;
-	Line l;
+	public Line line;
 	boolean wait = false;
     Music hitBall;
     Music hitWall;
@@ -125,7 +125,7 @@ public class Disk  extends Actor {
             super.clearActions();
         	float  a =(diskY - toolY)/ (diskX - toolX);
            
-            l = new Line(a, new Vector2(diskX , diskY));
+            line = new Line(a, new Vector2(diskX , diskY));
             
             if (diskY - toolY >= 0)
             {
@@ -144,7 +144,7 @@ public class Disk  extends Actor {
             {
             	wX = Wall.Left;
             }
-            LineToAction(l , wX , wY);
+            LineToAction(line , wX , wY);
         }
     }
 	
@@ -253,10 +253,10 @@ public class Disk  extends Actor {
         {
         	if (targetLoc!= null && (int)this.getX() == (int)targetLoc.x && (int)this.getY() == (int)targetLoc.y)
         	{
-        		float newA = this.l.getA() * (- 1);
+        		
         		
         		boolean changed = false;
-        		l = new Line(newA, new Vector2(this.getX() , this.getY()));
+        		
         		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
         		{
         			if (this.getX() >= game.leftGoal   && 
@@ -312,7 +312,9 @@ public class Disk  extends Actor {
         		}
         		if (changed)
         		{
-        			LineToAction(l, wX , wY);
+        			float newA = this.line.getA() * (- 1);
+            		line = new Line(newA, new Vector2(this.getX() , this.getY()));
+        			LineToAction(line, wX , wY);
         			if (!hitWall.isPlaying())
                 	{
                 		hitWall.play();

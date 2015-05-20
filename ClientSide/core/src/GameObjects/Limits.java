@@ -208,7 +208,7 @@ public class Limits {
 	{
 		if (!this.inGameBounds(x, y))
 		{
-			System.out.println("Out Of Bound ( "+x+","+y+" )");
+			Log.d("myExeption","Out Of Bound ( "+x+","+y+" )");
 		}
 		MoveToAction moveAction = new MoveToAction();
 		float distance , speed = 0;
@@ -247,7 +247,7 @@ public class Limits {
 			else if (typeC == 'd' && (a.getY() < this.calcMid() || 
 					this.inisiator && a.getY() == this.calcMid()))
 			{
-				speed =  distance / 70f;
+				speed =  distance / 20f;
 				String xDir , yDir   , dir;
 				xDir = ((Disk) a).getXDir();
 				yDir = ((Disk) a).getYDir();
@@ -255,6 +255,7 @@ public class Limits {
 				String msg=  "906-"+Float.toString(x)+"-"+Float.toString(y)+
 						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-"+dir+"-";
 				Log.d("diskTamir","adding to TOSend queue : " + msg);
+				
 				toSend.add(msg);
 				Log.d("diskTamir","addedto TOSend queue : ");
 			}
@@ -312,6 +313,11 @@ public class Limits {
 		moveAction.setDuration(time);
 		moveAction.setPosition(x, y);
 		disk.addAction(moveAction);
+	}
+
+	public void playGoodSound() {
+		// TODO Auto-generated method stub
+		goalSound.play();
 	}
 	
 	
