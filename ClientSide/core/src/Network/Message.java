@@ -38,7 +38,7 @@ public class Message implements IMessage {
 			return (parts.length == 2 && (parts[1].compareTo("0")==0
 			|| parts[1].compareTo("1")==0));
 		case "906":
-			return parts.length == 7;
+			return parts.length == 4;
 		case "907":
 			return parts.length == 3;
 		case "901":

@@ -253,7 +253,7 @@ public class Limits {
 				yDir = ((Disk) a).getYDir();
 				dir  = ((Disk) a).getDir();
 				String msg=  "906-"+Float.toString(x)+"-"+Float.toString(y)+
-						"-"+Float.toString(speed)+"-"+xDir+"-"+yDir+"-"+dir+"-";
+						"-"+Float.toString(speed)+"-";
 				Log.d("diskTamir","adding to TOSend queue : " + msg);
 				
 				toSend.add(msg);
