@@ -235,88 +235,7 @@ public class Disk  extends Actor {
 		game.addMoveToAction(this, x, y ,'d');
 		this.targetLoc = new Vector2(x,y);
 	}
-	public void multiplayerUpdate(Tool t1, Tool bot) {
-		// TODO Auto-generated method stub
-		if (wait )
-    		return;
-		this.checkCollision(t1);
-		this.checkCollision(bot);
-		 if (this.getActions().size == 0)// Not Moving , there is a chanse it is near a wall now, it need to be handeld 
-	        {
-	        	if (targetLoc!= null && (int)this.getX() == (int)targetLoc.x && (int)this.getY() == (int)targetLoc.y)
-	        	{
-	        		
-	        		
-	        		boolean changed = false;
-	        		
-	        		if (targetW == Wall.Bottom && (int)this.getY() == (int)game.getBottom())
-	        		{
-	        			if (this.getX() >= game.leftGoal   && 
-	        					this.getX()  + this.getWidth()<= game.rightGoal )
-	        			{
-	        				Log.d("goalTamir","scored Buttom Goal");
-	        				downSpawn = true;
-	        				
-	        				this.spawn();
-	        				
-	        					
-	        				this.game.incTop(this);
-	        				
-	        				
-	        				
-	        				return;
-	        			}
-	        			wY = Wall.Top;
-	        			changed = true;
-	        		}
-	        			
-	        		if (targetW == Wall.Top && 
-	        				(int)this.getY() == (int)myTop )
-	        		{
-	        			if (this.getX() >= game.leftGoal   &&
-	        					this.getX()+ this.getWidth() <= game.rightGoal )
-	        			{
-	        				this.game.incBottom();
-	        				downSpawn = false;
-	        				
-	        				this.spawn();
-	        				
-	        				
-	        				return;
-	        			}
-	        			wY = Wall.Bottom;
-	        			changed = true;
-	        		}
-	        			
-	        		if (targetW == Wall.Left && (int)this.getX() == (int)game.getLeft())
-	        		{
-	        			wX = Wall.Right;
-	        			changed = true;
-	        		}
-	        			
-	        		if (targetW == Wall.Right && (int)this.getX() == (int)myRight)
-	        		{
-	        			wX = Wall.Left;
-	        			changed = true;
-	        		}
-	        		if (changed)
-	        		{
-	        			float newA = this.line.getA() * (- 1);
-	            		line = new Line(newA, new Vector2(this.getX() , this.getY()));
-	        			LineToAction(line, wX , wY);
-	        			if (!hitWall.isPlaying())
-	                	{
-	                		hitWall.play();
-	                	}
-	        		}
-	        			
-	        		else
-	        		{
-	            		System.out.println("Disk stoped because of a problem somewhere");
-	            		//this.spawn();
-	            	}
-	        	}}
-	}
+ 
     public void update(Tool t1 , Tool t2)
     {
     	// t2 = bot 
@@ -504,8 +423,6 @@ public class Disk  extends Actor {
 		this.setY(y);
 		Log.d("handler" , "spawn x = " + x +"y = "+y);
 	}
-
-	
     
     
 }
