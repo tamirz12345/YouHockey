@@ -225,7 +225,10 @@ public class Limits {
 			}
 				
 		}
-		
+		if (isMultiplayer &&typeC == 'd')
+		{
+			speed =  distance /	55f;
+		}
 		if (speed == 0 )
 		{
 			speed =0.2f;
@@ -247,7 +250,7 @@ public class Limits {
 			else if (typeC == 'd' && (a.getY() < this.calcMid() || 
 					this.inisiator && a.getY() == this.calcMid()))
 			{
-				speed =  distance / 20f;
+				
 				String xDir , yDir   , dir;
 				xDir = ((Disk) a).getXDir();
 				yDir = ((Disk) a).getYDir();
