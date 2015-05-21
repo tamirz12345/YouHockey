@@ -76,7 +76,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
         
         disk = new Disk(lim , 0);
         disk.spawn();
-        stage = new Stage();
+        stage = new Stage(viewport);
         stage.addActor(bot);
         stage.addActor(t1);
         stage.addActor(disk);
@@ -163,6 +163,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 			game.setScreen(new Menu(game));
 			
 		}
+		stage.getViewport().apply();
 		stage.act(delta);
 		
 		if (lim.getScoreBottom() == SCORE_TO_WIN)

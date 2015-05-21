@@ -220,7 +220,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
         
         disk = new Disk(lim , downSpawn);
         disk.spawn();
-        stage = new Stage();
+        stage = new Stage(viewport);
         stage.addActor(bot);
         stage.addActor(t1);
         stage.addActor(disk);
@@ -345,6 +345,7 @@ public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,
 			game.setScreen(new Menu(game));
 			
 		}
+		stage.getViewport().apply();
 		stage.act(delta);
 		
 		if (lim.getScoreBottom() == SCORE_TO_WIN)

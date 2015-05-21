@@ -69,7 +69,12 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    UnitConvertor.draw(batch , playTexture ,PlayButton.x,PlayButton.y , PlayButton.height , PlayButton.width );
 	    UnitConvertor.draw(batch , pvpTexture ,PVPButton.x,PVPButton.y , PVPButton.height , PVPButton.width );
 	    batch.end();
-		
+	    if (Gdx.input.isKeyPressed(Keys.BACK)){
+			
+			super.dispose();
+			System.exit(0);
+			
+		}
 	}
 
 	@Override
