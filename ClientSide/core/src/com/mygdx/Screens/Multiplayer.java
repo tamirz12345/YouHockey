@@ -46,7 +46,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class Multiplayer  extends ApplicationAdapter implements InputProcessor ,  Screen  {
-	private static final Integer SCORE_TO_WIN = 2;
+	private static final Integer SCORE_TO_WIN = 3;
 	YouHockey game;
 	SpriteBatch batch;
 	OrthographicCamera camera;

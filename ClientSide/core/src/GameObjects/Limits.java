@@ -217,7 +217,7 @@ public class Limits {
 		{
 			if (typeC != 'd' )
 			{
-				speed =  distance /	70f;
+				speed =  distance /	80f;
 			}
 			else if ( typeC == 'd')
 			{
@@ -227,7 +227,7 @@ public class Limits {
 		}
 		if (isMultiplayer &&typeC == 'd')
 		{
-			speed =  distance /	55f;
+			speed =  distance /	70f;
 		}
 		if (speed == 0 )
 		{
