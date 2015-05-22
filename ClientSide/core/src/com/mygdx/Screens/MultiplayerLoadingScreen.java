@@ -27,28 +27,33 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MultiplayerLoadingScreen   extends ApplicationAdapter implements InputProcessor , Screen{
 	YouHockey game;
-	public String status ="Connecting to server";
+	
 	Limits lim;
+	public String status ="Connecting to server";
 	public static Texture backgroundTexture;
     public static Sprite backgroundSprite;
     private SpriteBatch spriteBatch;
 	boolean started = false;
+	Camera camera;
+	StretchViewport viewport;
 	
-	int countR = 0 ;
-	int rindurs = 50;
 	BitmapFont font ;
+	Matrix4 mx4Font;
 	public MultiplayerLoadingScreen(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -59,34 +64,51 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 		backgroundTexture = new Texture(Gdx.files.internal("loading.png"));
         lim = new Limits(null , false);
         spriteBatch = new SpriteBatch();
+        camera = new OrthographicCamera();
+	    viewport = new StretchViewport(100,100,camera); //stretch screen to [0,100]x[0,100] grid
+	    viewport.apply();
+	    camera.position.set(camera.viewportWidth/2,camera.viewportHeight/2,0); //set camera to look at center of viewport
+	    
+	    
+        
+        font =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"),false);
         
         ServerChat Schat = new ServerChat();
         Schat.execute();
-        font = new BitmapFont(Gdx.files.internal("data/calibri.fnt"), false);
-        
-
-
 	}
 
+	
+	 @Override
+	 public void resize(int width, int height){
+	    viewport.update(width, height);
+	    camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
+	 }
+	
+	
 	@SuppressWarnings("deprecation")
 	public void render (float delta) {
+		camera.update();
 		Gdx.gl.glClearColor((float)0.5,0.8f, (float)0.7, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		spriteBatch.setProjectionMatrix(camera.combined);
+		
+	
 		spriteBatch.begin();
 		//spriteBatch.draw(backgroundTexture, 0 , 0  , lim.getGameHeight(),lim.getGameWidth());
 		font.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 		font.setScale(0.2f);
-		font.draw(spriteBatch, status, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+		
+		font.draw(spriteBatch, status ,20 , 20 );
         spriteBatch.end();
         
         
         	
 		
-}
+	}
 	
 	public class ServerChat extends AsyncTask<String, Void, String> {
 	  	public int portS = 3000;
-	  	public String ipS =  "192.168.43.13"; 
+	  	public String ipS =  "192.168.1.107"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;
@@ -105,14 +127,15 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 				  clientSocket = new Socket();
 				  serverAddress = new InetSocketAddress(ipS , portS);
 				  clientSocket.connect(serverAddress , 5000);
+				  status = "Connected to server ";
 				  outToServer = new DataOutputStream(clientSocket.getOutputStream());
 				  inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				  if (gameRequest())
 				  {
-					  System.out.println("Waiting To rival \n");
+					  status =  "Waiting To rival ";
 				  }
 				  rival = pairUp(freePort);
-				  
+				  status =  "rival found . starting game";
 				  
 				  
 				  
@@ -124,9 +147,12 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				returnToMenu();
+				game.setScreen(new Menu(game));
 			}
-        	  
+        	catch (RuntimeException e)  
+			{
+        		e.printStackTrace();
+			}
 	      
 	     
           return rival;
@@ -140,6 +166,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				returnToMenu();
 			}
             Gdx.app.postRunnable(new Runnable() {
 				
@@ -239,8 +266,9 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 				
+				e.printStackTrace();
+				returnToMenu();
 			}
 
 			
