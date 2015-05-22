@@ -51,9 +51,10 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	boolean started = false;
 	Camera camera;
 	StretchViewport viewport;
-	
+	Thread t1;
 	BitmapFont font ;
 	Matrix4 mx4Font;
+	boolean loading = true;
 	public MultiplayerLoadingScreen(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -73,8 +74,8 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
         
         font =new  BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"),false);
         
-        ServerChat Schat = new ServerChat();
-        Schat.execute();
+        t1 = new Thread(new ServerChat());
+        t1.start();
 	}
 
 	
@@ -100,13 +101,18 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 		
 		font.draw(spriteBatch, status ,20 , 20 );
         spriteBatch.end();
-        
+        if (!loading)
+        {
+        	t1.interrupt();
+        	game.setScreen(new Menu(game));
+        }
+        	
         
         	
 		
 	}
 	
-	public class ServerChat extends AsyncTask<String, Void, String> {
+	public class ServerChat implements Runnable {
 	  	public int portS = 3000;
 	  	public String ipS =  "192.168.1.107"; 
 	  	InetSocketAddress serverAddress;
@@ -120,53 +126,18 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	  	int freePort;
 		
 		
-        protected String doInBackground(String... params) {
-        	  
-			try {
-				  freePort = findPort(1025, 10000);
-				  clientSocket = new Socket();
-				  serverAddress = new InetSocketAddress(ipS , portS);
-				  clientSocket.connect(serverAddress , 5000);
-				  status = "Connected to server ";
-				  outToServer = new DataOutputStream(clientSocket.getOutputStream());
-				  inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				  if (gameRequest())
-				  {
-					  status =  "Waiting To rival ";
-				  }
-				  rival = pairUp(freePort);
-				  status =  "rival found . starting game";
-				  
-				  
-				  
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				
-				e.printStackTrace();
-				returnToMenu();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				game.setScreen(new Menu(game));
-			}
-        	catch (RuntimeException e)  
-			{
-        		e.printStackTrace();
-			}
-	      
-	     
-          return rival;
-        }
+        
 
-        protected void onPostExecute(String result) {
-            final String res = result;
+        protected void finish() {
+            final String res = rival;
             System.out.println(res);
             try {
 				clientSocket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				returnToMenu();
+				//returnToMenu();
+				loading  = false;
 			}
             Gdx.app.postRunnable(new Runnable() {
 				
@@ -179,13 +150,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 			});
         }
 
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
-        
-        
+       
         
         
         public int findPort(int start , int end) throws IOException
@@ -209,12 +174,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
         }
         
         
-        @Override
-		protected void onCancelled() {
-		
-			super.onCancelled();
-		}
-
+        
 		public void returnToMenu()
         {
 			
@@ -268,7 +228,8 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 				// TODO Auto-generated catch block
 				
 				e.printStackTrace();
-				returnToMenu();
+				loading  = false;
+				//returnToMenu();
 			}
 
 			
@@ -318,13 +279,59 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				loading  = false;
 				
 			}
 			catch ( Exception e) {
 				// TODO: handle exception\
 				e.printStackTrace();
+				loading  = false;
 			}
 			return ret;
+		}
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			try {
+				  freePort = findPort(1025, 10000);
+				  clientSocket = new Socket();
+				  serverAddress = new InetSocketAddress(ipS , portS);
+				  clientSocket.connect(serverAddress , 5000);
+				  status = "Connected to server ";
+				  outToServer = new DataOutputStream(clientSocket.getOutputStream());
+				  inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				  if (gameRequest())
+				  {
+					  status =  "Waiting To rival ";
+				  }
+				  rival = pairUp(freePort);
+				  status =  "rival found . starting game";
+				  finish();
+				  
+				  
+				}
+			
+			
+				catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					
+					e.printStackTrace();
+					loading  = false;
+					//returnToMenu();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					loading  = false;
+					//game.setScreen(new Menu(game));
+				}
+		      	catch (RuntimeException e)  
+				{
+		      		e.printStackTrace();
+				}
+				
+	     
+       
 		}
     }
 
