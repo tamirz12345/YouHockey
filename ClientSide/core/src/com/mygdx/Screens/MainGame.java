@@ -5,6 +5,7 @@ import GameObjects.Disk;
 import GameObjects.Goal;
 import GameObjects.Limits;
 import GameObjects.Tool;
+import android.util.Log;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -53,6 +54,7 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
     final int SCORE_TO_WIN = 3; 
     Vector3 worldCoordinates;
     Vector2 pos;
+    int counter  = 0 ; 
     public MainGame(YouHockey youHockey) {
     	this.game = youHockey;
 		this.create();
@@ -219,14 +221,15 @@ public class MainGame  extends ApplicationAdapter implements InputProcessor, Scr
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// TODO Auto-generated method stub
-		
+		Log.d("special", "counted : "+Integer.toString(counter));
+		counter = 0 ;
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		// TODO Auto-generated method stub
-		
+		counter ++;
 		Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
 		Gdx.app.log("Mouse Event","Click at " + worldCoordinates.x + "," + worldCoordinates.y);
 	    Vector2 pos = UnitConvertor.toNormal(worldCoordinates.x, worldCoordinates.y);
