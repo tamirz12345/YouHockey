@@ -45,7 +45,7 @@ public class Menu extends ApplicationAdapter implements InputProcessor, Screen{
 	    playTexture = new Texture(Gdx.files.internal("bot.png"));
 	    pvpTexture = new Texture(Gdx.files.internal("pvp.png"));
 	    LogoTexture = new Texture(Gdx.files.internal("uhockey.png"));
-	    Logo = new Rectangle(25, 70 , 50 , 20);
+	    Logo = new Rectangle(0, 70 , 100 , 30);
 	    PlayButton = new Rectangle(25, 50 , 50 , 20);
 	    PVPButton = new Rectangle(25, 30 , 50 , 20 );
 	    camera = new OrthographicCamera();

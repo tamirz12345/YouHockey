@@ -114,7 +114,7 @@ public class MultiplayerLoadingScreen   extends ApplicationAdapter implements In
 	
 	public class ServerChat implements Runnable {
 	  	public int portS = 3000;
-	  	public String ipS =  "192.168.1.107"; 
+	  	public String ipS =  "192.168.43.13"; 
 	  	InetSocketAddress serverAddress;
 	  	String sentence;
 	  	String recivedString;
